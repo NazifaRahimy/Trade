@@ -1,17 +1,21 @@
-import type {Metadata} from "next";
+import TradeHistoryHeader from "@/src/components/dashboard/trade-history/TradeHistoryHeader";
+import TradeStats from "@/src/components/dashboard/trade-history/TradeStats";
+import TradeFilters from "@/src/components/dashboard/trade-history/TradeFilters";
+import TradeTable from "@/src/components/dashboard/trade-history/TradeTable";
 
-export const metadata: Metadata = {
-  title: "Trade History",
-  description: "View your trading history and previous transactions.",
-};
-
-const TradeHistory = () => {
+export default function TradeHistoryPage() {
   return (
-    <div>
-      <h1>تاریخچه معاملات</h1>
-      <p>سوابق و نتایج معاملات گذشته خود را مشاهده کنید.</p>
-    </div>
-  );
-};
+    <main className="min-h-screen bg-[#06101d] text-white">
+      <div className="mx-auto max-w-[1400px] px-5 py-7 md:px-8 lg:px-10">
+        <TradeHistoryHeader />
 
-export default TradeHistory;
+        <TradeStats />
+
+        <section>
+          <TradeFilters />
+          <TradeTable />
+        </section>
+      </div>
+    </main>
+  );
+}

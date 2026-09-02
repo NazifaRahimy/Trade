@@ -1,17 +1,29 @@
-import type {Metadata} from "next";
+import BrokerHeader from "@/src/components/dashboard/broker/BrokerHeader";
+import BrokerConnectionCard from "@/src/components/dashboard/broker/BrokerConnectionCard";
+import BrokerForm from "@/src/components/dashboard/broker/BrokerForm";
+import SupportedBrokers from "@/src/components/dashboard/broker/SupportedBrokers";
+import SecurityNotice from "@/src/components/dashboard/broker/SecurityNotice";
 
-export const metadata: Metadata = {
-  title: "Broker Form",
-  description: "Manage and update your broker account information.",
-};
-
-const BrokerForm = () => {
+export default function BrokerPage() {
   return (
-    <div>
-      <h1>فرم بروکر</h1>
-      <p>اطلاعات حساب بروکر خود را ثبت و مدیریت کنید.</p>
-    </div>
-  );
-};
+    <main className="min-h-screen bg-[#06101d] text-white">
+      <div className="mx-auto max-w-[1400px] px-5 py-7 md:px-8 lg:px-10 ">
+        <BrokerHeader />
 
-export default BrokerForm;
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.7fr)_minmax(320px,0.9fr)]">
+          {/* Left */}
+          <div className="space-y-6">
+            <BrokerConnectionCard />
+            <BrokerForm />
+          </div>
+
+          {/* Right */}
+          <div className="space-y-6">
+            <SupportedBrokers />
+            <SecurityNotice />
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
