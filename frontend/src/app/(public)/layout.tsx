@@ -1,5 +1,7 @@
 import type {Metadata} from "next";
-import "../app/globals.css";
+import Header from "../../components/layout/Header";
+import Footer from "../../components/layout/Footer";
+import "../../app/globals.css";
 export const metadata: Metadata = {
   title: {
     default: "Trade-platform | Home",
@@ -16,7 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Header />
+
         <main>{children}</main>
+
+        <Footer />
       </body>
     </html>
   );
