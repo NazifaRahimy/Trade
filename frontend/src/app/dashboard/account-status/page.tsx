@@ -9,7 +9,7 @@ import AccountInfo from "@/src/components/dashboard/AccountStats/AccountInfo";
 
 export default function AccountStatsPage() {
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="min-h-screen text-black">
       <main>
         <div className="space-y-6 p-5 lg:p-8">
           {/* Page Header */}

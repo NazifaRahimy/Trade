@@ -32,10 +32,10 @@ export default function SupportedBrokers() {
       initial={{opacity: 0, y: 20}}
       animate={{opacity: 1, y: 0}}
       transition={{duration: 0.5, delay: 0.2}}
-      className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 md:p-6"
+      className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6"
     >
       <div className="mb-5">
-        <h2 className="text-base font-semibold text-white">
+        <h2 className="text-base font-semibold text-slate-900">
           Supported Brokers
         </h2>
 
@@ -48,14 +48,14 @@ export default function SupportedBrokers() {
         {brokers.map((broker) => (
           <div
             key={broker.name}
-            className="group flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-950/40 p-3 transition hover:border-blue-500/30 hover:bg-slate-950/70"
+            className="group flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 transition hover:border-blue-200 hover:bg-blue-50/50"
           >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-800 text-xs font-bold text-slate-200">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-xs font-bold text-slate-700 shadow-sm">
               {broker.initials}
             </div>
 
             <div className="flex-1">
-              <p className="text-sm font-medium text-slate-200">
+              <p className="text-sm font-medium text-slate-900">
                 {broker.name}
               </p>
 
@@ -64,7 +64,11 @@ export default function SupportedBrokers() {
               </p>
             </div>
 
-            <FiCheckCircle className="text-emerald-400 opacity-70" size={17} />
+            <FiCheckCircle
+              className="text-emerald-600"
+              opacity={0.8}
+              size={17}
+            />
           </div>
         ))}
       </div>

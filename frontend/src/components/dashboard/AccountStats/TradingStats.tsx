@@ -28,8 +28,10 @@ const items = [
 
 export default function TradingStats() {
   return (
-    <section className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-      <h2 className="text-lg font-semibold text-white">Trading Statistics</h2>
+    <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 className="text-lg font-semibold text-slate-900">
+        Trading Statistics
+      </h2>
 
       <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {items.map((item, index) => {
@@ -41,17 +43,19 @@ export default function TradingStats() {
               initial={{opacity: 0, y: 10}}
               animate={{opacity: 1, y: 0}}
               transition={{delay: index * 0.08}}
-              className="rounded-xl border border-slate-800 bg-slate-950 p-4"
+              className="rounded-xl border border-slate-200 bg-slate-50 p-4"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-800 text-slate-300">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white text-slate-600 shadow-sm">
                   <Icon size={18} />
                 </div>
 
                 <div>
                   <p className="text-xs text-slate-500">{item.label}</p>
 
-                  <p className="mt-1 font-semibold text-white">{item.value}</p>
+                  <p className="mt-1 font-semibold text-slate-900">
+                    {item.value}
+                  </p>
                 </div>
               </div>
             </motion.div>

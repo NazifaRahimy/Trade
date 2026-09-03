@@ -26,13 +26,13 @@ export default function RiskStats() {
       {stats.map((item) => (
         <div
           key={item.title}
-          className="rounded-3xl border border-slate-800 bg-slate-900 p-6"
+          className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
         >
-          <item.icon size={28} className="mb-4 text-blue-500" />
+          <item.icon size={28} className="mb-4 text-blue-600" />
 
-          <h4 className="text-slate-400">{item.title}</h4>
+          <h4 className="text-sm font-medium text-slate-500">{item.title}</h4>
 
-          <p className="mt-2 text-2xl font-bold text-white">{item.value}</p>
+          <p className="mt-2 text-2xl font-bold text-slate-900">{item.value}</p>
         </div>
       ))}
     </div>

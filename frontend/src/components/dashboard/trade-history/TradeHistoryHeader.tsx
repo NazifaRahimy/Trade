@@ -13,27 +13,27 @@ export default function TradeHistoryHeader() {
     >
       <div>
         <div className="mb-2 flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
             <FiClock size={19} />
           </div>
 
-          <span className="text-sm font-medium text-blue-400">
+          <span className="text-sm font-medium text-blue-600">
             Trade History
           </span>
         </div>
 
-        <h1 className="text-2xl font-semibold text-white md:text-3xl">
+        <h1 className="text-2xl font-semibold text-slate-900 md:text-3xl">
           Trade History
         </h1>
 
-        <p className="mt-2 text-sm text-slate-400">
+        <p className="mt-2 text-sm text-slate-500">
           Review and analyze your recent trading activity.
         </p>
       </div>
 
       <button
         type="button"
-        className="flex w-fit items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70 px-4 py-2.5 text-sm font-medium text-slate-300 transition hover:border-blue-500/40 hover:bg-slate-800 hover:text-white"
+        className="flex w-fit items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-blue-300 hover:bg-slate-50 hover:text-blue-600"
       >
         <FiDownload size={16} />
         Export History

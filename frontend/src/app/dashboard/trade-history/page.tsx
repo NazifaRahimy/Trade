@@ -5,7 +5,7 @@ import TradeTable from "@/src/components/dashboard/trade-history/TradeTable";
 
 export default function TradeHistoryPage() {
   return (
-    <main className="min-h-screen bg-[#06101d] text-white">
+    <main className="min-h-screen text-black">
       <div className="mx-auto max-w-[1400px] px-5 py-7 md:px-8 lg:px-10">
         <TradeHistoryHeader />
 

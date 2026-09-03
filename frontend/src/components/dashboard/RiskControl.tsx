@@ -7,9 +7,9 @@ export default function RiskControl() {
     <motion.div
       initial={{opacity: 0, y: 20}}
       animate={{opacity: 1, y: 0}}
-      className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6"
+      className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
     >
-      <h2 className="text-lg font-bold text-white">Risk Control</h2>
+      <h2 className="text-lg font-bold text-slate-900">Risk Control</h2>
 
       <div className="mt-7 flex flex-col items-center">
         {/* Gauge */}
@@ -22,27 +22,35 @@ export default function RiskControl() {
             }}
           />
 
-          <div className="absolute left-5 top-5 h-46 w-46 rounded-full bg-slate-900" />
+          {/* Inner Circle */}
+          <div className="absolute left-5 top-5 h-46 w-46 rounded-full bg-white" />
 
           {/* Needle */}
-          <div className="absolute bottom-3 left-1/2 h-20 w-1 origin-bottom -translate-x-1/2 rotate-[35deg] rounded-full bg-white" />
+          <div className="absolute bottom-3 left-1/2 h-20 w-1 origin-bottom -translate-x-1/2 rotate-[35deg] rounded-full bg-slate-800" />
 
-          <div className="absolute bottom-0 left-1/2 h-4 w-4 -translate-x-1/2 rounded-full bg-slate-800 ring-2 ring-slate-600" />
+          {/* Needle Center */}
+          <div className="absolute bottom-0 left-1/2 h-4 w-4 -translate-x-1/2 rounded-full bg-slate-700 ring-2 ring-slate-300" />
         </div>
 
+        {/* Current Risk */}
         <div className="-mt-1 text-center">
-          <p className="text-2xl font-bold text-white">2.3%</p>
+          <p className="text-2xl font-bold text-slate-900">2.3%</p>
 
-          <p className="text-xs text-slate-400">Current Risk</p>
+          <p className="text-xs text-slate-500">Current Risk</p>
         </div>
 
-        <div className="mt-3 flex w-full justify-between text-xs text-slate-400">
+        {/* Labels */}
+        <div className="mt-3 flex w-full justify-between text-xs text-slate-500">
           <span>Low</span>
           <span>High</span>
         </div>
       </div>
 
-      <button className="mt-5 w-full rounded-lg bg-slate-800 py-3 text-sm font-semibold text-white hover:bg-slate-700">
+      {/* Button */}
+      <button
+        type="button"
+        className="mt-5 w-full rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
+      >
         Adjust Settings
       </button>
     </motion.div>

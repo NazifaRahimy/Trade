@@ -12,18 +12,18 @@ export default function SubscriptionHeader() {
       className="mb-7"
     >
       <div className="mb-2 flex items-center gap-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
           <FiCreditCard size={19} />
         </div>
 
-        <span className="text-sm font-medium text-blue-400">Subscription</span>
+        <span className="text-sm font-medium text-blue-600">Subscription</span>
       </div>
 
-      <h1 className="text-2xl font-semibold text-white md:text-3xl">
+      <h1 className="text-2xl font-semibold text-slate-900 md:text-3xl">
         Subscription
       </h1>
 
-      <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+      <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
         Manage your subscription and keep your trading account active.
       </p>
     </motion.div>

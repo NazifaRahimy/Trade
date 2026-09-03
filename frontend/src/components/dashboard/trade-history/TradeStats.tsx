@@ -14,28 +14,28 @@ const stats = [
     value: "128",
     change: "+12 this month",
     icon: FiActivity,
-    iconStyle: "bg-blue-500/10 text-blue-400",
+    iconStyle: "bg-blue-50 text-blue-600",
   },
   {
     title: "Winning Trades",
     value: "93",
     change: "72.7% win rate",
     icon: FiTrendingUp,
-    iconStyle: "bg-emerald-500/10 text-emerald-400",
+    iconStyle: "bg-emerald-50 text-emerald-600",
   },
   {
     title: "Total Profit",
     value: "$4,290.30",
     change: "+18.72%",
     icon: FiDollarSign,
-    iconStyle: "bg-purple-500/10 text-purple-400",
+    iconStyle: "bg-purple-50 text-purple-600",
   },
   {
     title: "Trading Volume",
     value: "24.85",
     change: "Lots traded",
     icon: FiBarChart2,
-    iconStyle: "bg-orange-500/10 text-orange-400",
+    iconStyle: "bg-orange-50 text-orange-600",
   },
 ];
 
@@ -54,17 +54,17 @@ export default function TradeStats() {
               duration: 0.4,
               delay: index * 0.08,
             }}
-            className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5"
+            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
           >
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-xs text-slate-500">{stat.title}</p>
 
-                <h3 className="mt-2 text-xl font-semibold text-white">
+                <h3 className="mt-2 text-xl font-semibold text-slate-900">
                   {stat.value}
                 </h3>
 
-                <p className="mt-2 text-xs text-emerald-400">{stat.change}</p>
+                <p className="mt-2 text-xs text-emerald-600">{stat.change}</p>
               </div>
 
               <div

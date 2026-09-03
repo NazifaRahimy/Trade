@@ -23,27 +23,32 @@ export default function DashboardCard({
       initial={{opacity: 0, y: 20}}
       animate={{opacity: 1, y: 0}}
       whileHover={{y: -4}}
-      className="rounded-2xl border border-slate-800 bg-slate-900 p-5 shadow-xl shadow-black/10"
+      className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
     >
       <div className="flex items-start justify-between">
         <div>
+          {/* Title */}
           <p className="text-sm text-slate-500">{title}</p>
 
-          <h3 className="mt-2 text-2xl font-bold text-white">{value}</h3>
+          {/* Value */}
+          <h3 className="mt-2 text-2xl font-bold text-slate-900">{value}</h3>
 
+          {/* Subtitle */}
           {subtitle && (
             <p className="mt-1 text-xs text-slate-500">{subtitle}</p>
           )}
         </div>
 
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+        {/* Icon */}
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
           <Icon className="text-xl" />
         </div>
       </div>
 
+      {/* Trend */}
       {trend && (
         <div className="mt-4">
-          <span className="text-xs font-medium text-emerald-400">{trend}</span>
+          <span className="text-xs font-medium text-emerald-600">{trend}</span>
         </div>
       )}
     </motion.div>

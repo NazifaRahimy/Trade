@@ -8,17 +8,22 @@ export default function PortfolioChart() {
     <motion.div
       initial={{opacity: 0, y: 20}}
       animate={{opacity: 1, y: 0}}
-      className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6"
+      className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
     >
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-white">Portfolio Growth</h2>
+        <h2 className="text-lg font-bold text-slate-900">Portfolio Growth</h2>
 
-        <button className="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800/60 px-3 py-2 text-xs text-slate-300">
+        <button
+          type="button"
+          className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+        >
           Last 30 Days
-          <FiChevronDown />
+          <FiChevronDown className="text-slate-400" />
         </button>
       </div>
 
+      {/* Chart */}
       <div className="mt-7 h-64 w-full">
         <svg
           viewBox="0 0 800 260"
@@ -34,7 +39,7 @@ export default function PortfolioChart() {
               x2="800"
               y2={y}
               stroke="currentColor"
-              className="text-slate-800"
+              className="text-slate-200"
             />
           ))}
 
@@ -103,8 +108,8 @@ export default function PortfolioChart() {
             "
             fill="none"
             stroke="currentColor"
-            className="text-blue-500"
-            strokeWidth="4"
+            className="text-blue-600"
+            strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
@@ -115,11 +120,12 @@ export default function PortfolioChart() {
             cy="60"
             r="6"
             fill="currentColor"
-            className="text-blue-400"
+            className="text-blue-600"
           />
         </svg>
       </div>
 
+      {/* Dates */}
       <div className="mt-2 flex justify-between text-xs text-slate-500">
         <span>Apr 20</span>
         <span>Apr 27</span>
