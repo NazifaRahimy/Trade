@@ -14,28 +14,28 @@ const stats = [
     value: "$24,790.50",
     description: "Current account balance",
     icon: FiDollarSign,
-    iconClass: "bg-blue-500/10 text-blue-400",
+    iconClass: "bg-blue-50 text-blue-600",
   },
   {
     title: "Total Profit",
     value: "$4,290.30",
     description: "+18.72% this month",
     icon: FiTrendingUp,
-    iconClass: "bg-emerald-500/10 text-emerald-400",
+    iconClass: "bg-emerald-50 text-emerald-600",
   },
   {
     title: "Total Loss",
     value: "$1,120.40",
     description: "From closed positions",
     icon: FiTrendingDown,
-    iconClass: "bg-red-500/10 text-red-400",
+    iconClass: "bg-red-50 text-red-500",
   },
   {
     title: "Win Rate",
     value: "72.8%",
     description: "+4.65% improvement",
     icon: FiPercent,
-    iconClass: "bg-purple-500/10 text-purple-400",
+    iconClass: "bg-purple-50 text-purple-600",
   },
 ];
 
@@ -51,13 +51,13 @@ export default function AccountOverview() {
             initial={{opacity: 0, y: 20}}
             animate={{opacity: 1, y: 0}}
             transition={{delay: index * 0.08}}
-            className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-lg"
+            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm text-slate-400">{stat.title}</p>
+                <p className="text-sm text-slate-500">{stat.title}</p>
 
-                <h3 className="mt-3 text-2xl font-bold text-white">
+                <h3 className="mt-3 text-2xl font-bold text-slate-900">
                   {stat.value}
                 </h3>
 

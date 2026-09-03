@@ -6,7 +6,7 @@ import SecurityNotice from "@/src/components/dashboard/broker/SecurityNotice";
 
 export default function BrokerPage() {
   return (
-    <main className="min-h-screen bg-[#06101d] text-white">
+    <main className="min-h-screen  text-black">
       <div className="mx-auto max-w-[1400px] px-5 py-7 md:px-8 lg:px-10 ">
         <BrokerHeader />
 

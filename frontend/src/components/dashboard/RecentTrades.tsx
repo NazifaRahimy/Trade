@@ -34,28 +34,38 @@ export default function RecentTrades() {
     <motion.div
       initial={{opacity: 0, y: 20}}
       animate={{opacity: 1, y: 0}}
-      className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900"
+      className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
     >
-      <div className="flex items-center justify-between border-b border-slate-800 p-6">
+      {/* Header */}
+      <div className="flex items-center justify-between border-b border-slate-200 p-6">
         <div>
           <p className="text-sm text-slate-500">Activity</p>
 
-          <h3 className="mt-1 text-xl font-bold text-white">Recent Trades</h3>
+          <h3 className="mt-1 text-xl font-bold text-slate-900">
+            Recent Trades
+          </h3>
         </div>
 
-        <button className="text-xs font-semibold text-blue-400 hover:text-blue-300">
+        <button
+          type="button"
+          className="text-xs font-semibold text-blue-600 transition hover:text-blue-700"
+        >
           View All
         </button>
       </div>
 
+      {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[600px]">
           <thead>
-            <tr className="border-b border-slate-800 text-left text-xs text-slate-500">
-              <th className="px-6 py-4">Asset</th>
-              <th className="px-6 py-4">Type</th>
-              <th className="px-6 py-4">Size</th>
-              <th className="px-6 py-4">Result</th>
+            <tr className="border-b border-slate-200 text-left text-xs text-slate-500">
+              <th className="px-6 py-4 font-medium">Asset</th>
+
+              <th className="px-6 py-4 font-medium">Type</th>
+
+              <th className="px-6 py-4 font-medium">Size</th>
+
+              <th className="px-6 py-4 font-medium">Result</th>
             </tr>
           </thead>
 
@@ -63,29 +73,33 @@ export default function RecentTrades() {
             {trades.map((trade) => (
               <tr
                 key={trade.pair}
-                className="border-b border-slate-800/70 last:border-0"
+                className="border-b border-slate-100 transition last:border-0 hover:bg-slate-50"
               >
-                <td className="px-6 py-4 text-sm font-semibold text-white">
+                {/* Asset */}
+                <td className="px-6 py-4 text-sm font-semibold text-slate-900">
                   {trade.pair}
                 </td>
 
+                {/* Type */}
                 <td
                   className={`px-6 py-4 text-xs font-bold ${
-                    trade.type === "BUY" ? "text-emerald-400" : "text-red-400"
+                    trade.type === "BUY" ? "text-emerald-600" : "text-red-500"
                   }`}
                 >
                   {trade.type}
                 </td>
 
-                <td className="px-6 py-4 text-sm text-slate-400">
+                {/* Size */}
+                <td className="px-6 py-4 text-sm text-slate-500">
                   {trade.size}
                 </td>
 
+                {/* Result */}
                 <td
                   className={`px-6 py-4 text-sm font-semibold ${
                     trade.result.startsWith("+")
-                      ? "text-emerald-400"
-                      : "text-red-400"
+                      ? "text-emerald-600"
+                      : "text-red-500"
                   }`}
                 >
                   {trade.result}

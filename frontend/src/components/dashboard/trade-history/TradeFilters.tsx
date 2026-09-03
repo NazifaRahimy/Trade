@@ -4,19 +4,19 @@ import {FiCalendar, FiFilter, FiSearch} from "react-icons/fi";
 
 export default function TradeFilters() {
   return (
-    <div className="border-b border-slate-800 p-5">
+    <div className="border-b border-slate-200 p-5">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
         {/* Search */}
         <div className="relative w-full xl:max-w-xs">
           <FiSearch
             size={17}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
           />
 
           <input
             type="text"
             placeholder="Search pair..."
-            className="w-full rounded-xl border border-slate-700 bg-slate-950/60 py-2.5 pl-10 pr-4 text-sm text-white outline-none placeholder:text-slate-600 transition focus:border-blue-500"
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 outline-none placeholder:text-slate-400 transition focus:border-blue-500"
           />
         </div>
 
@@ -25,12 +25,12 @@ export default function TradeFilters() {
           <div className="relative">
             <FiCalendar
               size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
             />
 
             <select
               defaultValue="30"
-              className="w-full appearance-none rounded-xl border border-slate-700 bg-slate-950/60 py-2.5 pl-9 pr-8 text-sm text-slate-300 outline-none focus:border-blue-500"
+              className="w-full appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-8 text-sm text-slate-700 outline-none focus:border-blue-500"
             >
               <option value="7">Last 7 Days</option>
               <option value="30">Last 30 Days</option>
@@ -42,7 +42,7 @@ export default function TradeFilters() {
           {/* Type */}
           <select
             defaultValue="all"
-            className="rounded-xl border border-slate-700 bg-slate-950/60 px-4 py-2.5 text-sm text-slate-300 outline-none focus:border-blue-500"
+            className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none focus:border-blue-500"
           >
             <option value="all">All Types</option>
             <option value="buy">Buy</option>
@@ -52,7 +52,7 @@ export default function TradeFilters() {
           {/* Status */}
           <select
             defaultValue="all"
-            className="rounded-xl border border-slate-700 bg-slate-950/60 px-4 py-2.5 text-sm text-slate-300 outline-none focus:border-blue-500"
+            className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none focus:border-blue-500"
           >
             <option value="all">All Status</option>
             <option value="closed">Closed</option>

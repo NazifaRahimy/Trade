@@ -14,29 +14,31 @@ export default function BrokerHeader() {
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <div className="mb-2 flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
               <FiLink size={19} />
             </div>
 
-            <span className="text-sm font-medium text-blue-400">
+            <span className="text-sm font-medium text-blue-600">
               Broker Connection
             </span>
           </div>
 
-          <h1 className="text-2xl font-semibold text-white md:text-3xl">
+          <h1 className="text-2xl font-semibold text-slate-900 md:text-3xl">
             Connect Your Broker
           </h1>
 
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
             Connect your trading account to manage your trades and monitor your
             portfolio from one place.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-4 py-2.5">
-          <FiShield className="text-emerald-400" size={17} />
+        <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2.5">
+          <FiShield className="text-emerald-600" size={17} />
 
-          <span className="text-xs text-slate-300">Secure Connection</span>
+          <span className="text-xs font-medium text-emerald-700">
+            Secure Connection
+          </span>
         </div>
       </div>
     </motion.div>

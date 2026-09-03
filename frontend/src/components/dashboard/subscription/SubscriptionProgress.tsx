@@ -14,11 +14,11 @@ export default function SubscriptionProgress() {
       initial={{opacity: 0, y: 20}}
       animate={{opacity: 1, y: 0}}
       transition={{duration: 0.45, delay: 0.1}}
-      className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 md:p-6"
+      className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-base font-semibold text-white">
+          <h2 className="text-base font-semibold text-slate-900">
             Subscription Status
           </h2>
 
@@ -27,7 +27,7 @@ export default function SubscriptionProgress() {
           </p>
         </div>
 
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500/10 text-orange-400">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
           <FiClock size={19} />
         </div>
       </div>
@@ -35,7 +35,9 @@ export default function SubscriptionProgress() {
       <div className="mt-7">
         <div className="flex items-end justify-between">
           <div>
-            <p className="text-3xl font-semibold text-white">{remainingDays}</p>
+            <p className="text-3xl font-semibold text-slate-900">
+              {remainingDays}
+            </p>
 
             <p className="mt-1 text-xs text-slate-500">days remaining</p>
           </div>
@@ -45,12 +47,12 @@ export default function SubscriptionProgress() {
           </p>
         </div>
 
-        <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-800">
+        <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200">
           <motion.div
             initial={{width: 0}}
             animate={{width: `${progress}%`}}
             transition={{duration: 0.8, delay: 0.3}}
-            className="h-full rounded-full bg-blue-500"
+            className="h-full rounded-full bg-blue-600"
           />
         </div>
 

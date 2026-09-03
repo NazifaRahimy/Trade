@@ -87,13 +87,13 @@ export default function TradeTable() {
       initial={{opacity: 0, y: 20}}
       animate={{opacity: 1, y: 0}}
       transition={{duration: 0.5, delay: 0.2}}
-      className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/70"
+      className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
     >
       {/* Header */}
       <div className="p-5">
         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-base font-semibold text-white">
+            <h2 className="text-base font-semibold text-slate-900">
               Recent Trades
             </h2>
 
@@ -110,7 +110,7 @@ export default function TradeTable() {
       <div className="overflow-x-auto">
         <table className="w-full min-w-[950px] border-collapse">
           <thead>
-            <tr className="border-y border-slate-800 bg-slate-950/30 text-left">
+            <tr className="border-y border-slate-200 bg-slate-50 text-left">
               <th className="px-5 py-3 text-xs font-medium text-slate-500">
                 Pair
               </th>
@@ -159,11 +159,11 @@ export default function TradeTable() {
                     duration: 0.3,
                     delay: 0.25 + index * 0.05,
                   }}
-                  className="border-b border-slate-800/70 transition hover:bg-slate-800/20"
+                  className="border-b border-slate-200 transition hover:bg-slate-50"
                 >
                   {/* Pair */}
                   <td className="px-5 py-4">
-                    <span className="text-sm font-medium text-white">
+                    <span className="text-sm font-medium text-slate-900">
                       {trade.pair}
                     </span>
                   </td>
@@ -172,7 +172,7 @@ export default function TradeTable() {
                   <td className="px-4 py-4">
                     <span
                       className={`inline-flex items-center gap-1.5 text-sm font-medium ${
-                        isBuy ? "text-blue-400" : "text-red-400"
+                        isBuy ? "text-blue-600" : "text-red-600"
                       }`}
                     >
                       {isBuy ? (
@@ -186,17 +186,17 @@ export default function TradeTable() {
                   </td>
 
                   {/* Volume */}
-                  <td className="px-4 py-4 text-sm text-slate-300">
+                  <td className="px-4 py-4 text-sm text-slate-700">
                     {trade.volume}
                   </td>
 
                   {/* Open */}
-                  <td className="px-4 py-4 text-sm text-slate-400">
+                  <td className="px-4 py-4 text-sm text-slate-600">
                     {trade.openPrice}
                   </td>
 
                   {/* Close */}
-                  <td className="px-4 py-4 text-sm text-slate-400">
+                  <td className="px-4 py-4 text-sm text-slate-600">
                     {trade.closePrice}
                   </td>
 
@@ -204,7 +204,7 @@ export default function TradeTable() {
                   <td className="px-4 py-4">
                     <span
                       className={`text-sm font-medium ${
-                        isProfit ? "text-emerald-400" : "text-red-400"
+                        isProfit ? "text-emerald-600" : "text-red-600"
                       }`}
                     >
                       {trade.profit}
@@ -213,7 +213,7 @@ export default function TradeTable() {
 
                   {/* Status */}
                   <td className="px-4 py-4">
-                    <span className="inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-400">
+                    <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-600">
                       {trade.status}
                     </span>
                   </td>
@@ -230,14 +230,14 @@ export default function TradeTable() {
       </div>
 
       {/* Pagination */}
-      <div className="flex flex-col gap-3 border-t border-slate-800 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 border-t border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-slate-500">Showing 1–7 of 128 trades</p>
 
         <div className="flex items-center gap-2">
           <button
             type="button"
             aria-label="Previous page"
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700 bg-slate-900 text-slate-500 transition hover:border-slate-600 hover:text-white"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700"
           >
             <FiChevronLeft size={16} />
           </button>
@@ -251,14 +251,14 @@ export default function TradeTable() {
 
           <button
             type="button"
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700 bg-slate-900 text-sm text-slate-400 transition hover:text-white"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-sm text-slate-500 transition hover:bg-slate-50 hover:text-slate-900"
           >
             2
           </button>
 
           <button
             type="button"
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700 bg-slate-900 text-sm text-slate-400 transition hover:text-white"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-sm text-slate-500 transition hover:bg-slate-50 hover:text-slate-900"
           >
             3
           </button>
@@ -266,7 +266,7 @@ export default function TradeTable() {
           <button
             type="button"
             aria-label="Next page"
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700 bg-slate-900 text-slate-500 transition hover:border-slate-600 hover:text-white"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700"
           >
             <FiChevronRight size={16} />
           </button>
