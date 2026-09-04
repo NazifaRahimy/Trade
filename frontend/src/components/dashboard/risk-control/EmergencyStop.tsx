@@ -2,9 +2,18 @@
 
 import {FiPauseCircle, FiPower} from "react-icons/fi";
 
-export default function EmergencyStop() {
+type EmergencyStopProps = {
+  botActive: boolean;
+  onToggleBot: () => void;
+};
+
+export default function EmergencyStop({
+  botActive,
+  onToggleBot,
+}: EmergencyStopProps) {
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+      {/* Header */}
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-50 text-red-600">
           <FiPauseCircle size={22} />
@@ -17,24 +26,49 @@ export default function EmergencyStop() {
         Control your trading bot instantly.
       </p>
 
-      {/* Bot Controls */}
-      <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <button
-          type="button"
-          className="flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 transition hover:bg-red-100"
-        >
-          <FiPauseCircle size={18} />
-          Turn Off Bot
-        </button>
+      {/* Bot Status */}
+      <div className="mt-6 rounded-xl bg-slate-50 p-4">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-slate-600">Bot Status</span>
 
-        <button
-          type="button"
-          className="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-emerald-700"
-        >
-          <FiPower size={18} />
-          Turn On Bot
-        </button>
+          <span
+            className={`flex items-center gap-2 text-sm font-semibold ${
+              botActive ? "text-emerald-600" : "text-red-600"
+            }`}
+          >
+            <span
+              className={`h-2.5 w-2.5 rounded-full ${
+                botActive ? "bg-emerald-500" : "bg-red-500"
+              }`}
+            />
+
+            {botActive ? "Running" : "Stopped"}
+          </span>
+        </div>
       </div>
+
+      {/* Toggle Button */}
+      <button
+        type="button"
+        onClick={onToggleBot}
+        className={`mt-5 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-white transition ${
+          botActive
+            ? "bg-red-600 hover:bg-red-700"
+            : "bg-emerald-600 hover:bg-emerald-700"
+        }`}
+      >
+        {botActive ? (
+          <>
+            <FiPauseCircle size={18} />
+            Turn Off Bot
+          </>
+        ) : (
+          <>
+            <FiPower size={18} />
+            Turn On Bot
+          </>
+        )}
+      </button>
     </div>
   );
 }
