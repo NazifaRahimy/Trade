@@ -1,11 +1,18 @@
 "use client";
 
-import {useState} from "react";
 import {FiSave, FiInfo} from "react-icons/fi";
 import {motion} from "framer-motion";
+import {useState} from "react";
 
-export default function RiskSettings() {
-  const [totalRisk, setTotalRisk] = useState(20);
+type RiskSettingsProps = {
+  totalRisk: number;
+  setTotalRisk: (value: number) => void;
+};
+
+export default function RiskSettings({
+  totalRisk,
+  setTotalRisk,
+}: RiskSettingsProps) {
   const [firstEntry, setFirstEntry] = useState(10);
   const [secondEntry, setSecondEntry] = useState(10);
   const [maxOpenTrades, setMaxOpenTrades] = useState(7);
@@ -126,6 +133,7 @@ export default function RiskSettings() {
 
           <div className="mt-2 flex items-center gap-2 text-xs text-slate-500">
             <FiInfo />
+
             <span>Trade volume must be between 0.01 and 3.00</span>
           </div>
         </div>
@@ -145,7 +153,7 @@ export default function RiskSettings() {
           />
         </div>
 
-        {/* Save Button */}
+        {/* Save */}
         <motion.button
           whileHover={{scale: 1.01}}
           whileTap={{scale: 0.98}}
