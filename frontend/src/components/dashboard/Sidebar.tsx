@@ -30,16 +30,8 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
             <Image
               src={Logo}
               alt="AMIRI Logo"
-              className="h-10 w-20 object-contain"
+              className="h-10 w-20 object-contain md:w-[120px]"
             />
-
-            <div>
-              <h1 className="font-bold text-slate-900">AMIRI</h1>
-
-              <p className="text-[10px] uppercase tracking-wider text-slate-500">
-                Finance Academy
-              </p>
-            </div>
           </div>
 
           {/* Navigation */}
