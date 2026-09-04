@@ -1,5 +1,8 @@
 import type {Metadata} from "next";
-
+import ContactFrom from "@/src/components/contact/ContactForm";
+import ContactFaq from "@/src/components/contact/ContactFaq";
+import ContactInfo from "@/src/components/contact/ContactInfo";
+import ContactHero from "@/src/components/contact/ContactHero";
 export const metadata: Metadata = {
   title: "Contact",
   description:
@@ -9,10 +12,10 @@ export const metadata: Metadata = {
 const Contact = () => {
   return (
     <div>
-      <h1>تماس با ما</h1>
-      <p>
-        برای دریافت اطلاعات بیشتر و ارتباط با تیم پشتیبانی با ما در تماس باشید.
-      </p>
+      <ContactHero />
+      <ContactInfo />
+      <ContactFrom />
+      <ContactFaq />
     </div>
   );
 };
