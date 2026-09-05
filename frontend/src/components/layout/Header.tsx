@@ -1,16 +1,12 @@
 "use client";
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {usePathname} from "next/navigation";
 import {FiMenu, FiX} from "react-icons/fi";
 
 import logo from "../../assets/images/logo.png";
-
-type HeaderProps = {
-  isLoggedIn?: boolean;
-};
 
 const navItems = [
   {
@@ -27,9 +23,29 @@ const navItems = [
   },
 ];
 
-export default function Header({isLoggedIn = false}: HeaderProps) {
+export default function Header() {
   const pathname = usePathname();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("auth-token");
+
+      setIsLoggedIn(Boolean(token));
+    };
+
+    // Check when Header loads
+    checkAuth();
+
+    // Listen for login/register/google login
+    window.addEventListener("auth-change", checkAuth);
+
+    return () => {
+      window.removeEventListener("auth-change", checkAuth);
+    };
+  }, []);
 
   const isActive = (href: string) => {
     if (href === "/") {
@@ -44,7 +60,6 @@ export default function Header({isLoggedIn = false}: HeaderProps) {
   };
 
   const toggleMenu = () => {
-    console.log("BUTTON CLICK");
     setIsMenuOpen((prev) => !prev);
   };
 
@@ -102,20 +117,17 @@ export default function Header({isLoggedIn = false}: HeaderProps) {
                 Dashboard
               </Link>
             ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="rounded-lg border border-blue-600 px-6 py-2.5 text-sm font-medium text-blue-600 transition hover:bg-blue-50"
-                >
-                  Login
-                </Link>
-              </>
+              <Link
+                href="/login"
+                className="rounded-lg border border-blue-600 px-6 py-2.5 text-sm font-medium text-blue-600 transition hover:bg-blue-50"
+              >
+                Login
+              </Link>
             )}
           </div>
 
           {/* Mobile / Tablet Actions */}
           <div className="flex items-center gap-2 md:hidden">
-            {/* Hamburger */}
             <button
               type="button"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -155,25 +167,13 @@ export default function Header({isLoggedIn = false}: HeaderProps) {
                 );
               })}
 
-              {!isLoggedIn && (
-                <Link
-                  href="/login"
-                  onClick={closeMenu}
-                  className="mx-4 mt-4 block rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-medium text-white hover:bg-blue-700"
-                >
-                  Login
-                </Link>
-              )}
-
-              {isLoggedIn && (
-                <Link
-                  href="/dashboard"
-                  onClick={closeMenu}
-                  className="mx-4 mt-4 block rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-medium text-white hover:bg-blue-700"
-                >
-                  Dashboard
-                </Link>
-              )}
+              <Link
+                href={isLoggedIn ? "/dashboard" : "/login"}
+                onClick={closeMenu}
+                className="mx-4 mt-4 block rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-medium text-white hover:bg-blue-700"
+              >
+                {isLoggedIn ? "Dashboard" : "Login"}
+              </Link>
             </nav>
           </div>
         )}

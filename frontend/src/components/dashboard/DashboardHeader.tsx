@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import {useEffect, useState} from "react";
 import {motion} from "framer-motion";
 import {FiBell, FiChevronDown, FiMenu} from "react-icons/fi";
 
@@ -7,7 +9,59 @@ type DashboardHeaderProps = {
   onMenuClick: () => void;
 };
 
+type UserData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  photo: string;
+};
+
 export default function DashboardHeader({onMenuClick}: DashboardHeaderProps) {
+  const [user, setUser] = useState<UserData>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    photo: "",
+  });
+
+  // ==========================================
+  // GET USER DATA
+  // ==========================================
+  useEffect(() => {
+    const loadUser = () => {
+      const firstName = localStorage.getItem("auth-firstName") || "";
+      const lastName = localStorage.getItem("auth-lastName") || "";
+      const email = localStorage.getItem("auth-email") || "";
+      const photo = localStorage.getItem("auth-photo") || "";
+
+      setUser({
+        firstName,
+        lastName,
+        email,
+        photo,
+      });
+    };
+
+    loadUser();
+
+    window.addEventListener("auth-change", loadUser);
+
+    return () => {
+      window.removeEventListener("auth-change", loadUser);
+    };
+  }, []);
+
+  // ==========================================
+  // USER INFO
+  // ==========================================
+  const fullName = `${user.firstName} ${user.lastName}`.trim();
+
+  const userInitial = user.firstName
+    ? user.firstName.charAt(0).toUpperCase()
+    : user.email
+      ? user.email.charAt(0).toUpperCase()
+      : "U";
+
   return (
     <header className="border-b border-slate-200 bg-white px-5 py-4 text-slate-900 lg:px-8">
       <div className="flex items-center justify-between gap-4 lg:ml-64">
@@ -21,7 +75,7 @@ export default function DashboardHeader({onMenuClick}: DashboardHeaderProps) {
 
             <div className="mt-1 flex items-center gap-3">
               <h1 className="text-lg font-bold text-slate-900 lg:text-2xl">
-                Ebrahim Amiri
+                {fullName || "User"}
               </h1>
 
               <span className="rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-600 lg:px-3">
@@ -56,17 +110,31 @@ export default function DashboardHeader({onMenuClick}: DashboardHeaderProps) {
 
           {/* Profile */}
           <button type="button" className="hidden items-center gap-3 md:flex">
+            {/* Profile Image / Initial */}
             <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-slate-200 bg-slate-100">
-              <span className="text-sm font-bold text-slate-700">EA</span>
+              {user.photo ? (
+                <Image
+                  src={user.photo}
+                  alt={fullName || "User"}
+                  width={44}
+                  height={44}
+                  className="h-11 w-11 object-cover"
+                />
+              ) : (
+                <span className="text-sm font-bold text-slate-700">
+                  {userInitial}
+                </span>
+              )}
             </div>
 
+            {/* User Name */}
             <div className="hidden text-left md:block">
               <p className="text-sm font-semibold text-slate-900">
-                Ebrahim Amiri
+                {fullName || "User"}
               </p>
             </div>
 
-            <FiChevronDown className="hidden text-slate-400 md:block" />
+            {/* <FiChevronDown className="hidden text-slate-400 md:block" /> */}
           </button>
         </div>
       </div>
