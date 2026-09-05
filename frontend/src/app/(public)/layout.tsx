@@ -2,6 +2,7 @@ import type {Metadata} from "next";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import "../../app/globals.css";
+import {html} from "motion/react-m";
 export const metadata: Metadata = {
   title: {
     default: "Trade-platform | Home",
@@ -16,14 +17,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-        <Header />
+    <>
+      <Header />
 
-        <main>{children}</main>
+      <main>{children}</main>
 
-        <Footer />
-      </body>
-    </html>
+      <Footer />
+    </>
   );
 }

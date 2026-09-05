@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
+import {useEffect, useState} from "react";
 import {motion, AnimatePresence} from "framer-motion";
 import {FiLogOut, FiX} from "react-icons/fi";
 
@@ -14,8 +15,78 @@ type SidebarProps = {
   onClose: () => void;
 };
 
+type UserData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  photo: string;
+};
+
 export default function Sidebar({isOpen, onClose}: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const [user, setUser] = useState<UserData>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    photo: "",
+  });
+
+  // ==========================================
+  // GET USER DATA
+  // ==========================================
+  useEffect(() => {
+    const loadUser = () => {
+      const firstName = localStorage.getItem("auth-firstName") || "";
+      const lastName = localStorage.getItem("auth-lastName") || "";
+      const email = localStorage.getItem("auth-email") || "";
+      const photo = localStorage.getItem("auth-photo") || "";
+
+      setUser({
+        firstName,
+        lastName,
+        email,
+        photo,
+      });
+    };
+
+    loadUser();
+
+    window.addEventListener("auth-change", loadUser);
+
+    return () => {
+      window.removeEventListener("auth-change", loadUser);
+    };
+  }, []);
+
+  // ==========================================
+  // USER DISPLAY DATA
+  // ==========================================
+  const fullName = `${user.firstName} ${user.lastName}`.trim();
+
+  const userInitial = user.firstName
+    ? user.firstName.charAt(0).toUpperCase()
+    : user.email
+      ? user.email.charAt(0).toUpperCase()
+      : "U";
+
+  // ==========================================
+  // LOGOUT
+  // ==========================================
+  const handleLogout = () => {
+    localStorage.removeItem("auth-token");
+    localStorage.removeItem("auth-firstName");
+    localStorage.removeItem("auth-lastName");
+    localStorage.removeItem("auth-email");
+    localStorage.removeItem("auth-photo");
+
+    window.dispatchEvent(new Event("auth-change"));
+
+    onClose();
+
+    router.push("/login");
+  };
 
   return (
     <>
@@ -55,7 +126,6 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
                     }`}
                   >
                     <Icon className="text-lg" />
-
                     <span>{item.label}</span>
                   </motion.div>
                 </Link>
@@ -66,21 +136,37 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
           {/* User */}
           <div className="border-t border-slate-200 p-4">
             <div className="mb-3 flex items-center gap-3 rounded-xl bg-slate-50 p-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 font-bold text-white">
-                EA
-              </div>
+              {/* Profile Image / Initial */}
+              {user.photo ? (
+                <Image
+                  src={user.photo}
+                  alt={fullName || "User"}
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 shrink-0 rounded-full object-cover"
+                />
+              ) : (
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 font-bold text-white">
+                  {userInitial}
+                </div>
+              )}
 
+              {/* User Info */}
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold text-slate-900">
-                  Ebrahim Amiri
+                  {fullName || "User"}
                 </p>
 
-                <p className="text-xs text-slate-500">Premium Member</p>
+                <p className="truncate text-xs text-slate-500">
+                  {user.email || "Member"}
+                </p>
               </div>
             </div>
 
+            {/* Logout */}
             <button
               type="button"
+              onClick={handleLogout}
               className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-red-50 hover:text-red-600"
             >
               <FiLogOut />
@@ -181,21 +267,37 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
                 {/* Mobile User */}
                 <div className="shrink-0 border-t border-slate-200 p-4">
                   <div className="mb-3 flex items-center gap-3 rounded-xl bg-slate-50 p-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 font-bold text-white">
-                      EA
-                    </div>
+                    {/* Profile Image / Initial */}
+                    {user.photo ? (
+                      <Image
+                        src={user.photo}
+                        alt={fullName || "User"}
+                        width={40}
+                        height={40}
+                        className="h-10 w-10 shrink-0 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 font-bold text-white">
+                        {userInitial}
+                      </div>
+                    )}
 
+                    {/* User Info */}
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold text-slate-900">
-                        Ebrahim Amiri
+                        {fullName || "User"}
                       </p>
 
-                      <p className="text-xs text-slate-500">Premium Member</p>
+                      <p className="truncate text-xs text-slate-500">
+                        {user.email || "Member"}
+                      </p>
                     </div>
                   </div>
 
+                  {/* Logout */}
                   <button
                     type="button"
+                    onClick={handleLogout}
                     className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-red-50 hover:text-red-600"
                   >
                     <FiLogOut />
