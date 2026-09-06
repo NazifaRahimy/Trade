@@ -56,8 +56,8 @@ export default function Features() {
                 whileInView={{opacity: 1, y: 0}}
                 viewport={{once: true}}
                 transition={{delay: index * 0.1}}
-                whileHover={{y: -6}}
-                className="rounded-2xl border border-slate-100 bg-white p-7 text-center shadow-sm transition-shadow hover:shadow-xl"
+                whileHover={{y: -6, scale: 1.01}}
+                className="rounded-2xl border border-slate-100 bg-white p-7 text-center shadow-sm transition-all duration-300 hover:border-blue-100 hover:shadow-xl"
               >
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-2xl text-blue-600">
                   <Icon />

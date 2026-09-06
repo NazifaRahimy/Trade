@@ -45,16 +45,22 @@ export default function Stats() {
           return (
             <motion.div
               key={stat.value}
-              initial={{opacity: 0, scale: 0.9}}
-              whileInView={{opacity: 1, scale: 1}}
-              viewport={{once: true}}
-              transition={{delay: index * 0.1}}
+              initial={{opacity: 0, y: 10}}
+              whileInView={{opacity: 1, y: 0}}
+              viewport={{once: true, amount: 0.3}}
+              transition={{
+                duration: 0.45,
+                delay: index * 0.08,
+              }}
               className="flex items-center justify-center gap-3"
             >
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+              <motion.div
+                whileHover={{scale: 1.1, rotate: 4}}
+                transition={{duration: 0.2}}
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 transition-colors duration-300 group-hover:bg-blue-600 group-hover:text-white"
+              >
                 <Icon />
-              </div>
-
+              </motion.div>
               <div>
                 <p className="font-black text-slate-900">{stat.value}</p>
 
