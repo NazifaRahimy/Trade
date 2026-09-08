@@ -1,20 +1,17 @@
-import type {Metadata} from "next";
+import AboutHero from "@/src/components/about/AboutHero";
+import AboutStory from "@/src/components/about/AboutStory";
+import AboutExpertise from "@/src/components/about/AboutExpertise";
+import AboutServices from "@/src/components/about/AboutServices";
+import AboutQuote from "@/src/components/about/AboutQuote";
 
-export const metadata: Metadata = {
-  title: "About",
-  description: "Learn more about Trade-platform and our services.",
-};
-
-const About = () => {
+export default function AboutPage() {
   return (
-    <div>
-      <h1>درباره ما</h1>
-      <p>
-        آکادمی مالی امیری با هدف آموزش و توسعه مهارت‌های معامله‌گری فعالیت
-        می‌کند.
-      </p>
-    </div>
+    <main>
+      <AboutHero />
+      <AboutStory />
+      <AboutExpertise />
+      <AboutServices />
+      <AboutQuote />
+    </main>
   );
-};
-
-export default About;
+}
