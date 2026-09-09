@@ -1,5 +1,5 @@
 "use client";
-
+import { registerUser } from "../../lib/api";
 import {useState} from "react";
 import Link from "next/link";
 import {motion} from "framer-motion";
@@ -29,44 +29,38 @@ export default function RegisterForm() {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+ // 👈 این خط را در بالاترین بخش فایل RegisterForm.tsx خود ایمپورت کنید:
 
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
-      return;
+
+// 👈 این تابع را جایگزین تابع handleSubmit قبلی کنید:
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  if (formData.password !== formData.confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    // 🚀 فراخوانی مستقیم تابع ثبت‌نام بدون درگیر شدن با کدهای پیچیده شبکه
+    await registerUser(formData.email, formData.password);
+
+    alert("ثبت‌نام شما با موفقیت انجام شد. لطفا وارد حساب خود شوید.");
+    window.location.href = "/login";
+  } catch (error: any) {
+    console.error("Registration Error:", error);
+    if (error.response && error.response.data) {
+      alert("خطا در ثبت‌نام: " + JSON.stringify(error.response.data));
+    } else {
+      alert("خطا در ارتباط با سرور. مطمئن شوید سرور جنگو (پورت 8000) روشن است.");
     }
+  } finally {
+    setLoading(false);
+  }
+};
 
-    try {
-      setLoading(true);
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        },
-      );
-
-      const result = await response.json();
-
-      console.log(result);
-      if (!response.ok) {
-        alert(result.message || "Registration failed");
-        return;
-      }
-
-      alert("Registration successful. Please login.");
-      window.location.href = "/login";
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <motion.div

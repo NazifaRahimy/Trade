@@ -38,32 +38,33 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
   // ==========================================
   useEffect(() => {
     const loadUser = () => {
-      const firstName = localStorage.getItem("auth-firstName") || "";
-      const lastName = localStorage.getItem("auth-lastName") || "";
-      const email = localStorage.getItem("auth-email") || "";
-      const photo = localStorage.getItem("auth-photo") || "";
+      // خواندن مستقیم و بدون واسطه از حافظه مرورگر
+      const storedUsername = localStorage.getItem('auth-username') || 'User';
+      const storedEmail = localStorage.getItem('auth-email') || '';
+      const storedPhoto = localStorage.getItem('auth-photo') || '';
 
       setUser({
-        firstName,
-        lastName,
-        email,
-        photo,
+        firstName: storedUsername, // نام کاربری را مستقیم به فیلد اصلی پاس می‌دهیم
+        lastName: '',
+        email: storedEmail,
+        photo: storedPhoto,
       });
     };
 
     loadUser();
-
-    window.addEventListener("auth-change", loadUser);
-
+    
+    // گوش دادن به تغییرات وضعیت احراز هویت برای به‌روزرسانی آنی
+    window.addEventListener('auth-change', loadUser);
     return () => {
-      window.removeEventListener("auth-change", loadUser);
+      window.removeEventListener('auth-change', loadUser);
     };
   }, []);
+
 
   // ==========================================
   // USER DISPLAY DATA
   // ==========================================
-  const fullName = `${user.firstName} ${user.lastName}`.trim();
+  const fullName = user.firstName ? user.firstName : 'User';
 
   const userInitial = user.firstName
     ? user.firstName.charAt(0).toUpperCase()

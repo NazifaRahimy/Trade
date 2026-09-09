@@ -14,8 +14,7 @@ export default function TradingIllustration() {
         <linearGradient id="coinSide" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#2563eb" />
           <stop offset="100%" stopColor="#0f172a" />
-        </linearGradient>
-
+        </linearGradient>---------
         <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.35" />
           <stop offset="100%" stopColor="#38bdf8" stopOpacity="0" />
