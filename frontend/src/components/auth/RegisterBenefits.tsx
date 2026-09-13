@@ -48,8 +48,8 @@ export default function RegisterBenefits() {
           <Image
             src={Logo.src}
             alt="Amiri Finance Academy"
-            width={180}
-            height={70}
+            width={150}
+            height={50}
             className="h-auto w-[170px] object-contain"
           />
         </div>

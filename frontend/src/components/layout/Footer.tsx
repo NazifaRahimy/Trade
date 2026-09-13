@@ -13,7 +13,7 @@ export default function Footer() {
             <img
               src={logo.src}
               alt="Amiri Finance Academy"
-              className="h-12 w-auto mb-4"
+              className="h-12 w-[75px] mb-4 rounded-md"
             />
 
             <p className="text-sm leading-7 text-slate-300">
@@ -23,21 +23,30 @@ export default function Footer() {
 
             <div className="mt-6 flex items-center gap-4">
               <a
-                href="#"
+                href="https://t.me/AmiriTrader"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Telegram"
                 className="text-slate-400 transition hover:text-blue-400"
               >
                 <FaTelegram size={20} />
               </a>
 
               <a
-                href="#"
+                href="https://instagram.com/amiritrader?utm_source=qr&igshid=MzNlNGNkZWQ4Mg%3D%3D"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
                 className="text-slate-400 transition hover:text-blue-400"
               >
                 <FaInstagram size={20} />
               </a>
 
               <a
-                href="#"
+                href="https://youtube.com/@ibrahimamiri8925?si=tEopPifYl2VKvSWf"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
                 className="text-slate-400 transition hover:text-blue-400"
               >
                 <FaYoutube size={20} />
@@ -97,13 +106,14 @@ export default function Footer() {
 
           {/* Support */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold">Support</h3>
+            <h3 className="mb-4 text-lg font-semibold"> Contact & Support</h3>
 
             <ul className="space-y-3 text-slate-300">
               <li>
                 <a
-                  href="https://t.me/yourusername"
+                  href="https://t.me/AmiriTrader"
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-blue-400"
                 >
                   Telegram Support
@@ -112,7 +122,7 @@ export default function Footer() {
 
               <li>
                 <a
-                  href="mailto:support@amirifinance.com"
+                  href="mailto:Ibraibrahem.amiri94@gmail.com"
                   className="hover:text-blue-400"
                 >
                   Email Support
