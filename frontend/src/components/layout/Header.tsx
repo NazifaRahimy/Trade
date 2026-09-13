@@ -64,7 +64,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-slate-950">
       <div className="container mx-auto px-4">
         {/* Header Row */}
         <div className="flex h-20 items-center justify-between">
@@ -74,11 +74,10 @@ export default function Header() {
             onClick={closeMenu}
             className="flex shrink-0 items-center"
           >
-            <Image
-              src={logo}
+            <img
+              src={logo.src}
               alt="Amiri Finance Academy"
-              priority
-              className="h-[48px] w-auto md:h-[50px] md:w-[120px]"
+              className="  h-[48px] w-auto md:h-[50px] md:w-[110px]"
             />
           </Link>
 
@@ -92,9 +91,7 @@ export default function Header() {
                   key={item.href}
                   href={item.href}
                   className={`relative flex h-full items-center px-1 text-sm font-medium transition-colors ${
-                    active
-                      ? "text-blue-600"
-                      : "text-slate-700 hover:text-blue-600"
+                    active ? "text-blue-600" : "text-white hover:text-blue-600"
                   }`}
                 >
                   {item.name}
@@ -146,7 +143,7 @@ export default function Header() {
 
         {/* Mobile / Tablet Menu */}
         {isMenuOpen && (
-          <div className="border-t border-gray-100 bg-white md:hidden">
+          <div className=" bg-slate-950 md:hidden">
             <nav className="py-3">
               {navItems.map((item) => {
                 const active = isActive(item.href);
@@ -156,10 +153,10 @@ export default function Header() {
                     key={item.href}
                     href={item.href}
                     onClick={closeMenu}
-                    className={`block border-b border-gray-100 px-4 py-4 text-sm font-medium ${
+                    className={`block border-b border-gray-800 px-4 py-4 text-sm font-medium ${
                       active
                         ? "text-blue-600"
-                        : "text-slate-700 hover:text-blue-600"
+                        : "text-white hover:text-blue-600"
                     }`}
                   >
                     {item.name}

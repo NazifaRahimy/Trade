@@ -95,14 +95,15 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
       {/* DESKTOP SIDEBAR */}
       {/* ================================================= */}
 
-      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-slate-200 bg-white lg:block">
+      {/* <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-slate-200 bg-white lg:block"> */}
+      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-slate-800 bg-slate-950 lg:block">
         <div className="flex h-full flex-col">
           {/* Logo */}
           <div className="flex h-[87px] items-center gap-3 border-b border-slate-200 px-4">
-            <Image
-              src={Logo}
+            <img
+              src={Logo.src}
               alt="AMIRI Logo"
-              className="h-10 w-20 object-contain md:w-[120px]"
+              className="h-10 w-[75px] rounded-md"
             />
           </div>
 
@@ -123,7 +124,7 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
                     className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
                       isActive
                         ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
-                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                        : "text-slate-400 hover:bg-slate-900 hover:text-white"
                     }`}
                   >
                     <Icon className="text-lg" />
@@ -135,8 +136,10 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
           </nav>
 
           {/* User */}
-          <div className="border-t border-slate-200 p-4">
-            <div className="mb-3 flex items-center gap-3 rounded-xl bg-slate-50 p-3">
+          {/* <div className="border-t border-slate-200 p-4"> */}
+          {/* <div className="mb-3 flex items-center gap-3 rounded-xl bg-slate-50 p-3"> */}
+          <div className="border-t border-slate-800 p-4">
+            <div className="mb-3 flex items-center gap-3 rounded-xl bg-slate-900 p-3">
               {/* Profile Image / Initial */}
               {user.photo ? (
                 <Image
@@ -154,11 +157,11 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
 
               {/* User Info */}
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-slate-900">
+                <p className="truncate text-sm font-semibold text-white">
                   {fullName || "User"}
                 </p>
 
-                <p className="truncate text-xs text-slate-500">
+                <p className="truncate text-xs text-slate-400">
                   {user.email || "Member"}
                 </p>
               </div>
@@ -168,7 +171,8 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
             <button
               type="button"
               onClick={handleLogout}
-              className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-red-50 hover:text-red-600"
+              className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-400 transition hover:bg-red-950/40 hover:text-red-400"
+              // className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-red-50 hover:text-red-600"
             >
               <FiLogOut />
 
@@ -204,32 +208,25 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
                 duration: 0.25,
                 ease: "easeOut",
               }}
-              className="fixed left-0 top-0 z-[60] h-screen w-72 border-r border-slate-200 bg-white lg:hidden"
+              className="fixed left-0 top-0 z-[60] h-screen w-72 border-r border-slate-800 bg-slate-950  lg:hidden"
             >
               <div className="flex h-full flex-col">
                 {/* Mobile Logo Header */}
-                <div className="flex h-[87px] shrink-0 items-center justify-between border-b border-slate-200 px-4">
+                <div className="flex h-[87px] shrink-0 items-center justify-between border-b border-slate-800 px-4">
                   <div className="flex items-center gap-3">
                     <Image
                       src={Logo}
                       alt="AMIRI Logo"
-                      className="h-10 w-20 object-contain"
+                      className="h-10 w-20 object-contain md:w-[150px]"
                     />
-
-                    <div>
-                      <h1 className="font-bold text-slate-900">AMIRI</h1>
-
-                      <p className="text-[10px] uppercase tracking-wider text-slate-500">
-                        Finance Academy
-                      </p>
-                    </div>
                   </div>
 
                   {/* Close Button */}
                   <button
                     type="button"
                     onClick={onClose}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+                    // className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-900 hover:text-white"
                     aria-label="Close menu"
                   >
                     <FiX size={22} />
@@ -266,8 +263,8 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
                 </nav>
 
                 {/* Mobile User */}
-                <div className="shrink-0 border-t border-slate-200 p-4">
-                  <div className="mb-3 flex items-center gap-3 rounded-xl bg-slate-50 p-3">
+                <div className="shrink-0 border-t border-slate-800 p-4">
+                  <div className="mb-3 flex items-center gap-3 rounded-xl  bg-slate-900 p p-3">
                     {/* Profile Image / Initial */}
                     {user.photo ? (
                       <Image
@@ -285,7 +282,7 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
 
                     {/* User Info */}
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-slate-900">
+                      <p className="truncate text-sm font-semibold text-white">
                         {fullName || "User"}
                       </p>
 
@@ -299,7 +296,8 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-red-50 hover:text-red-600"
+                    className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-400 transition hover:bg-red-950/40 hover:text-red-400"
+                    // className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-red-50 hover:text-red-600"
                   >
                     <FiLogOut />
 

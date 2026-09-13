@@ -37,16 +37,14 @@ export default function LoginBenefits() {
     >
       {/* Logo / Brand */}
       <div className=" flex justify-center ">
-        <Image
+        <img
           src={Logo.src}
           alt="Amiri Finance Academy"
-          width={150}
-          height={50}
-          className="h-auto mt-5 w-[170px] object-contain"
+          className="h-auto  w-[100px] mt-2 object-contain"
         />
       </div>
 
-      <div className="w-full px-8 py-5   ">
+      <div className="w-full px-8 py-4   ">
         {/* Heading */}
         <div className="mb-6">
           <h3 className="mb-4 text-xl text-center font-bold">
