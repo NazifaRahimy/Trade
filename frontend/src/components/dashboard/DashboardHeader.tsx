@@ -91,7 +91,7 @@ export default function DashboardHeader({onMenuClick}: DashboardHeaderProps) {
           <button
             type="button"
             onClick={onMenuClick}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 md:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 lg:hidden"
             aria-label="Open menu"
           >
             <FiMenu size={21} />
@@ -100,7 +100,7 @@ export default function DashboardHeader({onMenuClick}: DashboardHeaderProps) {
           {/* Notification */}
           <button
             type="button"
-            className="relative hidden text-slate-500 transition hover:text-slate-900 md:flex"
+            className="relative hidden text-slate-500 transition hover:text-slate-900 lg:flex"
             aria-label="Notifications"
           >
             <FiBell className="text-xl" />
@@ -109,7 +109,7 @@ export default function DashboardHeader({onMenuClick}: DashboardHeaderProps) {
           </button>
 
           {/* Profile */}
-          <button type="button" className="hidden items-center gap-3 md:flex">
+          <button type="button" className="hidden items-center gap-3 lg:flex">
             {/* Profile Image / Initial */}
             <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-slate-200 bg-slate-100">
               {user.photo ? (
