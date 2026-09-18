@@ -1,12 +1,11 @@
-
 "use client";
 
-import { useState } from "react";
+import {useState} from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+import {motion} from "framer-motion";
+import {FiMail, FiLock, FiEye, FiEyeOff} from "react-icons/fi";
 import SocialLogin from "@/src/components/auth/SocialLogin";
-import { loginUser } from "../../../lib/api";
+import {loginUser} from "../../../lib/api";
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -35,26 +34,25 @@ export default function LoginForm() {
       };
       const responseData = await loginUser(formData.email, formData.password);
       if (responseData) {
-     const { access, refresh, username } = responseData; // دریافت نام کاربری
-      localStorage.setItem('access_token', access);
-      localStorage.setItem('refresh_token', refresh);
-      localStorage.setItem('auth-username', username); // ذخیره نام کاربری
-      localStorage.setItem('auth-email', formData.email);
+        const {access, refresh, username} = responseData; // دریافت نام کاربری
+        localStorage.setItem("access_token", access);
+        localStorage.setItem("refresh_token", refresh);
+        localStorage.setItem("auth-username", username); // ذخیره نام کاربری
+        localStorage.setItem("auth-email", formData.email);
 
         window.dispatchEvent(new Event("auth-change"));
         alert("Success: Logged in successfully.");
-        
-        // ۳. هدایت خودکار کاربر به پنل و داشبورد اصلی سایت
-        window.location.href = "/dashboard";
       }
     } catch (error: any) {
       console.error("Login Error:", error);
-      
+
       // مدیریت هوشمند خطاهای دریافتی از سرور جنگو
       if (error.response && error.response.data) {
         alert("Failed: Invalid email or password. Please try again.");
       } else {
-        alert("Error: Cannot connect to the server. Make sure Django backend is running.");
+        alert(
+          "Error: Cannot connect to the server. Make sure Django backend is running.",
+        );
       }
     } finally {
       setLoading(false);
@@ -145,7 +143,8 @@ export default function LoginForm() {
         Don't have an account?{" "}
         <Link
           href="/register"
-          className="font-medium text-blue-600 transition hover:text-blue-700">
+          className="font-medium text-blue-600 transition hover:text-blue-700"
+        >
           Sign up
         </Link>
       </p>
