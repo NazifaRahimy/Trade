@@ -7,7 +7,7 @@ import SecurityNotice from "@/src/components/dashboard/broker/SecurityNotice";
 export default function BrokerPage() {
   return (
     <main className="min-h-screen  text-black">
-      <div className="mx-auto max-w-[1400px] px-5 py-7 md:px-8 lg:px-10 ">
+      <div className="px-5 py-7 md:px-8 lg:px-10 ">
         <BrokerHeader />
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1.7fr)_minmax(320px,0.9fr)]">
