@@ -1,4 +1,5 @@
 "use client";
+import { toggleBotStatus } from "../../../lib/api"; 
 
 import {FiPauseCircle, FiPower} from "react-icons/fi";
 

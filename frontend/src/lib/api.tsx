@@ -29,13 +29,9 @@ export const loginUser = async (loginInput: string, password: string) => {
   const response = await api.post('/api/auth/token/', payload);
   return response.data; // حاوی توکن‌های access و refresh
 };
-// 👈 این توابع جدید را به انتهای فایل lip/api.tsx اضافه کنید:
 
-/**
- * ۱. دریافت اطلاعات مالی زنده (بالانس، اکویتی، سود روزانه) برای کارت‌های داشبورد
- */
 export const getDashboardStats = async () => {
-  const response = await api.get('/api/dashboard/stats/');
+  const response = await api.get('/api/stats/overview/'); // 👈 فیکس شد
   return response.data;
 };
 
@@ -59,7 +55,9 @@ export const updateBrokerConnection = async (brokerData: {
   return response.data;
 };
 
-
+/**
+ * ۴. ذخیره تنظیمات مدیریت ریسک و وزن پوزیشن‌ها در اندپوینت متمرکز جنگو
+ */
 export const updateRiskSettings = async (riskData: {
   risk_percent: number;
   first_entry_risk_share: number;
@@ -67,12 +65,11 @@ export const updateRiskSettings = async (riskData: {
   max_open_trades: number;
   custom_lot: number;
 }) => {
-  const response = await api.post('/api/user/risk-settings/', riskData);
+  const response = await api.post('/api/user/broker/', riskData); // 👈 فیکس آدرس به بخش متمرکز broker
   return response.data;
 };
 
-
 export const getTradeHistory = async () => {
-  const response = await api.get('/bot/history/');
+  const response = await api.get('/api/stats/trade-history/'); // 👈 فیکس آدرس به دیتای واقعی جنگو
   return response.data;
 };

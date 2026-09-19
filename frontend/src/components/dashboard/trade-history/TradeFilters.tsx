@@ -1,8 +1,30 @@
 "use client";
 
-import {FiCalendar, FiFilter, FiSearch} from "react-icons/fi";
+import { FiCalendar, FiFilter, FiSearch } from "react-icons/fi";
 
-export default function TradeFilters() {
+// 🚀 ۱. تعریف پرپس‌ها برای فرستادن فیلترها به جدول اصلی معاملات
+type TradeFiltersProps = {
+  search: string;
+  setSearch: (val: string) => void;
+  days: string;
+  setDays: (val: string) => void;
+  type: string;
+  setType: (val: string) => void;
+  status: string;
+  setStatus: (val: string) => void;
+};
+
+export default function TradeFilters({
+  search,
+  setSearch,
+  days,
+  setDays,
+  type,
+  setType,
+  status,
+  setStatus,
+}: TradeFiltersProps) {
+
   return (
     <div className="border-b border-slate-200 p-5">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
@@ -12,14 +34,12 @@ export default function TradeFilters() {
             size={17}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
           />
-
           <input
             type="text"
             placeholder="Search pair..."
             className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 outline-none placeholder:text-slate-400 transition focus:border-blue-500"
           />
         </div>
-
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {/* Date */}
           <div className="relative">
@@ -27,7 +47,6 @@ export default function TradeFilters() {
               size={16}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
             />
-
             <select
               defaultValue="30"
               className="w-full appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-8 text-sm text-slate-700 outline-none focus:border-blue-500"
@@ -38,7 +57,6 @@ export default function TradeFilters() {
               <option value="all">All Time</option>
             </select>
           </div>
-
           {/* Type */}
           <select
             defaultValue="all"
@@ -48,7 +66,6 @@ export default function TradeFilters() {
             <option value="buy">Buy</option>
             <option value="sell">Sell</option>
           </select>
-
           {/* Status */}
           <select
             defaultValue="all"
@@ -60,7 +77,6 @@ export default function TradeFilters() {
           </select>
         </div>
       </div>
-
       <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
         <FiFilter size={14} />
         <span>Filters are applied to your trade history.</span>

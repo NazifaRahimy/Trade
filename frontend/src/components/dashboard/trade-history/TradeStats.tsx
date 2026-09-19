@@ -1,77 +1,83 @@
 "use client";
 
-import {motion} from "framer-motion";
-import {
-  FiActivity,
-  FiBarChart2,
-  FiDollarSign,
-  FiTrendingUp,
-} from "react-icons/fi";
+import { motion } from "framer-motion";
+import { FiActivity, FiAward, FiTrendingUp, FiPieChart } from "react-icons/fi";
 
-const stats = [
-  {
-    title: "Total Trades",
-    value: "128",
-    change: "+12 this month",
-    icon: FiActivity,
-    iconStyle: "bg-blue-50 text-blue-600",
-  },
-  {
-    title: "Winning Trades",
-    value: "93",
-    change: "72.7% win rate",
-    icon: FiTrendingUp,
-    iconStyle: "bg-emerald-50 text-emerald-600",
-  },
-  {
-    title: "Total Profit",
-    value: "$4,290.30",
-    change: "+18.72%",
-    icon: FiDollarSign,
-    iconStyle: "bg-purple-50 text-purple-600",
-  },
-  {
-    title: "Trading Volume",
-    value: "24.85",
-    change: "Lots traded",
-    icon: FiBarChart2,
-    iconStyle: "bg-orange-50 text-orange-600",
-  },
-];
+// ساختار دریافت اطلاعات خلاصه مالی از دیتابیس واقعی جنگو
+type TradeStatsProps = {
+  summary: {
+    total_trades: number;
+    winning_trades: number;
+    win_rate: string;
+    total_profit: string;
+    total_loss: string;
+    trading_volume: number;
+  } | null;
+};
 
-export default function TradeStats() {
+export default function TradeStats({ summary }: TradeStatsProps) {
+  // اگر دیتا هنوز لود نشده بود، مقادیر صفر نمایش داده شوند
+  const displayStats = summary || {
+    total_trades: 0,
+    winning_trades: 0,
+    win_rate: "0%",
+    total_profit: "\$0.00",
+    total_loss: "\$0.00",
+    trading_volume: 0,
+  };
+
+  // آرایه کارت‌ها همراه با فیلدهای داینامیک و آیکون‌های متناظر
+  const cards = [
+    { 
+      title: "Total Trades", 
+      value: displayStats.total_trades, 
+      change: `Winning: ${displayStats.winning_trades}`,
+      icon: FiActivity,
+      iconStyle: "bg-blue-50 text-blue-600"
+    },
+    { 
+      title: "Win Rate", 
+      value: displayStats.win_rate, 
+      change: "Real historical stats",
+      icon: FiAward,
+      iconStyle: "bg-purple-50 text-purple-600"
+    },
+    { 
+      title: "Total Profit", 
+      value: displayStats.total_profit, 
+      change: `Loss: ${displayStats.total_loss}`,
+      icon: FiTrendingUp,
+      iconStyle: "bg-emerald-50 text-emerald-600"
+    },
+    { 
+      title: "Trading Volume", 
+      value: `${displayStats.trading_volume} Lots`, 
+      change: "Accumulated volume",
+      icon: FiPieChart,
+      iconStyle: "bg-orange-50 text-orange-600"
+    },
+  ];
+
   return (
-    <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {stats.map((stat, index) => {
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 mb-6">
+      {/* 🚀 رندر کاملاً داینامیک و فیکس شده حلقه بدون ارور ۵۰۰ */}
+      {cards.map((stat, index) => {
         const Icon = stat.icon;
-
         return (
           <motion.div
             key={stat.title}
-            initial={{opacity: 0, y: 20}}
-            animate={{opacity: 1, y: 0}}
-            transition={{
-              duration: 0.4,
-              delay: index * 0.08,
-            }}
-            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: index * 0.08 }}
+            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm flex items-center justify-between"
           >
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs text-slate-500">{stat.title}</p>
-
-                <h3 className="mt-2 text-xl font-semibold text-slate-900">
-                  {stat.value}
-                </h3>
-
-                <p className="mt-2 text-xs text-emerald-600">{stat.change}</p>
-              </div>
-
-              <div
-                className={`flex h-10 w-10 items-center justify-center rounded-xl ${stat.iconStyle}`}
-              >
-                <Icon size={19} />
-              </div>
+            <div>
+              <p className="text-xs text-slate-500 font-medium">{stat.title}</p>
+              <h3 className="text-xl font-bold text-slate-900 mt-2">{stat.value}</h3>
+              <p className="text-[11px] text-slate-400 mt-1">{stat.change}</p>
+            </div>
+            <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${stat.iconStyle}`}>
+              <Icon size={19} />
             </div>
           </motion.div>
         );
