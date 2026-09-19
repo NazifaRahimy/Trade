@@ -7,7 +7,7 @@ import DailyPerformance from "@/src/components/copy-trading/performance/DailyPer
 export default function PerformancePage() {
   return (
     <main className="min-h-screen bg-white text-slate-900">
-      <div className="mx-auto max-w-[1400px] space-y-6 p-5 md:p-8 lg:p-10">
+      <div className=" space-y-6 p-5 md:p-8 lg:p-10">
         <PerformanceHeader />
 
         <PerformanceStats />

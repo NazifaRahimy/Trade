@@ -165,18 +165,10 @@ export default function CopyTradingSidebar({
 
         {/* Copy Trading Label */}
         <div className="border-t border-slate-800 p-3">
-          {/* <div className="rounded-xl bg-slate-900 px-4 py-2">
-            <p className="text-xs text-slate-400">Trading Platform</p>
-            <p className="mt-1 text-sm font-semibold text-white">
-              Copy Trading
-            </p>
-          </div> */}
           {/* Logout */}
           <button
             type="button"
-            // onClick={handleLogout}
             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-400 transition hover:bg-red-950/40 hover:text-red-400"
-            // className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-red-50 hover:text-red-600"
           >
             <FiLogOut />
 

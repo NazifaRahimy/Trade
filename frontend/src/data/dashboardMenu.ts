@@ -33,9 +33,4 @@ export const dashboardMenu = [
     href: "/dashboard/trade-history",
     icon: FiClock,
   },
-  {
-    label: "Subscription",
-    href: "/dashboard/subscription",
-    icon: FiCreditCard,
-  },
 ];
