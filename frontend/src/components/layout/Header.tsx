@@ -28,6 +28,10 @@ const navItems = [
     name: "Contact",
     href: "/contact",
   },
+  {
+    name: "Subscription",
+    href: "/subscription",
+  },
 ];
 
 export default function Header() {
