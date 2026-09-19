@@ -5,8 +5,7 @@ import Link from "next/link";
 import {usePathname, useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import {motion, AnimatePresence} from "framer-motion";
-import {FiLogOut, FiX} from "react-icons/fi";
-
+import {FiLogOut, FiX, FiHome} from "react-icons/fi";
 import Logo from "@/src/assets/images/logo.png";
 import {dashboardMenu} from "@/src/data/dashboardMenu";
 
@@ -39,32 +38,31 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
   useEffect(() => {
     const loadUser = () => {
       // خواندن مستقیم و بدون واسطه از حافظه مرورگر
-      const storedUsername = localStorage.getItem('auth-username') || 'User';
-      const storedEmail = localStorage.getItem('auth-email') || '';
-      const storedPhoto = localStorage.getItem('auth-photo') || '';
+      const storedUsername = localStorage.getItem("auth-username") || "User";
+      const storedEmail = localStorage.getItem("auth-email") || "";
+      const storedPhoto = localStorage.getItem("auth-photo") || "";
 
       setUser({
         firstName: storedUsername, // نام کاربری را مستقیم به فیلد اصلی پاس می‌دهیم
-        lastName: '',
+        lastName: "",
         email: storedEmail,
         photo: storedPhoto,
       });
     };
 
     loadUser();
-    
+
     // گوش دادن به تغییرات وضعیت احراز هویت برای به‌روزرسانی آنی
-    window.addEventListener('auth-change', loadUser);
+    window.addEventListener("auth-change", loadUser);
     return () => {
-      window.removeEventListener('auth-change', loadUser);
+      window.removeEventListener("auth-change", loadUser);
     };
   }, []);
-
 
   // ==========================================
   // USER DISPLAY DATA
   // ==========================================
-  const fullName = user.firstName ? user.firstName : 'User';
+  const fullName = user.firstName ? user.firstName : "User";
 
   const userInitial = user.firstName
     ? user.firstName.charAt(0).toUpperCase()
@@ -112,7 +110,14 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
             <p className="mb-4 px-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">
               Main Menu
             </p>
-
+            <Link
+              href="/"
+              onClick={onClose}
+              className=" hidden lg:flex items-center px-4 pb-4 gap-2 text-sm font-medium text-slate-300 transition hover:text-white"
+            >
+              <FiHome className="h-4 w-4" />
+              <span>Back Home</span>
+            </Link>
             {dashboardMenu.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -136,8 +141,6 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
           </nav>
 
           {/* User */}
-          {/* <div className="border-t border-slate-200 p-4"> */}
-          {/* <div className="mb-3 flex items-center gap-3 rounded-xl bg-slate-50 p-3"> */}
           <div className="border-t border-slate-800 p-4">
             <div className="mb-3 flex items-center gap-3 rounded-xl bg-slate-900 p-3">
               {/* Profile Image / Initial */}
@@ -238,7 +241,6 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
                   <p className="mb-4 px-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">
                     Main Menu
                   </p>
-
                   {dashboardMenu.map((item) => {
                     const Icon = item.icon;
                     const isActive = pathname === item.href;
@@ -260,6 +262,15 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
                       </Link>
                     );
                   })}
+                  <Link
+                    href="/"
+                    onClick={onClose}
+                    className={`flex items-center text-slate-600 hover:bg-slate-50 hover:text-slate-900 gap-3 rounded-xl px-4 py-3 text-sm font-medium transition`}
+                  >
+                    <FiHome className="h-4 w-4" />
+                    <span>Back Home</span>
+                  </Link>
+                  z
                 </nav>
 
                 {/* Mobile User */}
@@ -297,7 +308,6 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
                     type="button"
                     onClick={handleLogout}
                     className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-400 transition hover:bg-red-950/40 hover:text-red-400"
-                    // className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-red-50 hover:text-red-600"
                   >
                     <FiLogOut />
 

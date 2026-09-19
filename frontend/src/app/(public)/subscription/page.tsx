@@ -1,7 +1,7 @@
-import SubscriptionHeader from "@/src/components/dashboard/subscription/SubscriptionHeader";
-import CurrentSubscription from "@/src/components/dashboard/subscription/CurrentSubscription";
-import SubscriptionProgress from "@/src/components/dashboard/subscription/SubscriptionProgress";
-import SubscriptionPlans from "@/src/components/dashboard/subscription/SubscriptionPlans";
+import SubscriptionHeader from "@/src/components/subscription/SubscriptionHeader";
+import CurrentSubscription from "@/src/components/subscription/CurrentSubscription";
+import SubscriptionProgress from "@/src/components/subscription/SubscriptionProgress";
+import SubscriptionPlans from "@/src/components/subscription/SubscriptionPlans";
 
 export default function SubscriptionPage() {
   return (

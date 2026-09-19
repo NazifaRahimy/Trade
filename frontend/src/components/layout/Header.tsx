@@ -28,6 +28,10 @@ const navItems = [
     name: "Contact",
     href: "/contact",
   },
+  {
+    name: "Subscription",
+    href: "/subscription",
+  },
 ];
 
 export default function Header() {
@@ -132,7 +136,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-800 bg-slate-950">
-      <div className="container mx-auto px-4">
+      <div className="px-4">
         {/* ==========================================
             HEADER ROW
         ========================================== */}

@@ -10,8 +10,15 @@ import ActivePositionsTable from "@/src/components/copy-trading/active-positions
 import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
 
 export default function ActivePositionsPage() {
+<<<<<<< HEAD
   const [positions, setPositions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+=======
+  return (
+    <main className="min-h-screen bg-white text-slate-900">
+      <div className=" space-y-6 p-5 md:p-8 lg:p-10">
+        <PositionsHeader />
+>>>>>>> 22a47ee25095b905280328ddc24f4bd6d74b4100
 
   const fetchLivePositions = async () => {
     try {

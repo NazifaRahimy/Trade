@@ -90,7 +90,7 @@ const tradingStats = [
 export default function AmiriProTraderPage() {
   return (
     <main className="min-h-screen bg-white text-slate-900">
-      <div className="mx-auto max-w-[1400px] space-y-6 p-5 md:p-8 lg:p-10">
+      <div className=" space-y-6 p-5 md:p-8 lg:p-10">
         {/* Back */}
         <Link
           href="/copy-trading/my-copy-trades"
