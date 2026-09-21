@@ -108,12 +108,12 @@ export default function PaymentPage() {
           </button>
 
           {/* Payment Button */}
-          <button
-            type="button"
+          <Link
+            href={`/subscription/payment/crypto?service=${service}`}
             className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-blue-500 active:scale-[0.99]"
           >
             Pay {plan.price}
-          </button>
+          </Link>
 
           <p className="mt-4 text-center text-xs leading-5 text-slate-400">
             Your subscription will be activated after the payment is
