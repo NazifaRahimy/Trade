@@ -1,63 +1,57 @@
 "use client";
 
-import {motion} from "framer-motion";
-import {FiUser, FiCreditCard, FiGlobe, FiShield} from "react-icons/fi";
+import { motion } from "framer-motion";
+import { FiUser, FiCreditCard, FiGlobe, FiShield } from "react-icons/fi";
 
-const accountInfo = [
-  {
-    label: "Account Type",
-    value: "Professional",
-    icon: FiUser,
-  },
-  {
-    label: "Account ID",
-    value: "TRD-48291",
-    icon: FiCreditCard,
-  },
-  {
-    label: "Base Currency",
-    value: "USD",
-    icon: FiGlobe,
-  },
-  {
-    label: "Risk Profile",
-    value: "Moderate",
-    icon: FiShield,
-  },
-];
+// 🚀 تعریف ساختار داده‌های دریافتی از دیتابیس
+type AccountInfoProps = {
+  data: any;
+};
 
-export default function AccountInfo() {
+export default function AccountInfo({ data }: AccountInfoProps) {
+  // نقشه‌برداری داینامیک فیلدهای بک‌اَند روی آیکون‌ها
+  const items = [
+    {
+      label: "Account Type",
+      value: data?.account_type === "live" ? "Professional Live" : "Demo Account",
+      icon: FiUser,
+    },
+    {
+      label: "Account ID",
+      value: data?.mt5_login ? `#${data.mt5_login}` : "Not Linked",
+      icon: FiCreditCard,
+    },
+    {
+      label: "Base Currency",
+      value: "USD",
+      icon: FiGlobe,
+    },
+    {
+      label: "Risk Profile",
+      value: data?.risk_percent ? `Risk: ${data.risk_percent}%` : "Moderate",
+      icon: FiShield,
+    },
+  ];
+
   return (
     <motion.section
-      initial={{opacity: 0, y: 15}}
-      animate={{opacity: 1, y: 0}}
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
       className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
     >
-      <h2 className="text-lg font-semibold text-slate-900">
-        Account Information
-      </h2>
+      <h2 className="text-lg font-semibold text-slate-900">Account Information</h2>
 
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
-        {accountInfo.map((item) => {
+        {items.map((item) => {
           const Icon = item.icon;
-
           return (
-            <div
-              key={item.label}
-              className="flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4"
-            >
-              {/* Icon */}
+            <div key={item.label} className="flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
                 <Icon size={18} />
               </div>
-
-              {/* Information */}
               <div>
                 <p className="text-xs text-slate-500">{item.label}</p>
-
-                <p className="mt-1 text-sm font-medium text-slate-900">
-                  {item.value}
-                </p>
+                <p className="mt-1 text-sm font-semibold text-slate-900">{item.value}</p>
               </div>
             </div>
           );

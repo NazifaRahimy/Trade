@@ -1,21 +1,98 @@
 "use client";
 
-import {useState} from "react";
-import {motion} from "framer-motion";
-import {FiSave} from "react-icons/fi";
+import { useEffect, useState, FormEvent } from "react";
+import { motion } from "framer-motion";
+import { FiSave, FiLoader, FiCheckCircle } from "react-icons/fi";
+// 🚀 اتصال به کلاینت متمرکز شبکه پلتفرم شما
+import api from "@/src/lib/axios";
 
 export default function CopySettingsPanel() {
-  const [copyMode, setCopyMode] = useState("Percentage");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
+
+  // ⚙️ ۱. دقیقاً همان استیت‌های بومی و تمیز خودتان در تصویر اول و دوم
+  const [copyMode, setCopyMode] = useState("percentage");
   const [copyRatio, setCopyRatio] = useState(100);
   const [maxDrawdown, setMaxDrawdown] = useState(10);
   const [maxDailyLoss, setMaxDailyLoss] = useState(5);
-  const [maxLotSize, setMaxLotSize] = useState(1);
+  const [maxLotSize, setMaxLotSize] = useState(1.0);
   const [maxOpenPositions, setMaxOpenPositions] = useState(5);
 
   const [copyNewTrades, setCopyNewTrades] = useState(true);
   const [copyStopLoss, setCopyStopLoss] = useState(true);
   const [copyTakeProfit, setCopyTakeProfit] = useState(true);
   const [pauseCopying, setPauseCopying] = useState(false);
+
+  // 📡 ۲. متد GET: خواندن مستقیم اطلاعات ذخیره شده دیتابیس جنگو به محض لود شدن صفحه
+  useEffect(() => {
+    const loadCloudSettings = async () => {
+      try {
+        const response = await api.get("/api/copy-trading/settings/");
+        if (response.data) {
+          const d = response.data;
+          // تبدیل فیلدهای مارک‌دار بک‌اَند پایتون به استیت‌های فرانت شما
+          setCopyMode(d.copy_mode);
+          setCopyRatio(d.copy_ratio_multiplier);
+          setMaxDrawdown(d.maximum_drawdown_pct);
+          setMaxDailyLoss(d.maximum_daily_loss_pct);
+          setMaxLotSize(d.maximum_lot_size);
+          setMaxOpenPositions(d.maximum_open_positions);
+          setCopyNewTrades(d.copy_new_trades);
+          setCopyStopLoss(d.copy_stop_loss);
+          setCopyTakeProfit(d.copy_take_profit);
+          setPauseCopying(d.status === "paused");
+        }
+      } catch (error) {
+        console.error("Failed to fetch cloud copy configuration:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadCloudSettings();
+  }, []);
+
+  // 📡 ۳. متد POST: ذخیره هم‌زمان تمام مقادیر فرم هنگام کلیک روی دکمه Save Settings
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    try {
+      setSaving(true);
+      setSuccessMsg("");
+
+      // بسته‌بندی متغیرهای محلی شما به فرمت فیلدهای دیتابیس جنگو
+      const payload = {
+        copy_mode: copyMode,
+        copy_ratio_multiplier: Number(copyRatio),
+        maximum_drawdown_pct: Number(maxDrawdown),
+        maximum_daily_loss_pct: Number(maxDailyLoss),
+        maximum_lot_size: Number(maxLotSize),
+        maximum_open_positions: Math.floor(Number(maxOpenPositions)),
+        copy_new_trades: copyNewTrades,
+        copy_stop_loss: copyStopLoss,
+        copy_take_profit: copyTakeProfit,
+        status: pauseCopying ? "paused" : "active",
+      };
+
+      await api.post("/api/copy-trading/settings/", payload);
+      setSuccessMsg("Strategy parameters successfully deployed to cloud network.");
+      setTimeout(() => setSuccessMsg(""), 4000);
+    } catch (error) {
+      alert("❌ Cloud Sync Error: Failed to commit modifications.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-96 items-center justify-center gap-2 text-sm text-slate-400 italic bg-white rounded-2xl border border-slate-100">
+        <FiLoader className="animate-spin text-blue-600" size={22} />
+        <span>Synchronizing allocation protocols...</span>
+      </div>
+    );
+  }
+
+
 
   return (
     <motion.div
@@ -207,18 +284,38 @@ export default function CopySettingsPanel() {
           </button>
         </div>
       </div>
+            {/* 🟢 نمایش پیام هماهنگی ابری درست بالای دکمه سابمیت شما */}
+      {/* 🟢 نمایش پیام هماهنگی ابری درست بالای دکمه سابمیت شما */}
+      {successMsg && (
+        <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-100 text-xs font-medium text-emerald-700 flex items-center gap-2">
+          <FiCheckCircle className="text-emerald-500" size={15} />
+          <span>{successMsg}</span>
+        </div>
+      )}
 
-      {/* Save */}
+      {/* 🚀 دکمه لوکس و زنده ذخیره تنظیمات حساب کپی ترید */}
       <button
-        type="button"
-        className="mt-6 flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
+        type="submit"
+        disabled={saving}
+        className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 disabled:opacity-50 w-full md:w-auto"
       >
-        <FiSave size={16} />
-        Save Settings
+        {saving ? (
+          <>
+            <FiLoader className="animate-spin" size={16} />
+            <span>Deploying...</span>
+          </>
+        ) : (
+          <>
+            <FiSave size={16} />
+            <span>Save Settings</span>
+          </>
+        )}
       </button>
+
     </motion.div>
   );
 }
+
 
 function ToggleRow({
   label,

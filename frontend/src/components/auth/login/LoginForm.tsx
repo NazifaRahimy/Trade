@@ -6,21 +6,16 @@ import {motion} from "framer-motion";
 import {FiMail, FiLock, FiEye, FiEyeOff} from "react-icons/fi";
 import SocialLogin from "@/src/components/auth/SocialLogin";
 import {loginUser} from "../../../lib/api";
+import { useRouter } from "next/navigation";
 export default function LoginForm() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -43,21 +38,16 @@ export default function LoginForm() {
         window.dispatchEvent(new Event("auth-change"));
         alert("Success: Logged in successfully.");
       }
+
     } catch (error: any) {
       console.error("Login Error:", error);
-
-      // مدیریت هوشمند خطاهای دریافتی از سرور جنگو
-      if (error.response && error.response.data) {
-        alert("Failed: Invalid email or password. Please try again.");
-      } else {
-        alert(
-          "Error: Cannot connect to the server. Make sure Django backend is running.",
-        );
-      }
+      alert("Failed: Invalid email or password. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+
   return (
     <motion.div
       initial={{opacity: 0, x: 30}}

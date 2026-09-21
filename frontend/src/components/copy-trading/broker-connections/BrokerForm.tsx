@@ -1,245 +1,216 @@
 "use client";
 
-import {FormEvent, useState} from "react";
-import {motion} from "framer-motion";
-import {
-  FiEye,
-  FiEyeOff,
-  FiKey,
-  FiLock,
-  FiServer,
-  FiUser,
-  FiWifi,
-  FiTag,
-} from "react-icons/fi";
+import { FormEvent, useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { FiEye, FiEyeOff, FiLock, FiServer, FiUser, FiWifi, FiTag, FiLoader, FiCheck } from "react-icons/fi";
+import api from "@/src/lib/axios"; 
 
 export default function BrokerForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [dbBrokers, setDbBrokers] = useState<string[]>([]);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const [formData, setFormData] = useState({
+    broker: "", 
+    accountType: "live",
+    accountId: "",
+    server: "",
+    symbol: "XAUUSD",
+    password: "",
+    apiKey: ""
+  });
+
+  // 📡 ۱. فچ کردن آنلاین لیست بروکرهای ثبت شده در بک‌اَند
+  useEffect(() => {
+    const loadSupportedBrokers = async () => {
+      try {
+        const response = await api.get("/api/user/broker-list/");
+        if (response.data && response.data.supported_brokers) {
+          setDbBrokers(response.data.supported_brokers);
+          if (response.data.supported_brokers.length > 0) {
+            setFormData(prev => ({ ...prev, broker: response.data.supported_brokers[0] }));
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load backend dynamic brokers list:", error);
+      }
+    };
+    loadSupportedBrokers();
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // 📡 ۲. ارسال مشخصات حساب متاتریدر ۵ به سرور جنگو
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Backend connection will be added later.
-    console.log("Broker form submitted");
+    if (!formData.accountId || !formData.password || !formData.server) {
+      alert("⚠️ Configuration Error: Please fill in Account ID, Server, and Password fields.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const payload = {
+        mt5_login: Number(formData.accountId),
+        mt5_password: formData.password,
+        mt5_server: formData.server,
+        gold_symbol: formData.symbol
+      };
+
+      await api.post('/api/user/broker/', payload);
+      alert("✅ Authentication Successful: Your MT5 terminal has been linked to the copy-trade cloud engine.");
+      window.location.reload(); // رفرش صفحه برای آپدیت کارت وضعیت بالا
+    } catch (error: any) {
+      console.error("Broker synchronization failed:", error);
+      alert("❌ Authentication Rejected: Connection failed. Verify your details.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <motion.div
-      initial={{opacity: 0, y: 20}}
-      animate={{opacity: 1, y: 0}}
-      transition={{duration: 0.5, delay: 0.1}}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
       className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6"
     >
       <div className="mb-6">
-        <h2 className="text-base font-semibold text-slate-900">
-          Broker Account
-        </h2>
-
+        <h2 className="text-base font-semibold text-slate-900">Broker Account</h2>
         <p className="mt-1 text-xs leading-5 text-slate-500">
           Enter your broker account credentials to establish a connection.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Broker */}
+        {/* Broker Dropdown Select */}
         <div>
-          <label
-            htmlFor="broker"
-            className="mb-2 block text-sm font-medium text-slate-700"
-          >
-            Broker
-          </label>
-
+          <label htmlFor="broker" className="mb-2 block text-sm font-medium text-slate-700">Broker</label>
           <div className="relative">
-            <FiWifi
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-              size={17}
-            />
-
+            <FiWifi className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={17} />
             <select
               id="broker"
-              defaultValue="ic-markets"
-              className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-10 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10"
+              name="broker"
+              value={formData.broker}
+              onChange={handleChange}
+              className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-10 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white"
             >
-              <option value="ic-markets">IC Markets</option>
-              <option value="exness">Exness</option>
-              <option value="xm">XM</option>
-              <option value="pepperstone">Pepperstone</option>
+              {dbBrokers.length === 0 ? (
+                <option value="">Loading verified brokers...</option>
+              ) : (
+                dbBrokers.map((brokerName, index) => (
+                  <option key={index} value={brokerName.toLowerCase().replace(/\s+/g, '-')}>
+                    {brokerName}
+                  </option>
+                ))
+              )}
               <option value="other">Other</option>
             </select>
           </div>
         </div>
 
-        {/* Account Type */}
+        {/* Account Type Setup */}
         <div>
-          <label
-            htmlFor="accountType"
-            className="mb-2 block text-sm font-medium text-slate-700"
-          >
-            Account Type
-          </label>
-
+          <label htmlFor="accountType" className="mb-2 block text-sm font-medium text-slate-700">Account Type</label>
           <select
             id="accountType"
-            defaultValue="live"
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10"
+            name="accountType"
+            value={formData.accountType}
+            onChange={handleChange}
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white"
           >
             <option value="live">Live Account</option>
             <option value="demo">Demo Account</option>
           </select>
         </div>
 
-        {/* Account ID + Server */}
+        {/* Account ID + Server Inputs Grid */}
         <div className="grid gap-5 md:grid-cols-2">
           <div>
-            <label
-              htmlFor="accountId"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Account ID / Login
-            </label>
-
+            <label htmlFor="accountId" className="mb-2 block text-sm font-medium text-slate-700">Account ID / Login</label>
             <div className="relative">
-              <FiUser
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                size={17}
-              />
-
+              <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={17} />
               <input
                 id="accountId"
+                name="accountId"
                 type="text"
+                value={formData.accountId}
+                onChange={handleChange}
                 placeholder="1234567"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-10 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-10 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white"
               />
             </div>
           </div>
-
           <div>
-            <label
-              htmlFor="server"
-              className="mb-2 block text-sm font-medium text-slate-700"
-            >
-              Server
-            </label>
-
+            <label htmlFor="server" className="mb-2 block text-sm font-medium text-slate-700">Server</label>
             <div className="relative">
-              <FiServer
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                size={17}
-              />
-
+              <FiServer className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={17} />
               <input
                 id="server"
+                name="server"
                 type="text"
+                value={formData.server}
+                onChange={handleChange}
                 placeholder="ICMarkets-Live"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-10 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-10 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white"
               />
             </div>
           </div>
         </div>
 
-        {/* Symbol */}
+        {/* Target Symbol Customization */}
         <div>
-          <label
-            htmlFor="symbol"
-            className="mb-2 block text-sm font-medium text-slate-700"
-          >
-            Symbol
-          </label>
-
+          <label htmlFor="symbol" className="mb-2 block text-sm font-medium text-slate-700">Symbol</label>
           <div className="relative">
-            <FiTag
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-              size={17}
-            />
-
+            <FiTag className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={17} />
             <input
               id="symbol"
+              name="symbol"
               type="text"
-              placeholder="EURUSD"
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-10 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10"
+              value={formData.symbol}
+              onChange={handleChange}
+              placeholder="XAUUSD"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-10 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white"
             />
           </div>
         </div>
 
-        {/* Password */}
+        {/* Terminal Access Password */}
         <div>
-          <label
-            htmlFor="password"
-            className="mb-2 block text-sm font-medium text-slate-700"
-          >
-            Password
-          </label>
-
+          <label htmlFor="password" className="mb-2 block text-sm font-medium text-slate-700">Password</label>
           <div className="relative">
-            <FiLock
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-              size={17}
-            />
-
+            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={17} />
             <input
               id="password"
+              name="password"
               type={showPassword ? "text" : "password"}
+              value={formData.password}
+              onChange={handleChange}
               placeholder="Enter your password"
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-10 py-3 pr-11 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-10 py-3 pr-11 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white"
             />
-
             <button
               type="button"
               onClick={() => setShowPassword((value) => !value)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
             >
               {showPassword ? <FiEyeOff size={17} /> : <FiEye size={17} />}
             </button>
           </div>
         </div>
 
-        {/* API Key */}
-        <div>
-          <label
-            htmlFor="apiKey"
-            className="mb-2 block text-sm font-medium text-slate-700"
-          >
-            API Key
-            <span className="ml-2 text-xs font-normal text-slate-400">
-              Optional
-            </span>
-          </label>
-
-          <div className="relative">
-            <FiKey
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-              size={17}
-            />
-
-            <input
-              id="apiKey"
-              type="text"
-              placeholder="Enter API key if required"
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-10 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10"
-            />
-          </div>
-        </div>
-
-        {/* Remember */}
-        <label className="flex cursor-pointer items-center gap-3 text-sm text-slate-600">
-          <input
-            type="checkbox"
-            defaultChecked
-            className="h-4 w-4 rounded border-slate-300 bg-white text-blue-600 focus:ring-blue-500"
-          />
-
-          <span>Remember this account</span>
-        </label>
-
-        {/* Submit */}
+        {/* Submit Button */}
         <button
           type="submit"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 transition hover:bg-blue-700 active:scale-[0.99]"
+          disabled={loading}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:opacity-50"
         >
-          <FiWifi size={17} />
-          Connect Broker
+          {loading ? <FiLoader className="animate-spin" size={17} /> : <FiCheck size={17} />}
+          <span>{loading ? "Connecting..." : "Connect Broker"}</span>
         </button>
       </form>
     </motion.div>

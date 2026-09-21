@@ -1,87 +1,53 @@
 "use client";
 
-import {motion} from "framer-motion";
-import {
-  FiArrowDown,
-  FiArrowUp,
-  FiChevronLeft,
-  FiChevronRight,
-} from "react-icons/fi";
-
-const trades = [
-  {
-    pair: "EUR/USD",
-    type: "Buy",
-    volume: "1.00",
-    openPrice: "1.08420",
-    closePrice: "1.08635",
-    profit: "+$230.50",
-    status: "Closed",
-    time: "2h ago",
-  },
-  {
-    pair: "BTC/USDT",
-    type: "Buy",
-    volume: "0.05",
-    openPrice: "67,240",
-    closePrice: "69,646",
-    profit: "+$120.30",
-    status: "Closed",
-    time: "5h ago",
-  },
-  {
-    pair: "XAU/USD",
-    type: "Sell",
-    volume: "0.10",
-    openPrice: "2,358.40",
-    closePrice: "2,362.92",
-    profit: "-$45.20",
-    status: "Closed",
-    time: "1d ago",
-  },
-  {
-    pair: "GBP/USD",
-    type: "Buy",
-    volume: "1.00",
-    openPrice: "1.26710",
-    closePrice: "1.26985",
-    profit: "+$98.10",
-    status: "Closed",
-    time: "1d ago",
-  },
-  {
-    pair: "ETH/USDT",
-    type: "Buy",
-    volume: "0.10",
-    openPrice: "3,020",
-    closePrice: "3,096",
-    profit: "+$76.40",
-    status: "Closed",
-    time: "2d ago",
-  },
-  {
-    pair: "USD/JPY",
-    type: "Sell",
-    volume: "0.50",
-    openPrice: "156.420",
-    closePrice: "156.080",
-    profit: "+$108.60",
-    status: "Closed",
-    time: "2d ago",
-  },
-  {
-    pair: "NAS100",
-    type: "Buy",
-    volume: "0.20",
-    openPrice: "18,245",
-    closePrice: "18,310",
-    profit: "+$130.00",
-    status: "Closed",
-    time: "3d ago",
-  },
-];
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { FiChevronLeft, FiChevronRight, FiLoader } from "react-icons/fi";
+import api from "../../../lib/axios"; // ایمپورت هسته شبکه جهت ارسال فیلترها به آدرس پوشه آمار داشبورد stats
+import TradeFilters from "./TradeFilters";
+import TradeStats from "./TradeStats";
 
 export default function TradeTable() {
+  const [trades, setTrades] = useState<any[]>([]);
+  const [summary, setSummary] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  // 📦 استیت‌های مربوط به فیلترهای داینامیک ارسالی به جنگو
+  const [search, setSearch] = useState("");
+  const [days, setDays] = useState("30");
+  const [type, setType] = useState("all");
+  const [status, setStatus] = useState("all");
+
+  // 📡 تابع اصلی لود معاملات دیتابیس جنگو بر اساس فیلترهای انتخابی کاربر
+  const fetchTradesFromDatabase = async () => {
+    try {
+      setLoading(true);
+      // ارسال پارامترهای فیلتر فرانت به اندپوینت متمرکز آمار داشبورد شما
+      const response = await api.get("/api/stats/trade-history/", {
+        params: {
+          days: days,
+          type: type,
+          status: status,
+          search: search,
+        },
+      });
+
+      if (response.data) {
+        setTrades(response.data.recent_trades || []);
+        setSummary(response.data.summary || null);
+      }
+    } catch (error) {
+      console.error("Failed to load real trade history rows:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // رفرش خودکار و آنی جدول به محض اینکه کاربر هر فیلتری را تغییر دهد
+  useEffect(() => {
+    fetchTradesFromDatabase();
+  }, [days, type, status, search]);
+
   return (
     <motion.div
       initial={{opacity: 0, y: 20}}
