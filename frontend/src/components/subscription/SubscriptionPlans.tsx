@@ -1,43 +1,70 @@
 "use client";
-
+import Link from "next/link";
 import {motion} from "framer-motion";
-import {FiCheck, FiStar} from "react-icons/fi";
+import {FiArrowRight, FiCheck, FiCopy, FiSend} from "react-icons/fi";
 
-const plans = [
+// const subscriptions = [
+//   {
+//     name: "Telegram Bot",
+//     description:
+//       "Automated trading with Telegram bot, signals, risk control, and account monitoring.",
+//     price: "$10",
+//     period: "/ week",
+//     icon: FiSend,
+//     features: [
+//       "Telegram trading bot",
+//       "Trading signals",
+//       "Risk control",
+//       "Account monitoring",
+//     ],
+//   },
+//   {
+//     name: "Copy Trading",
+//     description:
+//       "Follow professional traders and automatically copy their trading strategies.",
+//     price: "$30",
+//     period: "/ month",
+//     icon: FiCopy,
+//     features: [
+//       "Professional traders",
+//       "Automatic copy trading",
+//       "Active positions",
+//       "Portfolio analytics",
+//     ],
+//   },
+// ];
+const subscriptions = [
   {
-    name: "Basic",
-    price: "$19",
-    period: "/ month",
-    description: "For traders getting started.",
-    features: ["Trading dashboard", "Account monitoring", "Trade history"],
-  },
-  {
-    name: "Pro Trader",
-    price: "$39",
-    period: "/ month",
-    description: "For active traders.",
+    name: "Telegram Bot",
+    service: "telegram",
+    description:
+      "Automated trading with Telegram bot, signals, risk control, and account monitoring.",
+    price: "$10",
+    period: "/ week",
+    icon: FiSend,
     features: [
-      "Everything in Basic",
-      "Advanced risk control",
-      "Broker connection",
-      "Portfolio analytics",
+      "Telegram trading bot",
+      "Trading signals",
+      "Risk control",
+      "Account monitoring",
     ],
-    popular: true,
   },
   {
-    name: "Premium",
-    price: "$69",
+    name: "Copy Trading",
+    service: "copy-trading",
+    description:
+      "Follow professional traders and automatically copy their trading strategies.",
+    price: "$30",
     period: "/ month",
-    description: "For advanced trading needs.",
+    icon: FiCopy,
     features: [
-      "Everything in Pro",
-      "Advanced analytics",
-      "Priority support",
-      "Extended account tools",
+      "Professional traders",
+      "Automatic copy trading",
+      "Active positions",
+      "Portfolio analytics",
     ],
   },
 ];
-
 export default function SubscriptionPlans() {
   return (
     <motion.section
@@ -52,78 +79,90 @@ export default function SubscriptionPlans() {
         </h2>
 
         <p className="mt-1 text-sm text-slate-500">
-          Choose a plan that fits your trading needs.
+          Choose the service you want to activate.
         </p>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-3">
-        {plans.map((plan, index) => (
-          <motion.div
-            key={plan.name}
-            initial={{opacity: 0, y: 20}}
-            animate={{opacity: 1, y: 0}}
-            transition={{
-              duration: 0.4,
-              delay: 0.25 + index * 0.08,
-            }}
-            className={`relative rounded-2xl border p-5 shadow-sm md:p-6 ${
-              plan.popular
-                ? "border-blue-200 bg-blue-50/50"
-                : "border-slate-200 bg-white"
-            }`}
-          >
-            {plan.popular && (
-              <div className="absolute right-5 top-5 flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-600">
-                <FiStar size={12} />
-                Popular
-              </div>
-            )}
+      <div className="grid gap-5 lg:grid-cols-2">
+        {subscriptions.map((subscription, index) => {
+          const Icon = subscription.icon;
 
-            <h3 className="text-base font-semibold text-slate-900">
-              {plan.name}
-            </h3>
-
-            <p className="mt-2 min-h-[40px] text-xs leading-5 text-slate-500">
-              {plan.description}
-            </p>
-
-            <div className="mt-5">
-              <span className="text-3xl font-semibold text-slate-900">
-                {plan.price}
-              </span>
-
-              <span className="ml-1 text-xs text-slate-500">{plan.period}</span>
-            </div>
-
-            <div className="my-5 h-px bg-slate-200" />
-
-            <ul className="space-y-3">
-              {plan.features.map((feature) => (
-                <li
-                  key={feature}
-                  className="flex items-center gap-2.5 text-sm text-slate-700"
-                >
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
-                    <FiCheck size={12} />
-                  </span>
-
-                  {feature}
-                </li>
-              ))}
-            </ul>
-
-            <button
-              type="button"
-              className={`mt-6 w-full rounded-xl px-4 py-3 text-sm font-semibold transition ${
-                plan.popular
-                  ? "bg-blue-600 text-white hover:bg-blue-500"
-                  : "border border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:bg-slate-50 hover:text-blue-600"
-              }`}
+          return (
+            <motion.div
+              key={subscription.name}
+              initial={{opacity: 0, y: 20}}
+              animate={{opacity: 1, y: 0}}
+              transition={{
+                duration: 0.4,
+                delay: 0.25 + index * 0.08,
+              }}
+              className="relative rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-blue-200 hover:shadow-md md:p-6"
             >
-              {plan.name === "Pro Trader" ? "Current Plan" : "Choose Plan"}
-            </button>
-          </motion.div>
-        ))}
+              {/* Header */}
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                    <Icon size={21} />
+                  </div>
+
+                  <div>
+                    <h3 className="text-base font-semibold text-slate-900">
+                      {subscription.name}
+                    </h3>
+
+                    <p className="mt-1 text-xs text-slate-500">
+                      Monthly subscription
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Description */}
+              <p className="mt-5 min-h-[48px] text-sm leading-6 text-slate-500">
+                {subscription.description}
+              </p>
+
+              {/* Price */}
+              <div className="mt-5">
+                <span className="text-3xl font-semibold text-slate-900">
+                  {subscription.price}
+                </span>
+
+                <span className="ml-1 text-xs text-slate-500">
+                  {subscription.period}
+                </span>
+              </div>
+
+              {/* Divider */}
+              <div className="my-5 h-px bg-slate-200" />
+
+              {/* Features */}
+              <ul className="space-y-3">
+                {subscription.features.map((feature) => (
+                  <li
+                    key={feature}
+                    className="flex items-center gap-2.5 text-sm text-slate-700"
+                  >
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+                      <FiCheck size={12} />
+                    </span>
+
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+
+              {/* Action */}
+              <Link
+                href={`/subscription/payment?service=${subscription.service}`}
+                className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-500 active:scale-[0.99]"
+              >
+                Choose {subscription.name}
+                <FiArrowRight size={16} />
+              </Link>
+            </motion.div>
+          );
+        })}
       </div>
     </motion.section>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import {motion} from "framer-motion";
+import Link from "next/link";
 import {FiCopy} from "react-icons/fi";
 
 export default function OverviewHeader() {
@@ -23,13 +24,13 @@ export default function OverviewHeader() {
         </p>
       </div>
 
-      <button
-        type="button"
+      <Link
+        href="/copy-trading/my-traders"
         className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700"
       >
         <FiCopy />
         Explore Traders
-      </button>
+      </Link>
     </motion.div>
   );
 }

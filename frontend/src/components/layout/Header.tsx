@@ -136,7 +136,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-800 bg-slate-950">
-      <div className="px-4">
+      <div className="px-4 max-w-[1400px] mx-auto ">
         {/* ==========================================
             HEADER ROW
         ========================================== */}
