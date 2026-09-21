@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import api from "@/src/lib/axios";
 
 // ایمپورت ابزارک‌های فیکس شده شما
@@ -10,15 +10,8 @@ import ActivePositionsTable from "@/src/components/copy-trading/active-positions
 import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
 
 export default function ActivePositionsPage() {
-<<<<<<< HEAD
   const [positions, setPositions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-=======
-  return (
-    <main className="min-h-screen bg-white text-slate-900">
-      <div className=" space-y-6 p-5 md:p-8 lg:p-10">
-        <PositionsHeader />
->>>>>>> 22a47ee25095b905280328ddc24f4bd6d74b4100
 
   const fetchLivePositions = async () => {
     try {
@@ -54,10 +47,10 @@ export default function ActivePositionsPage() {
       <div className="min-h-screen bg-slate-50/50 p-4 lg:p-6 w-full max-w-[1700px] mx-auto space-y-6">
         {/* ۱. هدر صفحه */}
         <PositionsHeader />
-        
+
         {/* ۲. ۴ کارت محاسباتی بالای صفحه (کامپوننت زنده شده شما) */}
         <PositionsStats positions={positions} />
-        
+
         {/* ۳. جدول اصلی معاملات لایو (کامپوننت زنده شده شما) */}
         <ActivePositionsTable positions={positions} />
       </div>
