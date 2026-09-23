@@ -8,6 +8,7 @@ import {
   FiMenu,
   FiX,
   FiChevronDown,
+  FiCreditCard,
   FiGrid,
   FiCopy,
   FiLogOut,
@@ -39,6 +40,7 @@ export default function Header() {
   const router = useRouter();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -46,8 +48,10 @@ export default function Header() {
   useEffect(() => {
     const checkAuth = () => {
       const token = localStorage.getItem("auth-token");
+      const role = localStorage.getItem("auth-role");
 
       setIsLoggedIn(Boolean(token));
+      setIsAdmin(role === "admin");
     };
 
     // Check when Header loads
@@ -277,6 +281,49 @@ export default function Header() {
 
                       <span>Copy Trading Dashboard</span>
                     </Link>
+                    {/* Billing */}
+
+                    <Link
+                      href="/billing"
+                      onClick={() => setIsDropdownOpen(false)}
+                      className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-normal transition ${
+                        pathname.startsWith("/billing")
+                          ? "bg-blue-600 text-white"
+                          : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                      }`}
+                    >
+                      <FiCreditCard className="text-lg" />
+
+                      <span>Billing</span>
+                    </Link>
+                    <Link
+                      href="/admin/finance"
+                      onClick={() => setIsDropdownOpen(false)}
+                      className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-normal transition ${
+                        pathname.startsWith("/admin/finance")
+                          ? "bg-blue-600 text-white"
+                          : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                      }`}
+                    >
+                      <FiCreditCard className="text-lg" />
+
+                      <span>Admin Finance</span>
+                    </Link>
+                    {/* {isAdmin && (
+                      <Link
+                        href="/admin/finance"
+                        onClick={() => setIsDropdownOpen(false)}
+                        className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-normal transition ${
+                          pathname.startsWith("/admin/finance")
+                            ? "bg-blue-600 text-white"
+                            : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                        }`}
+                      >
+                        <FiCreditCard className="text-lg" />
+
+                        <span>Admin Finance</span>
+                      </Link>
+                    )} */}
 
                     <div className="my-2 border-t border-slate-800" />
 
@@ -385,6 +432,49 @@ export default function Header() {
 
                     <span>Copy Trading</span>
                   </Link>
+                  {/* Billing */}
+
+                  <Link
+                    href="/billing"
+                    onClick={closeMenu}
+                    className={` mt-2 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium ${
+                      pathname.startsWith("/copy-trading")
+                        ? "bg-blue-600 text-white"
+                        : "bg-slate-900 text-white"
+                    }`}
+                  >
+                    <FiCreditCard className="text-lg" />
+
+                    <span>Billing</span>
+                  </Link>
+                  <Link
+                    href="/admin/finance"
+                    onClick={closeMenu}
+                    className={` mt-2 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium ${
+                      pathname.startsWith("/copy-trading")
+                        ? "bg-blue-600 text-white"
+                        : "bg-slate-900 text-white"
+                    }`}
+                  >
+                    <FiCreditCard className="text-lg" />
+
+                    <span>Admin Finance</span>
+                  </Link>
+                  {isAdmin && (
+                    <Link
+                      href="/admin/finance"
+                      onClick={closeMenu}
+                      className={` mt-2 flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium ${
+                        pathname.startsWith("/copy-trading")
+                          ? "bg-blue-600 text-white"
+                          : "bg-slate-900 text-white"
+                      }`}
+                    >
+                      <FiCreditCard className="text-lg" />
+
+                      <span>Admin Finance</span>
+                    </Link>
+                  )}
 
                   {/* Mobile Logout */}
 
