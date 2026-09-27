@@ -2,11 +2,9 @@
 
 import { motion } from "framer-motion";
 import { FiBarChart2, FiTarget, FiClock, FiRepeat } from "react-icons/fi";
-
 type TradingStatsProps = {
   data: any;
 };
-
 export default function TradingStats({ data }: TradingStatsProps) {
   const items = [
     {
@@ -30,7 +28,6 @@ export default function TradingStats({ data }: TradingStatsProps) {
       icon: FiRepeat,
     },
   ];
-
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <h2 className="text-lg font-semibold text-slate-900 mb-5">Trading Statistics</h2>

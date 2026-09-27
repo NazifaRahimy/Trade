@@ -1,16 +1,12 @@
 "use client";
-
 import { motion } from "framer-motion";
 import { FiActivity, FiTrendingUp } from "react-icons/fi";
-
 type PerformanceProps = {
   data: any;
 };
-
 export default function Performance({ data }: PerformanceProps) {
   // محاسبه داینامیک عرض نوار پیشرفت سبز رنگ وین‌ریت
   const winRatePercent = data?.win_rate ? parseFloat(data.win_rate) : 0;
-
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -35,7 +31,6 @@ export default function Performance({ data }: PerformanceProps) {
           <span className="text-slate-500 font-medium">Winning Trades Rate</span>
           <span className="text-emerald-600 font-bold">{data?.win_rate || "0%"}</span>
         </div>
-
         {/* نوار پیشرفت متحرک و هوشمند براساس درصد واقعی وین‌ریت دیتابیس */}
         <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
           <motion.div
@@ -45,7 +40,6 @@ export default function Performance({ data }: PerformanceProps) {
             className="h-full rounded-full bg-emerald-500"
           />
         </div>
-
         <div className="flex items-center justify-between border-t border-slate-100 pt-4 text-xs">
           <div className="flex items-center gap-2 text-slate-500">
             <FiActivity size={16} />

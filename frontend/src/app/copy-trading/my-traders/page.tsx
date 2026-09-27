@@ -2,13 +2,8 @@
 
 import {useEffect, useState} from "react";
 import {FiLoader} from "react-icons/fi";
-// 🚀 اتصال به کلاینت متمرکز شبکه پلتفرم شما جهت ارسال توکن‌های احراز هویت
 import api from "@/src/lib/axios";
-
-// 📦 ایمپورت دقیق بخش‌های سه‌گانه لایوت بر اساس کامپوننت‌های فرانت‌اَند شما
-
 import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
-
 import CopyTradesHeader from "@/src/components/copy-trading/my-traders/CopyTradesHeader";
 import CopyTradesStats from "@/src/components/copy-trading/my-traders/CopyTradesStats";
 import MyCopyTrader from "@/src/components/copy-trading/my-traders/MyCopyTrader";
@@ -16,7 +11,6 @@ export default function MyTradersPage() {
   const [copyData, setCopyData] = useState<any>(null);
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
   // 📡 فچ هم‌زمان دیتای خلاصه وضعیت پورتفو و لیست اشتراک‌های دیتابیس جنگو
   const fetchMyCopyPortfolio = async () => {
     try {
@@ -25,8 +19,6 @@ export default function MyTradersPage() {
       if (overviewRes.data) {
         setCopyData(overviewRes.data);
       }
-
-      // دریافت لیست تمام مسترهایی که کاربر Najib در حال کپی آنهاست
       const tradersRes = await api.get("/api/copy-trading/my-traders/");
       if (tradersRes.data) {
         setSubscriptions(tradersRes.data);
@@ -37,11 +29,9 @@ export default function MyTradersPage() {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchMyCopyPortfolio();
   }, []);
-
   if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center gap-2 text-sm text-slate-400 italic bg-white">
@@ -50,7 +40,6 @@ export default function MyTradersPage() {
       </div>
     );
   }
-
   return (
     <ProtectedRoute>
       {/* 🚀 لایوت متوازن و عریض پلتفرم کاملاً هماهنگ با بقیه صفحات داشبورد شما */}

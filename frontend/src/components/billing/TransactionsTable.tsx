@@ -1,188 +1,168 @@
 "use client";
 
-import {useMemo, useState} from "react";
-import {motion} from "framer-motion";
-import {FiArrowDownLeft, FiArrowUpRight, FiSearch} from "react-icons/fi";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  FiArrowDownLeft,
+  FiArrowUpRight,
+  FiSearch,
+} from "react-icons/fi";
 
-const transactions = [
-  {
-    id: "TX-1001",
-    type: "Deposit",
-    service: "USDT Wallet",
-    date: "Sep 22, 2026",
-    amount: "+$500.00",
-    status: "Completed",
-  },
-  {
-    id: "TX-1002",
-    type: "Subscription",
-    service: "Telegram Bot",
-    date: "Sep 20, 2026",
-    amount: "-$10.00",
-    status: "Completed",
-  },
-  {
-    id: "TX-1003",
-    type: "Copy Trading",
-    service: "Copy Trading",
-    date: "Sep 18, 2026",
-    amount: "-$30.00",
-    status: "Completed",
-  },
-  {
-    id: "TX-1004",
-    type: "Deposit",
-    service: "USDT Wallet",
-    date: "Sep 15, 2026",
-    amount: "+$1,500.00",
-    status: "Completed",
-  },
-  {
-    id: "TX-1005",
-    type: "Subscription",
-    service: "Telegram Bot",
-    date: "Sep 12, 2026",
-    amount: "-$10.00",
-    status: "Pending",
-  },
-];
+// 🚀 ۱. تعریف دقیق ساختار ورودی دیتای لایو بک‌اَند
+type TransactionItem = {
+  id: number;
+  type: string;
+  amount: string;
+  status: string;
+  date: string;
+  description: string;
+};
 
-export default function TransactionsTable() {
+type TransactionsTableProps = {
+  transactions: TransactionItem[];
+};
+
+export default function TransactionsTable({ transactions }: TransactionsTableProps) {
   const [search, setSearch] = useState("");
   const [type, setType] = useState("All");
 
-  const filteredTransactions = useMemo(() => {
-    return transactions.filter((transaction) => {
-      const matchesSearch =
-        transaction.id.toLowerCase().includes(search.toLowerCase()) ||
-        transaction.service.toLowerCase().includes(search.toLowerCase());
+  // 🔍 ۲. حفظ کامل منطق فیلتر و سرچ بومی خودتان در تصویر اول (خطوط ۴۷ تا ۵۵)
+  const filteredTransactions = (transactions || []).filter((transaction) => {
+    const matchesType = type === "All" || transaction.type === type;
+    
+    // هماهنگ‌سازی فیلد سرچ متنی بر اساس نام یا توصیف تراکنش دیتابیس
+    const descriptionText = transaction.description || "";
+    const matchesSearch =
+      transaction.type.toLowerCase().includes(search.toLowerCase()) ||
+      descriptionText.toLowerCase().includes(search.toLowerCase()) ||
+      transaction.id.toString().includes(search);
 
-      const matchesType = type === "All" || transaction.type === type;
-
-      return matchesSearch && matchesType;
-    });
-  }, [search, type]);
+    return matchesSearch && matchesType;
+  });
 
   return (
     <motion.div
-      initial={{opacity: 0, y: 20}}
-      animate={{opacity: 1, y: 0}}
-      transition={{duration: 0.5}}
-      className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
     >
-      {/* Search & Filter */}
-      <div className="border-b border-slate-200 p-5">
-        <div className="flex flex-col gap-4 lg:flex-row">
+      {/* بخش ابزارهای سرچ و فیلتر (حفظ کامل کلاس‌های تصویر اول) */}
+      <div className="border-b border-slate-100 p-5 sm:p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative flex-1">
             <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search transaction..."
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+              placeholder="Search transactions..."
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-1 focus:ring-blue-500"
             />
           </div>
 
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
+            className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:bg-white"
           >
             <option value="All">All Types</option>
-            <option value="Deposit">Deposit</option>
-            <option value="Subscription">Subscription</option>
-            <option value="Copy Trading">Copy Trading</option>
+            <option value="deposit">Deposit</option>
+            <option value="sub_payment">Subscription</option>
+            <option value="performance_fee">Copy Trading</option>
           </select>
         </div>
       </div>
 
-      {/* Transactions Table */}
+      {/* 🖥️ جدول نمایش تراکنش‌ها (حفظ ۱۰۰٪ کلاس‌های چیدمان تصویر اول و دوم) */}
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[850px]">
+        <table className="w-full min-w-[700px] text-left">
           <thead>
-            <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wider text-slate-500">
-              <th className="px-5 py-4">Transaction</th>
-              <th className="px-5 py-4">Service</th>
-              <th className="px-5 py-4">Date</th>
-              <th className="px-5 py-4">Amount</th>
-              <th className="px-5 py-4">Status</th>
+            <tr className="border-b border-slate-200 text-xs font-semibold uppercase tracking-wider text-slate-500 bg-slate-50">
+              <th className="p-4 pl-6">Transaction</th>
+              <th className="p-4">Service</th>
+              <th className="p-4">Date</th>
+              <th className="p-4">Amount</th>
+              <th className="p-4 pr-6">Status</th>
             </tr>
           </thead>
 
-          <tbody>
-            {filteredTransactions.map((transaction) => {
-              const isDeposit = transaction.type === "Deposit";
+          <tbody className="text-xs divide-y divide-slate-50">
+            {filteredTransactions.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="p-8 text-center text-slate-400 italic font-medium">
+                  No transactions found matching your filtering parameters.
+                </td>
+              </tr>
+            ) : (
+              filteredTransactions.map((transaction) => {
+                const isDeposit = transaction.type === "deposit";
 
-              return (
-                <tr
-                  key={transaction.id}
-                  className="border-b border-slate-100 last:border-0 transition hover:bg-slate-50"
-                >
-                  <td className="px-5 py-5">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-xl ${
-                          isDeposit
-                            ? "bg-emerald-50 text-emerald-600"
-                            : "bg-orange-50 text-orange-600"
-                        }`}
-                      >
-                        {isDeposit ? <FiArrowDownLeft /> : <FiArrowUpRight />}
-                      </div>
-
-                      <div>
-                        <p className="text-sm font-medium text-slate-900">
-                          {transaction.type}
-                        </p>
-
-                        <p className="text-xs text-slate-500">
-                          {transaction.id}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-
-                  <td className="px-5 py-5 text-sm text-slate-600">
-                    {transaction.service}
-                  </td>
-
-                  <td className="px-5 py-5 text-sm text-slate-500">
-                    {transaction.date}
-                  </td>
-
-                  <td
-                    className={`px-5 py-5 text-sm font-semibold ${
-                      isDeposit ? "text-emerald-600" : "text-slate-900"
-                    }`}
+                return (
+                  <tr
+                    key={transaction.id}
+                    className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors"
                   >
-                    {transaction.amount}
-                  </td>
+                    <td className="p-4 pl-6">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`flex h-8 w-8 items-center justify-center rounded-xl ${
+                            isDeposit
+                              ? "bg-emerald-50 text-emerald-600"
+                              : "bg-orange-50 text-orange-600"
+                          }`}
+                        >
+                          {isDeposit ? (
+                            <FiArrowDownLeft size={16} />
+                          ) : (
+                            <FiArrowUpRight size={16} />
+                          )}
+                        </div>
+                        <div>
+                          <span className="text-sm font-medium text-slate-900 capitalize">
+                            {transaction.type.replace('_', ' ')}
+                          </span>
+                        </div>
+                      </div>
+                    </td>
 
-                  <td className="px-5 py-5">
-                    <span
-                      className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
-                        transaction.status === "Completed"
-                          ? "bg-emerald-50 text-emerald-600"
-                          : "bg-yellow-50 text-yellow-700"
+                    <td className="p-4 text-slate-500">
+                      <span className="block font-medium">ID: #{transaction.id}</span>
+                      <span className="text-[11px] text-slate-400 block mt-0.5">
+                        {transaction.description || "System Automated Settlement Ledger"}
+                      </span>
+                    </td>
+
+                    <td className="p-4 text-slate-400 font-medium">{transaction.date}</td>
+
+                    <td
+                      className={`p-4 font-bold text-sm ${
+                        isDeposit ? "text-emerald-600" : "text-red-600"
                       }`}
                     >
-                      {transaction.status}
-                    </span>
-                  </td>
-                </tr>
-              );
-            })}
+                      {isDeposit ? "+" : ""}{transaction.amount}
+                    </td>
+
+                    <td className="p-4 pr-6">
+                      <span
+                        className={`inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-bold ${
+                          transaction.status === "completed"
+                            ? "bg-emerald-50 text-emerald-700"
+                            : transaction.status === "failed"
+                            ? "bg-red-50 text-red-700"
+                            : "bg-amber-50 text-amber-700"
+                        }`}
+                      >
+                        {transaction.status}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>
-
-      {filteredTransactions.length === 0 && (
-        <div className="px-5 py-12 text-center text-sm text-slate-500">
-          No transactions found.
-        </div>
-      )}
     </motion.div>
   );
 }

@@ -1,264 +1,131 @@
 "use client";
 
-import {FiArrowDown, FiArrowUp} from "react-icons/fi";
-import Link from "next/link";
-export interface CopyTrade {
-  id: number | string;
+import { useState } from "react";
+import { FiActivity, FiPause, FiPlay, FiLoader } from "react-icons/fi";
+import api from "@/src/lib/axios";
+
+type TradeItem = {
+  id: number;
   symbol: string;
-  type: "BUY" | "SELL";
-  volume?: number | string;
-  entry_price?: number | string;
-  exit_price?: number | string | null;
-  profit?: number | string;
-  status?: "OPEN" | "CLOSED";
-  opened_at?: string;
-  closed_at?: string | null;
+  type: string;
+  volume: number;
+  entry_price: number;
+  exit_price: number | null;
+  profit: number;
+  status: string;
+};
+
+interface MyCopyTraderProps {
+  trades: TradeItem[]; // دریافت مستقیم معاملات زنده دیتابیس
+  onRefresh: () => void;
 }
 
-interface MyCopyTradesProps {
-  trades?: CopyTrade[];
-}
+export default function MyCopyTrader({ trades, onRefresh }: MyCopyTraderProps) {
+  const [processingId, setProcessingId] = useState<number | null>(null);
 
-// TEMPORARY DATA - فقط برای دیدن استایل
-const demoTrades: CopyTrade[] = [
-  {
-    id: 1,
-    symbol: "XAUUSD",
-    type: "BUY",
-    volume: 0.5,
-    entry_price: 2650.5,
-    exit_price: 2670.2,
-    profit: 98.5,
-    status: "CLOSED",
-  },
-  {
-    id: 2,
-    symbol: "EURUSD",
-    type: "SELL",
-    volume: 1,
-    entry_price: 1.175,
-    exit_price: 1.1695,
-    profit: 55.0,
-    status: "CLOSED",
-  },
-  {
-    id: 3,
-    symbol: "GBPUSD",
-    type: "BUY",
-    volume: 0.8,
-    entry_price: 1.345,
-    exit_price: 1.3515,
-    profit: 52.0,
-    status: "CLOSED",
-  },
-  {
-    id: 4,
-    symbol: "XAUUSD",
-    type: "SELL",
-    volume: 0.3,
-    entry_price: 2685.4,
-    exit_price: null,
-    profit: 24.6,
-    status: "OPEN",
-  },
-  {
-    id: 5,
-    symbol: "USDJPY",
-    type: "BUY",
-    volume: 0.7,
-    entry_price: 148.2,
-    exit_price: 148.85,
-    profit: 45.5,
-    status: "CLOSED",
-  },
-];
-
-export default function MyCopyTrades({trades = demoTrades}: MyCopyTradesProps) {
-  const displayTrades = trades.length > 0 ? trades : demoTrades;
+  // 📡 شلیک سیگنال متوقف یا روشن کردن کپی‌ترید به بک‌اَند
+  const handleToggleCopyStatus = async (tradeId: number, currentStatus: string) => {
+    const isCurrentlyActive = currentStatus.toLowerCase() === "open" || currentStatus.toLowerCase() === "active";
+    const action = isCurrentlyActive ? "pause" : "resume";
+    
+    try {
+      setProcessingId(tradeId);
+      await api.post(`/api/copy-trading/my-traders/${tradeId}/${action}/`);
+      onRefresh(); // به‌روزرسانی آنی فرانت‌اَند پس از اعمال تغییر وضعیت در بک‌اَند
+    } catch (error) {
+      console.error(`Failed to execute ${action} on live order matrix:`, error);
+    } finally {
+      setProcessingId(null);
+    }
+  };
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      {/* Header */}
-      <div className="border-b border-slate-200 px-5 py-5">
-        <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-          <div>
-            <h2 className="text-lg font-bold text-slate-900">Copied Trades</h2>
-
-            <p className="mt-1 text-sm text-slate-500">
-              Trades copied from Amiri Pro Trader
-            </p>
-          </div>
-
-          <Link
-            href="/copy-trading/amiri-pro"
-            className="w-fit rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-600"
-          >
-            Amiri Pro Trader
-          </Link>
-        </div>
+    <div className="w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm mt-6">
+      <div className="border-b border-slate-100 p-5">
+        <h2 className="text-base font-bold text-slate-900">Copied Trades Portfolio & Controls</h2>
+        <p className="text-xs text-slate-400 mt-0.5">Real-time terminal synchronization logs from MetaTrader 5.</p>
       </div>
 
-      {/* Desktop */}
-      <div className="hidden overflow-x-auto md:block">
-        <table className="w-full text-left">
-          <thead className="bg-slate-50">
-            <tr className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-              <th className="px-5 py-4">Symbol</th>
-              <th className="px-5 py-4">Type</th>
-              <th className="px-5 py-4">Volume</th>
-              <th className="px-5 py-4">Entry</th>
-              <th className="px-5 py-4">Exit</th>
-              <th className="px-5 py-4">P&L</th>
-              <th className="px-5 py-4">Status</th>
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[800px] text-left">
+          <thead>
+            <tr className="border-b border-slate-200 text-xs font-semibold uppercase tracking-wider text-slate-500 bg-slate-50">
+              <th className="p-4 pl-6">Symbol</th>
+              <th className="p-4">Type</th>
+              <th className="p-4">Volume</th>
+              <th className="p-4">Entry</th>
+              <th className="p-4">Exit</th>
+              <th className="p-4">P&L</th>
+              <th className="p-4">Status</th>
+              <th className="p-4 pr-6 text-center">Actions</th> {/* 🚀 اضافه شدن ستون کنترلرها */}
             </tr>
           </thead>
+          <tbody className="text-xs divide-y divide-slate-50 font-medium">
+            {!trades || trades.length === 0 ? (
+              <tr>
+                <td colSpan={8} className="p-8 text-center text-slate-400 italic">
+                  No active or closed trades synchronizing from your MT5 terminal ledger yet.
+                </td>
+              </tr>
+            ) : (
+              trades.map((trade) => {
+                const isBuy = trade.type === "BUY" || trade.type === "buy";
+                const isClosed = trade.status === "CLOSED" || trade.status === "closed";
+                const isProfit = trade.profit >= 0;
+                const isTradeActive = !isClosed; // اگر معامله بسته نشده باشد یعنی فعال است
 
-          <tbody className="divide-y divide-slate-100">
-            {displayTrades.map((trade) => {
-              const profit = Number(trade.profit ?? 0);
-              const isBuy = trade.type === "BUY";
-              const isOpen = trade.status === "OPEN";
+                return (
+                  <tr key={trade.id} className="hover:bg-slate-50 transition-colors">
+                    <td className="p-4 pl-6 font-bold text-slate-900">{trade.symbol}</td>
+                    <td className="p-4">
+                      <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold ${
+                        isBuy ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"
+                      }`}>
+                        {isBuy ? "↑ BUY" : "↓ SELL"}
+                      </span>
+                    </td>
+                    <td className="p-4 font-mono text-slate-600">{trade.volume}</td>
+                    <td className="p-4 font-mono text-slate-600">\${trade.entry_price.toFixed(2)}</td>
+                    <td className="p-4 font-mono text-slate-400">
+                      {trade.exit_price ? `$` + trade.exit_price.toFixed(2) : "—"}
+                    </td>
+                    <td className={`p-4 font-bold ${isProfit ? "text-emerald-600" : "text-red-600"}`}>
+                      {isProfit ? "+" : ""}\${trade.profit.toFixed(2)}
+                    </td>
+                    <td className="p-4">
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                        isClosed ? "bg-slate-100 text-slate-600" : "bg-blue-50 text-blue-600 animate-pulse"
+                      }`}>
+                        {trade.status}
+                      </span>
+                    </td>
 
-              return (
-                <tr key={trade.id} className="transition hover:bg-slate-50">
-                  {/* Symbol */}
-                  <td className="px-5 py-4">
-                    <span className="font-semibold text-slate-900">
-                      {trade.symbol}
-                    </span>
-                  </td>
+                    {/* 🟩 رندر خودکار دکمه‌های کنترل لایو کپی‌ترید در انتهای جدول */}
+                    <td className="p-4 pr-6 text-center">
+                      <button
+                        onClick={() => handleToggleCopyStatus(trade.id, trade.status)}
+                        disabled={processingId !== null}
+                        className={`inline-flex h-7 items-center gap-1.5 rounded-xl px-3 text-[11px] font-bold text-white transition ${
+                          isTradeActive ? "bg-orange-500 hover:bg-orange-600" : "bg-blue-600 hover:bg-blue-700"
+                        }`}
+                      >
+                        {processingId === trade.id ? (
+                          <FiLoader className="animate-spin" size={12} />
+                        ) : isTradeActive ? (
+                          <FiPause size={12} />
+                        ) : (
+                          <FiPlay size={12} />
+                        )}
+                        <span>{isTradeActive ? "Pause" : "Start"}</span>
+                      </button>
+                    </td>
 
-                  {/* Type */}
-                  <td className="px-5 py-4">
-                    <span
-                      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${
-                        isBuy
-                          ? "bg-emerald-50 text-emerald-600"
-                          : "bg-red-50 text-red-600"
-                      }`}
-                    >
-                      {isBuy ? (
-                        <FiArrowUp size={13} />
-                      ) : (
-                        <FiArrowDown size={13} />
-                      )}
-
-                      {trade.type}
-                    </span>
-                  </td>
-
-                  {/* Volume */}
-                  <td className="px-5 py-4 text-sm text-slate-600">
-                    {trade.volume ?? "—"}
-                  </td>
-
-                  {/* Entry */}
-                  <td className="px-5 py-4 text-sm text-slate-600">
-                    {trade.entry_price ?? "—"}
-                  </td>
-
-                  {/* Exit */}
-                  <td className="px-5 py-4 text-sm text-slate-600">
-                    {trade.exit_price ?? "—"}
-                  </td>
-
-                  {/* Profit */}
-                  <td className="px-5 py-4">
-                    <span
-                      className={`text-sm font-semibold ${
-                        profit >= 0 ? "text-emerald-600" : "text-red-600"
-                      }`}
-                    >
-                      {profit >= 0 ? "+" : ""}${profit.toFixed(2)}
-                    </span>
-                  </td>
-
-                  {/* Status */}
-                  <td className="px-5 py-4">
-                    <span
-                      className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
-                        isOpen
-                          ? "bg-blue-50 text-blue-600"
-                          : "bg-slate-100 text-slate-600"
-                      }`}
-                    >
-                      {trade.status ?? "CLOSED"}
-                    </span>
-                  </td>
-                </tr>
-              );
-            })}
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
-      </div>
-
-      {/* Mobile */}
-      <div className="divide-y divide-slate-100 md:hidden">
-        {displayTrades.map((trade) => {
-          const profit = Number(trade.profit ?? 0);
-          const isBuy = trade.type === "BUY";
-
-          return (
-            <div key={trade.id} className="p-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-bold text-slate-900">{trade.symbol}</p>
-
-                  <span
-                    className={`mt-1 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${
-                      isBuy
-                        ? "bg-emerald-50 text-emerald-600"
-                        : "bg-red-50 text-red-600"
-                    }`}
-                  >
-                    {isBuy ? (
-                      <FiArrowUp size={13} />
-                    ) : (
-                      <FiArrowDown size={13} />
-                    )}
-                    {trade.type}
-                  </span>
-                </div>
-
-                <span
-                  className={`text-sm font-bold ${
-                    profit >= 0 ? "text-emerald-600" : "text-red-600"
-                  }`}
-                >
-                  {profit >= 0 ? "+" : ""}${profit.toFixed(2)}
-                </span>
-              </div>
-
-              <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p className="text-xs text-slate-400">Volume</p>
-                  <p className="mt-1 text-slate-700">{trade.volume ?? "—"}</p>
-                </div>
-
-                <div>
-                  <p className="text-xs text-slate-400">Status</p>
-                  <p className="mt-1 text-slate-700">
-                    {trade.status ?? "CLOSED"}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-xs text-slate-400">Entry</p>
-                  <p className="mt-1 text-slate-700">
-                    {trade.entry_price ?? "—"}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-xs text-slate-400">Exit</p>
-                  <p className="mt-1 text-slate-700">
-                    {trade.exit_price ?? "—"}
-                  </p>
-                </div>
-              </div>
-            </div>
-          );
-        })}
       </div>
     </div>
   );

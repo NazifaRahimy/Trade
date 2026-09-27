@@ -1,15 +1,16 @@
 "use client";
-import { registerUser } from "../../lib/api";
-import {useState} from "react";
-import Link from "next/link";
-import {motion} from "framer-motion";
-import {FiMail, FiLock, FiUser, FiPhone, FiEye, FiEyeOff} from "react-icons/fi";
 
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { FiMail, FiLock, FiUser, FiEye, FiEyeOff, FiLoader } from "react-icons/fi";
+import api from "@/src/lib/axios";
 import SocialLogin from "./SocialLogin";
 
 export default function RegisterForm() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -17,7 +18,6 @@ export default function RegisterForm() {
     fullName: "",
     lastName: "",
     email: "",
-    phone: "",
     password: "",
     confirmPassword: "",
   });
@@ -29,67 +29,64 @@ export default function RegisterForm() {
     });
   };
 
- // 👈 این خط را در بالاترین بخش فایل RegisterForm.tsx خود ایمپورت کنید:
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-
-// 👈 این تابع را جایگزین تابع handleSubmit قبلی کنید:
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-
-  if (formData.password !== formData.confirmPassword) {
-    alert("Passwords do not match");
-    return;
-  }
-
-  try {
-    setLoading(true);
-
-    // 🚀 فراخوانی مستقیم تابع ثبت‌نام بدون درگیر شدن با کدهای پیچیده شبکه
-    await registerUser(formData.email, formData.password);
-
-    alert("ثبت‌نام شما با موفقیت انجام شد. لطفا وارد حساب خود شوید.");
-    window.location.href = "/login";
-  } catch (error: any) {
-    console.error("Registration Error:", error);
-    if (error.response && error.response.data) {
-      alert("خطا در ثبت‌نام: " + JSON.stringify(error.response.data));
-    } else {
-      alert("خطا در ارتباط با سرور. مطمئن شوید سرور جنگو (پورت 8000) روشن است.");
+    if (formData.password !== formData.confirmPassword) {
+      alert("⚠️ Passwords do not match!");
+      return;
     }
-  } finally {
-    setLoading(false);
-  }
-};
 
+    try {
+      setLoading(true);
+
+      // 🚀 انطباق ۱۰۰٪ با فیلدهای آرایه RegisterSerializer بک‌اَند شما
+      const payload = {
+        username: formData.email, // ایمیل مشتری به عنوان کُد شناسایی یکتا (Username) چفت می‌شود
+        email: formData.email,
+        password: formData.password,
+      };
+
+      // شلیک مستقیم به کلاس ثبت‌نام بدون فرستادن فیلدهای تکراری
+      const response = await api.post("/api/auth/register/", payload);
+
+      if (response.status === 201) {
+        alert("✅ Account created successfully! Please sign in to activate your live session.");
+        router.push("/login");
+      }
+    } catch (error: any) {
+      console.error("Registration Core Matrix Failure:", error);
+      if (error.response && error.response.data) {
+        const serverErrors = Object.entries(error.response.data)
+          .map(([key, value]) => `${key}: ${value}`)
+          .join("\n");
+        alert(`❌ Registration Rejected:\n${serverErrors}`);
+      } else {
+        alert("❌ Network Error: Unable to handshake with Django registration endpoint.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <motion.div
-      initial={{opacity: 0, x: -30}}
-      animate={{opacity: 1, x: 0}}
-      transition={{duration: 0.5}}
-      className="rounded-b-md lg:rounded-b-none lg:rounded-l-3xl border border-slate-200 bg-white p-6 shadow-lg"
+      initial={{ opacity: 0, x: -30 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5 }}
+      className="rounded-b-md lg:rounded-b-none lg:rounded-l-3xl border border-slate-200 bg-white p-6 shadow-lg text-slate-900"
     >
-      {/* Heading */}
       <div className="mb-6">
-        <h2 className="mb-2 text-2xl font-bold text-slate-900">
-          Create Account
-        </h2>
-
-        <p className="text-sm text-slate-500">
-          Start your trading journey today.
-        </p>
+        <h2 className="mb-2 text-2xl font-bold text-slate-900">Create Account</h2>
+        <p className="text-sm text-slate-500">Start your trading journey today.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Full Name */}
+        {/* Full Name (حفظ ظاهر گرافیکی شما) */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700">
-            Full Name
-          </label>
-
+          <label className="mb-2 block text-sm font-medium text-slate-700">Full Name</label>
           <div className="relative">
             <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-
             <input
               type="text"
               name="fullName"
@@ -102,15 +99,11 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           </div>
         </div>
 
-        {/* Last Name */}
+        {/* Last Name (حفظ ظاهر گرافیکی شما) */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700">
-            Last Name
-          </label>
-
+          <label className="mb-2 block text-sm font-medium text-slate-700">Last Name</label>
           <div className="relative">
             <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-
             <input
               type="text"
               name="lastName"
@@ -125,13 +118,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
         {/* Email */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700">
-            Email
-          </label>
-
+          <label className="mb-2 block text-sm font-medium text-slate-700">Email</label>
           <div className="relative">
             <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-
             <input
               type="email"
               name="email"
@@ -146,13 +135,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
         {/* Password */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700">
-            Password
-          </label>
-
+          <label className="mb-2 block text-sm font-medium text-slate-700">Password</label>
           <div className="relative">
             <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-
             <input
               type={showPassword ? "text" : "password"}
               name="password"
@@ -162,7 +147,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               required
               className="w-full rounded-xl border border-slate-300 bg-white py-3 pl-11 pr-12 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
             />
-
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
@@ -175,13 +159,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
         {/* Confirm Password */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700">
-            Confirm Password
-          </label>
-
+          <label className="mb-2 block text-sm font-medium text-slate-700">Confirm Password</label>
           <div className="relative">
             <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-
             <input
               type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
@@ -191,7 +171,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               required
               className="w-full rounded-xl border border-slate-300 bg-white py-3 pl-11 pr-12 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
             />
-
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -202,35 +181,28 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           </div>
         </div>
 
-        {/* Submit */}
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-xl bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-xl bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 flex items-center justify-center gap-2"
         >
+          {loading ? <FiLoader className="animate-spin" size={16} /> : null}
           {loading ? "Creating Account..." : "Create Account"}
         </button>
       </form>
 
-      {/* Divider */}
       <div className="my-5 flex items-center">
         <div className="h-px flex-1 bg-slate-200" />
-
         <span className="px-4 text-sm text-slate-500">OR</span>
-
         <div className="h-px flex-1 bg-slate-200" />
       </div>
 
-      {/* Social Login */}
       <SocialLogin />
 
-      {/* Login */}
       <p className="mt-6 text-center text-sm text-slate-500">
         Already have an account?{" "}
-        <Link
-          href="/login"
-          className="font-medium text-blue-600 transition hover:text-blue-700"
-        >
+        <Link href="/login" className="font-medium text-blue-600 transition hover:text-blue-700">
           Sign in
         </Link>
       </p>

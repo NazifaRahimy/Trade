@@ -1,8 +1,10 @@
 "use client";
-import {FiLogOut, FiHome} from "react-icons/fi";
+
+import { useEffect, useState } from "react"; // 🚀 اضافه شدن هوک‌ها برای دریافت نقش
+import { FiLogOut, FiHome } from "react-icons/fi";
 import Link from "next/link";
 import Image from "next/image";
-import {usePathname} from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   FiGrid,
   FiLink,
@@ -12,64 +14,93 @@ import {
   FiSettings,
   FiClock,
   FiX,
+  FiDollarSign, // آیکون دلار دریافتی از کدهای شما
 } from "react-icons/fi";
 
 import logo from "@/src/assets/images/logo.png";
+import api from "@/src/lib/axios"; // کلاینت شبکه اکسوس پلتفرم شما
 
 interface CopyTradingSidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
 }
 
-const menuItems = [
-  {
-    name: "Overview",
-    href: "/copy-trading",
-    icon: FiGrid,
-  },
-  {
-    name: "Broker Connections",
-    href: "/copy-trading/broker-connections",
-    icon: FiLink,
-  },
-  {
-    name: "My Copy Trades",
-    href: "/copy-trading/my-copy-trades",
-    icon: FiCopy,
-  },
-  {
-    name: "Active Positions",
-    href: "/copy-trading/active-positions",
-    icon: FiActivity,
-  },
-  {
-    name: "Performance",
-    href: "/copy-trading/performance",
-    icon: FiTrendingUp,
-  },
-  {
-    name: "Copy Settings",
-    href: "/copy-trading/copy-settings",
-    icon: FiSettings,
-  },
-  {
-    name: "History",
-    href: "/copy-trading/history",
-    icon: FiClock,
-  },
-];
-
 export default function CopyTradingSidebar({
   isOpen = false,
   onClose,
 }: CopyTradingSidebarProps) {
   const pathname = usePathname();
+  
+  // 🧠 ۱. استیت ذخیره نقش کاربر (پیش‌فرض روی فلوور یا کاربر عادی)
+  const [userRole, setUserRole] = useState<string>("follower");
+
+  // 📡 ۲. فچ کردن زنده وضعیت مستر بودن یا نبودن کاربر از پروفایل احراز هویت جنگو
+  // 📡 فچ کردن آنلاین و زنده وضعیت واقعی نقش کاربر بدون حالت تستی پیش‌فرض
+  useEffect(() => {
+    const checkUserAuthorizationRole = async () => {
+      try {
+        const response = await api.get("/api/user/profile/");
+        if (response.data && response.data.role) {
+          // 🟢 ثبت نقش واقعی کاربر از دیتابیس (master یا follower)
+          setUserRole(response.data.role); 
+        } else {
+          // 🛡️ اگر نقشی در پاسخ سرور نبود، به عنوان کاربر عادی قفلش کن
+          setUserRole("follower"); 
+        }
+      } catch (error) {
+        console.error("Security Alert: Failed to fetch profile node role.", error);
+        
+        setUserRole("follower"); 
+      }
+    };
+    
+    checkUserAuthorizationRole();
+  }, [pathname]); // هماهنگ‌سازی اتوماتیک با تغییر آدرس صفحات داشبورد
+
+
+  // 📊 ۳. لیست منوهای عمومی و مشترک برای تمام کاربران (دقیقاً کدهای خودتان)
+  const menuItems = [
+    {
+      name: "Overview",
+      href: "/copy-trading",
+      icon: FiGrid,
+    },
+    {
+      name: "Broker Connections",
+      href: "/copy-trading/broker-connections",
+      icon: FiLink,
+    },
+    {
+      name: "My Copy Trades",
+      href: "/copy-trading/my-copy-trades",
+      icon: FiCopy,
+    },
+    {
+      name: "Active Positions",
+      href: "/copy-trading/active-positions",
+      icon: FiActivity,
+    },
+    {
+      name: "Performance",
+      href: "/copy-trading/performance",
+      icon: FiTrendingUp,
+    },
+    {
+      name: "Copy Settings",
+      href: "/copy-trading/copy-settings",
+      icon: FiSettings,
+    },
+    {
+      name: "History",
+      href: "/copy-trading/history",
+      icon: FiClock,
+    },
+  ];
 
   const isActive = (href: string) => {
     if (href === "/copy-trading") {
       return pathname === "/copy-trading";
     }
-
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
@@ -125,6 +156,7 @@ export default function CopyTradingSidebar({
           </Link>
 
           <nav className="space-y-2">
+            {/* رندر لیست منوهای عمومی بومی خودتان */}
             {menuItems.map((item) => {
               const active = isActive(item.href);
               const Icon = item.icon;
@@ -147,17 +179,38 @@ export default function CopyTradingSidebar({
                         : "text-slate-400 group-hover:text-white"
                     }`}
                   />
-
                   <span>{item.name}</span>
                 </Link>
               );
             })}
+
+            {/* 🛡️ ۴. قفل امنیتی فرانت‌اَند: منوی درآمدها فقط و فقط در صورت مستر بودن کاربر رندر می‌شود */}
+            {userRole === "master" && (
+              <Link
+                href="/copy-trading/earnings"
+                onClick={onClose}
+                className={`group flex items-center gap-4 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
+                  isActive("/copy-trading/earnings")
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
+                    : "text-slate-300 hover:bg-slate-900 hover:text-white"
+                }`}
+              >
+                <FiDollarSign
+                  className={`h-5 w-5 shrink-0 ${
+                    isActive("/copy-trading/earnings")
+                      ? "text-white"
+                      : "text-slate-400 group-hover:text-white"
+                  }`}
+                />
+                <span>Master Earnings</span>
+              </Link>
+            )}
+
             <Link
               href="/"
               className={`group flex lg:hidden items-center gap-4 rounded-xl px-4 py-2.5 text-sm font-medium transition-all `}
             >
               <FiHome />
-
               <span>Back Home</span>
             </Link>
           </nav>
@@ -171,7 +224,6 @@ export default function CopyTradingSidebar({
             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-400 transition hover:bg-red-950/40 hover:text-red-400"
           >
             <FiLogOut />
-
             <span>Logout</span>
           </button>
         </div>

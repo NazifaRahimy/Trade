@@ -1,401 +1,229 @@
 "use client";
 
-import {motion} from "framer-motion";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   FiActivity,
-  FiArrowLeft,
-  FiBarChart2,
-  FiCheckCircle,
-  FiClock,
-  FiDollarSign,
-  FiPercent,
-  FiShield,
-  FiTarget,
   FiArrowUpRight,
-  FiTrendingDown,
+  FiClock,
+  FiCopy,
+  FiDollarSign,
+  FiGrid,
+  FiLink,
+  FiSettings,
   FiTrendingUp,
-  FiUser,
+  FiUsers,
+  FiLoader,
+  FiPercent,
+  FiShield
 } from "react-icons/fi";
-import Link from "next/link";
+import api from "@/src/lib/axios";
+import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
 
-const stats = [
-  {
-    title: "Total Profit",
-    value: "+$1,284.60",
-    icon: FiDollarSign,
-    color: "text-emerald-600",
-    bg: "bg-emerald-50",
-  },
-  {
-    title: "Return",
-    value: "+24.82%",
-    icon: FiTrendingUp,
-    color: "text-blue-600",
-    bg: "bg-blue-50",
-  },
-  {
-    title: "Win Rate",
-    value: "76.4%",
-    icon: FiTarget,
-    color: "text-violet-600",
-    bg: "bg-violet-50",
-  },
-  {
-    title: "Max Drawdown",
-    value: "6.42%",
-    icon: FiTrendingDown,
-    color: "text-amber-600",
-    bg: "bg-amber-50",
-  },
-  {
-    title: "Profit Factor",
-    value: "2.18",
-    icon: FiPercent,
-    color: "text-cyan-600",
-    bg: "bg-cyan-50",
-  },
-];
+export default function ActiveCopyTradersPage() {
+  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-const performanceData = [
-  18, 24, 21, 31, 28, 39, 36, 48, 44, 56, 61, 58, 68, 72,
-];
+  // 📡 ۱. فچ آنلاین اطلاعات پورتفو و لیست تریدرها از بک‌اَند جنگو
+  useEffect(() => {
+    const fetchActiveTradersMetrics = async () => {
+      try {
+        const response = await api.get("/api/copy-trading/overview/");
+        if (response.data) {
+          setDashboardData(response.data);
+        }
+      } catch (error) {
+        console.error("Critical Matrix Failure: Failed to stream active provider nodes:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchActiveTradersMetrics();
+  }, []);
 
-const tradingStats = [
-  {
-    label: "Total Trades",
-    value: "142",
-  },
-  {
-    label: "Winning Trades",
-    value: "108",
-  },
-  {
-    label: "Losing Trades",
-    value: "34",
-  },
-  {
-    label: "Average Trade",
-    value: "+$30.58",
-  },
-  {
-    label: "Best Trade",
-    value: "+$124.80",
-  },
-  {
-    label: "Worst Trade",
-    value: "-$48.20",
-  },
-];
-
-export default function AmiriProTraderPage() {
-  return (
-    <main className="min-h-screen bg-white text-slate-900">
-      <div className=" space-y-6 p-5 md:p-8 lg:p-10">
-        {/* Back */}
-        <Link
-          href="/copy-trading/my-copy-trades"
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
-        >
-          <FiArrowLeft size={16} />
-          Back to My Copy Trades
-        </Link>
-
-        {/* Trader Header */}
-        <motion.div
-          initial={{opacity: 0, y: 15}}
-          animate={{opacity: 1, y: 0}}
-          transition={{duration: 0.4}}
-          className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6"
-        >
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-sm">
-                <FiUser size={28} />
-              </div>
-
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="text-2xl font-bold text-slate-900">
-                    Amiri Pro Trader
-                  </h1>
-
-                  <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600">
-                    <FiCheckCircle size={13} />
-                    Active
-                  </span>
-                </div>
-
-                <p className="mt-1 text-sm text-slate-500">
-                  Professional Forex & Gold Trader
-                </p>
-
-                <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-slate-500">
-                  <span className="flex items-center gap-1.5">
-                    <FiClock size={14} />
-                    Trading for 7+ years
-                  </span>
-
-                  <span className="flex items-center gap-1.5">
-                    <FiActivity size={14} />
-                    Forex & Gold
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-xl bg-emerald-50 px-5 py-3">
-              <p className="text-xs text-emerald-600">Current Status</p>
-
-              <p className="mt-1 flex items-center gap-2 text-sm font-bold text-emerald-700">
-                <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                Trading Active
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Stats */}
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-          {stats.map((stat, index) => {
-            const Icon = stat.icon;
-
-            return (
-              <motion.div
-                key={stat.title}
-                initial={{opacity: 0, y: 15}}
-                animate={{opacity: 1, y: 0}}
-                transition={{
-                  duration: 0.4,
-                  delay: index * 0.07,
-                }}
-                className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-slate-500">
-                      {stat.title}
-                    </p>
-
-                    <p className="mt-2 text-2xl font-bold text-slate-900">
-                      {stat.value}
-                    </p>
-                  </div>
-
-                  <div
-                    className={`flex h-11 w-11 items-center justify-center rounded-xl ${stat.bg} ${stat.color}`}
-                  >
-                    <Icon size={21} />
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Performance + Trading Style */}
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.7fr)_minmax(320px,0.8fr)]">
-          {/* Performance Chart */}
-          <motion.div
-            initial={{opacity: 0, y: 15}}
-            animate={{opacity: 1, y: 0}}
-            transition={{duration: 0.4}}
-            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-lg font-bold text-slate-900">
-                  Performance
-                </h2>
-
-                <p className="mt-1 text-sm text-slate-500">
-                  Trader performance over time.
-                </p>
-              </div>
-
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                <FiBarChart2 size={19} />
-              </div>
-            </div>
-
-            <div className="mt-8 flex h-[260px] items-end gap-2 border-b border-slate-200 px-2">
-              {performanceData.map((value, index) => (
-                <div key={index} className="flex h-full flex-1 items-end">
-                  <motion.div
-                    initial={{height: 0}}
-                    animate={{height: `${value}%`}}
-                    transition={{
-                      duration: 0.7,
-                      delay: index * 0.04,
-                    }}
-                    className="w-full rounded-t-lg bg-blue-500"
-                  />
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-3 flex justify-between text-xs text-slate-400">
-              <span>Start</span>
-              <span>Current</span>
-            </div>
-          </motion.div>
-
-          {/* Trading Style */}
-          <motion.div
-            initial={{opacity: 0, y: 15}}
-            animate={{opacity: 1, y: 0}}
-            transition={{duration: 0.4, delay: 0.1}}
-            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6"
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
-                <FiActivity size={19} />
-              </div>
-
-              <div>
-                <h2 className="text-lg font-bold text-slate-900">
-                  Trading Style
-                </h2>
-
-                <p className="text-sm text-slate-500">
-                  Professional trading profile
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6 space-y-4">
-              <InfoRow label="Markets" value="Forex & Gold" />
-
-              <InfoRow label="Strategy" value="Technical Analysis" />
-
-              <InfoRow label="Risk Level" value="Moderate" />
-
-              <InfoRow label="Average Holding" value="4h 32m" />
-
-              <InfoRow label="Copy Ratio" value="1:1" />
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Trading Statistics */}
-        <motion.div
-          initial={{opacity: 0, y: 15}}
-          animate={{opacity: 1, y: 0}}
-          transition={{duration: 0.4}}
-          className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6"
-        >
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-              <FiTrendingUp size={19} />
-            </div>
-
-            <div>
-              <h2 className="text-lg font-bold text-slate-900">
-                Trading Statistics
-              </h2>
-
-              <p className="text-sm text-slate-500">
-                Detailed trading performance.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {tradingStats.map((item) => (
-              <div
-                key={item.label}
-                className="rounded-xl border border-slate-200 bg-slate-50 p-4"
-              >
-                <p className="text-xs text-slate-500">{item.label}</p>
-
-                <p className="mt-2 text-lg font-bold text-slate-900">
-                  {item.value}
-                </p>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Risk Management */}
-        <motion.div
-          initial={{opacity: 0, y: 15}}
-          animate={{opacity: 1, y: 0}}
-          transition={{duration: 0.4}}
-          className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6"
-        >
-          <div className="flex items-start gap-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-              <FiShield size={21} />
-            </div>
-
-            <div>
-              <h2 className="text-lg font-bold text-slate-900">
-                Risk Management
-              </h2>
-
-              <p className="mt-1 text-sm leading-6 text-slate-500">
-                Amiri Pro Trader follows controlled risk management practices
-                with defined drawdown and position limits.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-5 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-xl bg-emerald-50 p-4">
-              <p className="text-xs text-emerald-600">Risk Level</p>
-              <p className="mt-1 font-bold text-slate-900">Moderate</p>
-            </div>
-
-            <div className="rounded-xl bg-blue-50 p-4">
-              <p className="text-xs text-blue-600">Maximum Drawdown</p>
-              <p className="mt-1 font-bold text-slate-900">6.42%</p>
-            </div>
-
-            <div className="rounded-xl bg-violet-50 p-4">
-              <p className="text-xs text-violet-600">Profit Factor</p>
-              <p className="mt-1 font-bold text-slate-900">2.18</p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Copy Trader */}
-        <motion.div
-          initial={{opacity: 0, y: 15}}
-          animate={{opacity: 1, y: 0}}
-          transition={{duration: 0.4}}
-          className="rounded-2xl border border-blue-100 bg-blue-50 p-5 md:p-6"
-        >
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <h2 className="text-lg font-bold text-slate-900">
-                Copy Amiri Pro Trader
-              </h2>
-
-              <p className="mt-1 text-sm text-slate-600">
-                Your account is currently copying this trader with a 1:1 copy
-                ratio.
-              </p>
-            </div>
-
-            <Link
-              href="/copy-trading/copy-settings"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
-            >
-              Manage Copy Settings
-              <FiArrowUpRight size={16} />
-            </Link>
-          </div>
-        </motion.div>
+  if (loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center gap-2 text-sm text-slate-400 italic bg-white">
+        <FiLoader className="animate-spin text-blue-600" size={22} />
+        <span>Synchronizing live active copy-trading nodes...</span>
       </div>
-    </main>
-  );
-}
+    );
+  }
 
-function InfoRow({label, value}: {label: string; value: string}) {
+  const activeTraders = dashboardData?.active_traders || [];
+
   return (
-    <div className="flex items-center justify-between gap-4 border-b border-slate-100 pb-3">
-      <span className="text-sm text-slate-500">{label}</span>
+    <ProtectedRoute>
+      <main className="min-h-screen bg-slate-50/50 p-4 md:p-6 lg:p-8 w-full text-slate-900">
+        <div className="space-y-6 w-full max-w-[1700px] mx-auto">
+          
+          <h2 className="text-xl font-bold text-slate-900 mb-4">Your Active Copy Traders</h2>
 
-      <span className="text-sm font-semibold text-slate-900">{value}</span>
-    </div>
+          {activeTraders.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-12 text-center text-slate-400 italic">
+              No active master traders are being copied on your MetaTrader 5 account yet.
+            </div>
+          ) : (
+            // 🚀 ۲. لوپ داینامیک: تک‌تک کارت‌های تریدرها به صورت سریالی رندر و زیر هم لیست می‌شوند
+            activeTraders.map((trader: any) => (
+              <div key={trader.id} className="space-y-6 bg-transparent w-full mb-8">
+                
+                {/* 🟩 بخش اول: مشخصات اصلی تریدر و دکمه‌های ناوبری (حفظ ۱۰۰٪ استایل تصویر شما) */}
+                <motion.div
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+                >
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 font-bold text-lg">
+                        {trader.name?.charAt(0) || "T"}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-lg font-bold text-slate-900">{trader.name}</h3>
+                          <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-600">
+                            {trader.status || "Active"}
+                          </span>
+                        </div>
+                        <p className="text-sm font-medium text-slate-400 mt-0.5">{trader.pair || "Forex & Gold"}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <Link href="/copy-trading/performance" className="rounded-xl bg-slate-50 border border-slate-200 px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition">
+                        View Performance
+                      </Link>
+                      <Link href="/copy-trading/copy-settings" className="rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-semibold text-white hover:bg-blue-700 transition">
+                        Copy Settings
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* گرید مقادیر مبالغ سود و زیان (میانی) */}
+                  <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4 border-t border-slate-50 pt-5">
+                    <div>
+                      <span className="text-xs text-slate-400 font-medium">Investment</span>
+                      <p className="text-base font-bold text-slate-900 mt-1">{trader.investment || "$0.00"}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-slate-400 font-medium">Profit</span>
+                      <p className="text-base font-bold text-emerald-600 mt-1">{trader.profit || "$0.00"}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-slate-400 font-medium">Return</span>
+                      <p className="text-base font-bold text-emerald-600 mt-1">{trader.return_pct || "0.00%"}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-slate-400 font-medium">Win Rate</span>
+                      <p className="text-base font-bold text-slate-900 mt-1">{trader.win_rate || "0.0%"}</p>
+                    </div>
+                  </div>
+
+                  {/* نوار وضعیت ابر متاتریدر انتهای کارت */}
+                  <div className="mt-5 grid gap-4 border-t border-slate-100 pt-4 sm:grid-cols-3">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                        <FiTrendingUp size={18} />
+                      </div>
+                      <div>
+                        <span className="text-[11px] text-slate-400 block">Copy Status</span>
+                        <span className="text-sm font-semibold text-slate-900">Copying Active</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                        <FiActivity size={18} />
+                      </div>
+                      <div>
+                        <span className="text-[11px] text-slate-400 block">Active Positions</span>
+                        <span className="text-sm font-semibold text-slate-900">{trader.active_positions || 0} Positions</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+                        <FiPercent size={17} />
+                      </div>
+                      <div>
+                        <span className="text-[11px] text-slate-400 block">Copy Ratio</span>
+                        <span className="text-sm font-semibold text-slate-900">{trader.copy_ratio || "1:1"}</span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* 🟨 بخش دوم: آمار معاملاتی تفکیکی پیشرفته (Trading Statistics) */}
+                <motion.div
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.1 }}
+                  className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                      <FiActivity size={19} />
+                    </div>
+                    <div>
+                      <h2 className="font-semibold text-slate-900 text-base">Trading Statistics</h2>
+                      <p className="text-xs text-slate-400">Detailed trading performance nodes.</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-4 flex justify-between items-center">
+                      <span className="text-xs text-slate-500 font-medium">Total Trades</span>
+                      <span className="text-sm font-bold text-slate-900">{trader.total_trades || 0}</span>
+                    </div>
+                    <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-4 flex justify-between items-center">
+                      <span className="text-xs text-slate-500 font-medium">Profit Factor</span>
+                      <span className="text-sm font-bold text-emerald-600">{trader.profit_factor || "0.00"}</span>
+                    </div>
+                    <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-4 flex justify-between items-center">
+                      <span className="text-xs text-slate-500 font-medium">Average Win</span>
+                      <span className="text-sm font-bold text-emerald-600">{trader.avg_win || "$0.00"}</span>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* 🟧 بخش سوم: ابزار مانیتورینگ مدیریت ریسک (Risk Management) */}
+                <motion.div
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.2 }}
+                  className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
+                      <FiShield size={19} />  
+                    </div>
+                    <div>
+                      <h2 className="font-semibold text-slate-900 text-base">Risk Management</h2>
+                      <p className="text-xs text-slate-400">Monitor and control your copy-trading risk.</p>
+                    </div>
+                  </div>
+                  <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-4 flex justify-between items-center">
+                      <span className="text-xs text-slate-500 font-medium">Max Drawdown</span>
+                      <span className="text-sm font-bold text-red-600">{trader.max_drawdown || "0.00%"}</span>
+                    </div>
+                    <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-4 flex justify-between items-center">
+                      <span className="text-xs text-slate-500 font-medium">Stop Loss</span>
+                      <span className="text-sm font-bold text-red-600">{trader.stop_loss || "0.00%"}</span>
+                    </div>
+                    <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-4 flex justify-between items-center">
+                      <span className="text-xs text-slate-500 font-medium">Take Profit</span>
+                      <span className="text-sm font-bold text-emerald-600">{trader.take_profit || "0.00%"}</span>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            ))
+          )}
+
+        </div>
+      </main>
+    </ProtectedRoute>
   );
 }

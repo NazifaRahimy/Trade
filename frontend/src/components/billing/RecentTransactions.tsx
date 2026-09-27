@@ -1,144 +1,135 @@
 "use client";
 
+import { motion } from "framer-motion";
+import {
+  FiArrowDownLeft,
+  FiArrowUpRight,
+} from "react-icons/fi";
 import Link from "next/link";
-import {motion} from "framer-motion";
-import {FiArrowDownLeft, FiArrowUpRight, FiChevronRight} from "react-icons/fi";
 
-const transactions = [
-  {
-    id: "TX-1001",
-    type: "Deposit",
-    service: "USDT Wallet",
-    date: "Sep 22, 2026",
-    amount: "+$500.00",
-    status: "Completed",
-  },
-  {
-    id: "TX-1002",
-    type: "Subscription",
-    service: "Telegram Bot",
-    date: "Sep 20, 2026",
-    amount: "-$10.00",
-    status: "Completed",
-  },
-  {
-    id: "TX-1003",
-    type: "Copy Trading",
-    service: "Copy Trading",
-    date: "Sep 18, 2026",
-    amount: "-$30.00",
-    status: "Completed",
-  },
-  {
-    id: "TX-1004",
-    type: "Deposit",
-    service: "USDT Wallet",
-    date: "Sep 15, 2026",
-    amount: "+$1,500.00",
-    status: "Completed",
-  },
-];
+// 🚀 ۱. تعریف ساختار پرپس برای دریافت تراکنش‌های زنده از فایل مادر (صفحه بیلیینگ)
+type TransactionItem = {
+  id: number;
+  type: string;
+  amount: string;
+  status: string;
+  date: string;
+  description: string;
+};
 
-export default function RecentTransactions() {
+type RecentTransactionsProps = {
+  transactions: TransactionItem[];
+};
+
+export default function RecentTransactions({ transactions }: RecentTransactionsProps) {
   return (
-    <motion.section
-      initial={{opacity: 0, y: 20}}
-      animate={{opacity: 1, y: 0}}
-      transition={{duration: 0.5}}
-      className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
     >
-      <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 p-5 sm:p-6 sm:flex-row flex-col items-start">
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">
-            Recent Transactions
-          </h2>
-
-          <p className="mt-1 text-sm text-slate-500">
-            Your latest financial activity.
-          </p>
+          <h2 className="text-lg font-bold text-slate-900">Recent Transactions</h2>
+          <p className="mt-1 text-xs text-slate-500">Your latest financial activity.</p>
         </div>
 
+        {/* لینک به صفحه آرشیو کامل تراکنش‌ها */}
         <Link
-          href="/billing/transactions"
+          href="/dashboard/billing/transactions"
           className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 transition hover:text-blue-700"
         >
-          View All
-          <FiChevronRight />
+          View all transactions
+          <FiArrowUpRight size={16} />
         </Link>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[700px]">
+        <table className="w-full min-w-[700px] text-left">
           <thead>
-            <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wider text-slate-500">
-              <th className="px-5 py-4 font-medium">Transaction</th>
-              <th className="px-5 py-4 font-medium">Service</th>
-              <th className="px-5 py-4 font-medium">Date</th>
-              <th className="px-5 py-4 font-medium">Amount</th>
-              <th className="px-5 py-4 font-medium">Status</th>
+            <tr className="border-b border-slate-100 text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <th className="p-4 pl-6">Transaction</th>
+              <th className="p-4">Service</th>
+              <th className="p-4">Date</th>
+              <th className="p-4">Amount</th>
+              <th className="p-4 pr-6">Status</th>
             </tr>
           </thead>
 
-          <tbody>
-            {transactions.map((transaction) => {
-              const isDeposit = transaction.type === "Deposit";
+          <tbody className="text-xs divide-y divide-slate-50">
+            {/* 🛡️ گارد امنیتی: در صورتی که کاربر هنوز تراکنشی نداشته باشد */}
+            {!transactions || transactions.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="p-6 text-center text-slate-400 italic">
+                  No financial activity recorded in your database yet.
+                </td>
+              </tr>
+            ) : (
+              // 🚀 رندر ۱۰۰٪ داینامیک بر اساس آرایه دریافتی از دیتابیس جنگو
+              transactions.map((transaction) => {
+                const isDeposit = transaction.type === "deposit";
 
-              return (
-                <tr
-                  key={transaction.id}
-                  className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
-                >
-                  <td className="px-5 py-4">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`flex h-9 w-9 items-center justify-center rounded-lg ${
-                          isDeposit
-                            ? "bg-emerald-50 text-emerald-600"
-                            : "bg-orange-50 text-orange-600"
+                return (
+                  <tr
+                    key={transaction.id}
+                    className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
+                  >
+                    <td className="p-4 pl-6">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`flex h-8 w-8 items-center justify-center rounded-lg ${
+                            isDeposit
+                              ? "bg-emerald-50 text-emerald-600"
+                              : "bg-orange-50 text-orange-600"
+                          }`}
+                        >
+                          {isDeposit ? (
+                            <FiArrowDownLeft size={16} />
+                          ) : (
+                            <FiArrowUpRight size={16} />
+                          )}
+                        </div>
+                        <span className="text-sm font-medium text-slate-900 capitalize">
+                          {transaction.type}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="p-4 text-slate-500">
+                      ID: #{transaction.id} - {transaction.description || "System Ledger"}
+                    </td>
+
+                    <td className="p-4 text-slate-400">{transaction.date}</td>
+
+                    <td
+                      className={`p-4 font-semibold text-sm ${
+                        isDeposit ? "text-emerald-600" : "text-red-600"
+                      }`}
+                    >
+                      {transaction.amount}
+                    </td>
+
+                    <td className="p-4 pr-6">
+                      <span
+                        className={`inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-medium ${
+                          transaction.status === "completed"
+                            ? "bg-emerald-50 text-emerald-700"
+                            : transaction.status === "failed"
+                            ? "bg-red-50 text-red-700"
+                            : "bg-amber-50 text-amber-700"
                         }`}
                       >
-                        {isDeposit ? <FiArrowDownLeft /> : <FiArrowUpRight />}
-                      </div>
-
-                      <div>
-                        <p className="text-sm font-medium text-slate-900">
-                          {transaction.type}
-                        </p>
-
-                        <p className="text-xs text-slate-500">
-                          {transaction.id}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-
-                  <td className="px-5 py-4 text-sm text-slate-600">
-                    {transaction.service}
-                  </td>
-
-                  <td className="px-5 py-4 text-sm text-slate-500">
-                    {transaction.date}
-                  </td>
-
-                  <td
-                    className={`px-5 py-4 text-sm font-semibold ${
-                      isDeposit ? "text-emerald-600" : "text-slate-900"
-                    }`}
-                  >
-                    {transaction.amount}
-                  </td>
-
-                  <td className="px-5 py-4">
-                    <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600">
-                      {transaction.status}
-                    </span>
-                  </td>
-                </tr>
-              );
-            })}
+                        {transaction.status}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>
-    </motion.section>
+    </motion.div>
   );
 }

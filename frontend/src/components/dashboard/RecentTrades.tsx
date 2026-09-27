@@ -12,25 +12,28 @@ export default function RecentTrades() {
   const [loading, setLoading] = useState(true);
 
   // 📡 ۱. فچ کردن زنده آخرین معاملات کپی‌شده از دیتابیس جنگو
-  useEffect(() => {
-    const fetchRecentTrades = async () => {
-      try {
-        // خواندن تاریخچه لایو از اندپوینت اختصاصی آمار داشبورد شما
-        const response = await api.get("/api/stats/trade-history/", {
-          params: { limit: 4 } // فقط ۴ ترید آخر را برای صفحه اصلی فچ کن تا باکس شلوغ نشود
-        });
-        
-        if (response.data && response.data.recent_trades) {
-          setRecentTrades(response.data.recent_trades);
-        }
-      } catch (error) {
-        console.error("Failed to load home dashboard recent trades:", error);
-      } finally {
-        setLoading(false);
+// 🚀 تعریف استیت برای ذخیره تعداد ردیف‌های دلخواه کاربر (مثلاً ۵ ردیف به صورت پیش‌فرض)
+const [displayLimit, setDisplayLimit] = useState<number>(5);
+
+useEffect(() => {
+  const fetchRecentTrades = async () => {
+    try {
+      // 🟢 ارسال کاملاً پویا و داینامیک متغیر به بک‌اَند پایتون
+      const response = await api.get("/api/stats/trade-history/", {
+        params: { limit: displayLimit } 
+      });
+      
+      if (response.data && response.data.recent_trades) {
+        setRecentTrades(response.data.recent_trades);
       }
-    };
-    fetchRecentTrades();
-  }, []);
+    } catch (error) {
+      console.error("Failed to load home dashboard recent trades:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchRecentTrades();
+}, [displayLimit]); // 🎯 به محض اینکه کاربر تعداد نمایشی را تغییر دهد، جدول زنده آپدیت می‌شود
 
   // 🚀 ۲. هدایت کاربر به صفحه تمام‌عرض تاریخچه معاملات با کلیک روی View All
   const handleViewAllRedirect = () => {

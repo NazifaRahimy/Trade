@@ -7,6 +7,8 @@ import {FiMail, FiLock, FiEye, FiEyeOff} from "react-icons/fi";
 import SocialLogin from "@/src/components/auth/SocialLogin";
 import {loginUser} from "../../../lib/api";
 import { useRouter } from "next/navigation";
+import api from "@/src/lib/axios";
+
 export default function LoginForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -16,36 +18,42 @@ export default function LoginForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  
+  try {
+    setLoading(true);
+    
+    // شلیک درخواست لاگین به بک‌اَند جنگو
+    const response = await api.post("/api/auth/token/", {
+      username: formData.email,
+      password: formData.password
+    });
 
-    try {
-      setLoading(true);
+    if (response.status === 200) {
+      // 🚀 ۱. ذخیره اطلاعات دقیقاً با همان کلیدهایی که هدر شما برای خواندن نیاز دارد
+      localStorage.setItem("auth-token", response.data.access);
+      localStorage.setItem("auth-refresh", response.data.refresh);
+      localStorage.setItem("auth-username", response.data.username || formData.email);
+      localStorage.setItem("auth-firstName", response.data.first_name || "Member");
+      localStorage.setItem("auth-email", formData.email);
+      localStorage.setItem("auth-role", response.data.role || "follower");
 
-      // پکیج کردن داده‌ها؛ مقدار ایمیل به عنوان یوزرنیم به JWT جنگو فرستاده می‌شود
-      const payload = {
-        username: formData.email,
-        password: formData.password,
-      };
-      const responseData = await loginUser(formData.email, formData.password);
-      if (responseData) {
-        const {access, refresh, username} = responseData; // دریافت نام کاربری
-        localStorage.setItem("access_token", access);
-        localStorage.setItem("refresh_token", refresh);
-        localStorage.setItem("auth-username", username); // ذخیره نام کاربری
-        localStorage.setItem("auth-email", formData.email);
+      // 🚀 ۲. شلیک رویداد سراسری برای باخبر کردن آنی هدر از ورود کاربر
+      window.dispatchEvent(new Event("auth-change"));
 
-        window.dispatchEvent(new Event("auth-change"));
-        alert("Success: Logged in successfully.");
-      }
+      alert("Success: Logged in successfully.");
 
-    } catch (error: any) {
-      console.error("Login Error:", error);
-      alert("Failed: Invalid email or password. Please try again.");
-    } finally {
-      setLoading(false);
+      // 🚀 ۳. هدایت مستقیم کاربر به داشبورد اصلی پلتفرم پس از تایید
+      window.location.href = "/copy-trading";
     }
-  };
+  } catch (error: any) {
+    console.error("Login Core Failure:", error);
+    alert("❌ Invalid credentials or server node timeout.");
+  } finally {
+    setLoading(false);
+  }
+};
 
 
   return (

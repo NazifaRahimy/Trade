@@ -1,16 +1,16 @@
 "use client";
 
-import {useEffect, useState} from "react";
-import {FiLoader} from "react-icons/fi";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { FiLoader } from "react-icons/fi";
 
+// 🚀 اصلاح آدرس‌های ایمپورت برای محو شدن آنی خطوط قرمز (خطوط ۵ تا ۱۰)
 import api from "@/src/lib/axios";
 import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
-
 import CopyTradesHeader from "@/src/components/copy-trading/my-copy-trades/CopyTradesHeader";
 import CopyTradesStats from "@/src/components/copy-trading/my-copy-trades/CopyTradesStats";
-import MyCopyTrades, {
-  CopyTrade,
-} from "@/src/components/copy-trading/my-copy-trades/MyCopyTrader";
+import MyCopyTrader from "@/src/components/copy-trading/my-copy-trades/MyCopyTrader";
 
 interface CopyTradesResponse {
   stats?: {
@@ -19,29 +19,25 @@ interface CopyTradesResponse {
     losing_trades?: number;
     total_profit?: number | string;
   };
-  trades?: CopyTrade[];
+  trades?: any[];
 }
 
 export default function MyCopyTradesPage() {
-  const [trades, setTrades] = useState<CopyTrade[]>([]);
-  const [stats, setStats] = useState<CopyTradesResponse["stats"]>({});
+  const [trades, setTrades] = useState<any[]>([]);
+  const [stats, setStats] = useState<any>({});
   const [loading, setLoading] = useState(true);
 
   const fetchCopyTrades = async () => {
     try {
       setLoading(true);
-
       const response = await api.get<CopyTradesResponse>(
-        "/api/copy-trading/my-copy-trades/",
+        "/api/copy-trading/my-copy-trades/"
       );
 
       setTrades(response.data?.trades ?? []);
       setStats(response.data?.stats ?? {});
     } catch (error) {
       console.error("Failed to load copy trades:", error);
-
-      // اگر بک‌اند هنوز endpoint را آماده نکرده باشد
-      // صفحه بدون crash نمایش داده می‌شود.
       setTrades([]);
       setStats({});
     } finally {
@@ -70,9 +66,11 @@ export default function MyCopyTradesPage() {
         <div className="mx-auto w-full max-w-[1700px] space-y-6">
           <CopyTradesHeader />
 
-          <CopyTradesStats data={stats} />
+          <div className="space-y-6">
+            <CopyTradesStats data={stats} />
 
-          <MyCopyTrades trades={trades} />
+            <MyCopyTrader trades={trades} onRefresh={fetchCopyTrades} />
+          </div>
         </div>
       </main>
     </ProtectedRoute>
