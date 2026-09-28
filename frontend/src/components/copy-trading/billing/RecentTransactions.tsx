@@ -1,10 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
-import {
-  FiArrowDownLeft,
-  FiArrowUpRight,
-} from "react-icons/fi";
+import {motion} from "framer-motion";
+import {FiArrowDownLeft, FiArrowUpRight} from "react-icons/fi";
 import Link from "next/link";
 
 // 🚀 ۱. تعریف ساختار پرپس برای دریافت تراکنش‌های زنده از فایل مادر (صفحه بیلیینگ)
@@ -21,23 +18,29 @@ type RecentTransactionsProps = {
   transactions: TransactionItem[];
 };
 
-export default function RecentTransactions({ transactions }: RecentTransactionsProps) {
+export default function RecentTransactions({
+  transactions,
+}: RecentTransactionsProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      initial={{opacity: 0, y: 20}}
+      animate={{opacity: 1, y: 0}}
+      transition={{duration: 0.5}}
       className="w-full overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
     >
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 p-5 sm:p-6 sm:flex-row flex-col items-start">
         <div>
-          <h2 className="text-lg font-bold text-slate-900">Recent Transactions</h2>
-          <p className="mt-1 text-xs text-slate-500">Your latest financial activity.</p>
+          <h2 className="text-lg font-bold text-slate-900">
+            Recent Transactions
+          </h2>
+          <p className="mt-1 text-xs text-slate-500">
+            Your latest financial activity.
+          </p>
         </div>
 
         {/* لینک به صفحه آرشیو کامل تراکنش‌ها */}
         <Link
-          href="/dashboard/billing/transactions"
+          href="/copy-trading/billing/transactions"
           className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 transition hover:text-blue-700"
         >
           View all transactions
@@ -61,7 +64,10 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
             {/* 🛡️ گارد امنیتی: در صورتی که کاربر هنوز تراکنشی نداشته باشد */}
             {!transactions || transactions.length === 0 ? (
               <tr>
-                <td colSpan={5} className="p-6 text-center text-slate-400 italic">
+                <td
+                  colSpan={5}
+                  className="p-6 text-center text-slate-400 italic"
+                >
                   No financial activity recorded in your database yet.
                 </td>
               </tr>
@@ -97,7 +103,8 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
                     </td>
 
                     <td className="p-4 text-slate-500">
-                      ID: #{transaction.id} - {transaction.description || "System Ledger"}
+                      ID: #{transaction.id} -{" "}
+                      {transaction.description || "System Ledger"}
                     </td>
 
                     <td className="p-4 text-slate-400">{transaction.date}</td>
@@ -116,8 +123,8 @@ export default function RecentTransactions({ transactions }: RecentTransactionsP
                           transaction.status === "completed"
                             ? "bg-emerald-50 text-emerald-700"
                             : transaction.status === "failed"
-                            ? "bg-red-50 text-red-700"
-                            : "bg-amber-50 text-amber-700"
+                              ? "bg-red-50 text-red-700"
+                              : "bg-amber-50 text-amber-700"
                         }`}
                       >
                         {transaction.status}

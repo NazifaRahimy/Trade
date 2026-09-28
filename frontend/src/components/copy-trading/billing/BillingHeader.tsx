@@ -29,7 +29,7 @@ export default function BillingHeader() {
       </div>
 
       <Link
-        href="/billing/wallet"
+        href="/copy-trading/billing/wallet"
         className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
       >
         <FiPlus />

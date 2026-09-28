@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import Link from "next/link";
-import { FiArrowLeft, FiBarChart2, FiLoader } from "react-icons/fi";
+import {FiArrowLeft, FiBarChart2, FiLoader} from "react-icons/fi";
 
 // 🚀 ۱. اصلاح دقیق آدرس‌های ایمپورت برای برطرف شدن باگ Turbopack
 import api from "@/src/lib/axios";
-import AdminFinanceStats from "@/src/components/billing/admin/AdminFinanceStats";
-import RevenueBreakdown from "@/src/components/billing/admin/RevenueBreakdown";
+import AdminFinanceStats from "@/src/components/copy-trading/billing/admin/AdminFinanceStats";
+import RevenueBreakdown from "@/src/components/copy-trading/billing/admin/RevenueBreakdown";
 import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
 
 export default function AdminFinancePage() {
@@ -20,18 +20,25 @@ export default function AdminFinancePage() {
     const fetchAdminFinancials = async () => {
       try {
         // دریافت آمارهای کلان درآمد ربات و کپی‌ترید
-        const statsResponse = await api.get("/api/billing/admin/finance/overview/");
+        const statsResponse = await api.get(
+          "/api/billing/admin/finance/overview/",
+        );
         if (statsResponse.data) {
           setFinanceData(statsResponse.data);
         }
 
         // دریافت لیست ردیف‌های تاریخچه کارمزدها
-        const revenueResponse = await api.get("/api/billing/admin/finance/revenue/");
+        const revenueResponse = await api.get(
+          "/api/billing/admin/finance/revenue/",
+        );
         if (revenueResponse.data) {
           setRevenueList(revenueResponse.data);
         }
       } catch (error) {
-        console.error("Critical: Failed to stream platform revenue records:", error);
+        console.error(
+          "Critical: Failed to stream platform revenue records:",
+          error,
+        );
       } finally {
         setLoading(false);
       }
@@ -53,7 +60,6 @@ export default function AdminFinancePage() {
       {/* 🚀 ۳. حفظ کامل لایوت، تگ‌ها و کلاس‌های Tailwind اختصاصی خودتان در تصویر */}
       <main className="min-h-screen bg-white px-4 py-8 md:px-6 lg:px-8">
         <div className="mx-auto max-w-[1400px]">
-          
           <Link
             href="/"
             className="mb-6 inline-flex items-center gap-2 text-sm text-slate-500 transition hover:text-blue-600"
@@ -73,15 +79,15 @@ export default function AdminFinancePage() {
             </h1>
 
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 md:text-base">
-              Monitor platform revenue, service performance, and master trader payouts.
+              Monitor platform revenue, service performance, and master trader
+              payouts.
             </p>
           </div>
 
           {/* 📊 ۴. پاس دادن دیتای زنده به عنوان پرپس و برطرف شدن خطوط قرمز ادیتور */}
           <AdminFinanceStats adminStats={financeData} />
-          
-          <RevenueBreakdown revenueList={revenueList} />
 
+          <RevenueBreakdown revenueList={revenueList} />
         </div>
       </main>
     </ProtectedRoute>

@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react"; // 🚀 اضافه شدن هوک‌ها برای دریافت نقش
-import { FiLogOut, FiHome } from "react-icons/fi";
+import {useEffect, useState} from "react"; // 🚀 اضافه شدن هوک‌ها برای دریافت نقش
+import {FiLogOut, FiHome} from "react-icons/fi";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import {usePathname} from "next/navigation";
 import {
   FiGrid,
   FiLink,
@@ -14,6 +14,7 @@ import {
   FiSettings,
   FiClock,
   FiX,
+  FiCreditCard,
   FiDollarSign, // آیکون دلار دریافتی از کدهای شما
 } from "react-icons/fi";
 
@@ -30,7 +31,7 @@ export default function CopyTradingSidebar({
   onClose,
 }: CopyTradingSidebarProps) {
   const pathname = usePathname();
-  
+
   // 🧠 ۱. استیت ذخیره نقش کاربر (پیش‌فرض روی فلوور یا کاربر عادی)
   const [userRole, setUserRole] = useState<string>("follower");
 
@@ -42,21 +43,23 @@ export default function CopyTradingSidebar({
         const response = await api.get("/api/user/profile/");
         if (response.data && response.data.role) {
           // 🟢 ثبت نقش واقعی کاربر از دیتابیس (master یا follower)
-          setUserRole(response.data.role); 
+          setUserRole(response.data.role);
         } else {
           // 🛡️ اگر نقشی در پاسخ سرور نبود، به عنوان کاربر عادی قفلش کن
-          setUserRole("follower"); 
+          setUserRole("follower");
         }
       } catch (error) {
-        console.error("Security Alert: Failed to fetch profile node role.", error);
-        
-        setUserRole("follower"); 
+        console.error(
+          "Security Alert: Failed to fetch profile node role.",
+          error,
+        );
+
+        setUserRole("follower");
       }
     };
-    
+
     checkUserAuthorizationRole();
   }, [pathname]); // هماهنگ‌سازی اتوماتیک با تغییر آدرس صفحات داشبورد
-
 
   // 📊 ۳. لیست منوهای عمومی و مشترک برای تمام کاربران (دقیقاً کدهای خودتان)
   const menuItems = [
@@ -91,6 +94,11 @@ export default function CopyTradingSidebar({
       icon: FiSettings,
     },
     {
+      name: "Billing",
+      href: "/copy-trading/billing",
+      icon: FiCreditCard,
+    },
+    {
       name: "History",
       href: "/copy-trading/history",
       icon: FiClock,
@@ -121,7 +129,7 @@ export default function CopyTradingSidebar({
         } lg:translate-x-0`}
       >
         {/* Logo */}
-        <div className="flex h-[89px] items-center justify-between border-b border-slate-800 px-6">
+        <div className="flex h-[80px] items-center justify-between border-b border-slate-800 px-6">
           <div
             onClick={onClose}
             className="flex items-center justify-between w-full "
@@ -145,7 +153,7 @@ export default function CopyTradingSidebar({
         </div>
 
         {/* Main Menu */}
-        <div className="flex-1 overflow-y-auto px-4 py-7">
+        <div className="flex-1 overflow-y-auto px-4 pt-5">
           <Link
             href="/"
             onClick={onClose}
