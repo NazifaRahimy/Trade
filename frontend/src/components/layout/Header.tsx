@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import {useEffect, useState, useRef} from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {
   FiMenu,
   FiX,
@@ -11,15 +11,16 @@ import {
   FiCopy,
   FiCreditCard,
   FiLogOut,
+  FiBarChart2,
 } from "react-icons/fi";
 
 import logo from "../../assets/images/logo.png";
 
 const navItems = [
-  { name: "Home", href: "/" },
-  { name: "About Us", href: "/about" },
-  { name: "Contact", href: "/contact" },
-  { name: "Subscription", href: "/subscription" },
+  {name: "Home", href: "/"},
+  {name: "About Us", href: "/about"},
+  {name: "Contact", href: "/contact"},
+  {name: "Subscription", href: "/subscription"},
 ];
 
 export default function Header() {
@@ -51,14 +52,28 @@ export default function Header() {
   }, [pathname]);
 
   // واکشی دیتای کاربر با سپرهای ایمن SSR
-  const firstName = typeof window !== "undefined" ? localStorage.getItem("auth-firstName") || localStorage.getItem("auth-username") || "User" : "User";
-  const email = typeof window !== "undefined" ? localStorage.getItem("auth-email") || "" : "";
-  const photo = typeof window !== "undefined" ? localStorage.getItem("auth-photo") || "" : "";
+  const firstName =
+    typeof window !== "undefined"
+      ? localStorage.getItem("auth-firstName") ||
+        localStorage.getItem("auth-username") ||
+        "User"
+      : "User";
+  const email =
+    typeof window !== "undefined"
+      ? localStorage.getItem("auth-email") || ""
+      : "";
+  const photo =
+    typeof window !== "undefined"
+      ? localStorage.getItem("auth-photo") || ""
+      : "";
   const userInitial = firstName.charAt(0).toUpperCase();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     };
@@ -66,7 +81,10 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const isActive = (href: string) => href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+  const isActive = (href: string) =>
+    href === "/"
+      ? pathname === "/"
+      : pathname === href || pathname.startsWith(`${href}/`);
   const closeMenu = () => setIsMenuOpen(false);
 
   const handleLogout = () => {
@@ -88,10 +106,17 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-slate-800 bg-slate-950">
       <div className="px-4 max-w-[1400px] mx-auto">
         <div className="flex h-20 items-center justify-between">
-          
           {/* لوگوی پلتفرم */}
-          <Link href="/" onClick={closeMenu} className="flex shrink-0 items-center">
-            <img src={logo.src} alt="Amiri Finance Academy" className="h-[48px] w-auto md:h-[50px] md:w-[110px]" />
+          <Link
+            href="/"
+            onClick={closeMenu}
+            className="flex shrink-0 items-center"
+          >
+            <img
+              src={logo.src}
+              alt="Amiri Finance Academy"
+              className="h-[48px] w-auto md:h-[50px] md:w-[110px]"
+            />
           </Link>
 
           {/* منوی ناوبری دسکتاپ */}
@@ -107,7 +132,9 @@ export default function Header() {
                   }`}
                 >
                   {item.name}
-                  {active && <span className="absolute bottom-0 left-1/2 h-[2px] w-7 -translate-x-1/2 rounded-full bg-blue-500" />}
+                  {active && (
+                    <span className="absolute bottom-0 left-1/2 h-[2px] w-7 -translate-x-1/2 rounded-full bg-blue-500" />
+                  )}
                 </Link>
               );
             })}
@@ -130,39 +157,77 @@ export default function Header() {
                   className="flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-900 px-5 py-2.5 transition hover:border-blue-500 hover:bg-slate-800 text-sm font-semibold text-white"
                 >
                   <span>Services</span>
-                  <FiChevronDown className={`text-slate-400 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} />
+                  <FiChevronDown
+                    className={`text-slate-400 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
+                  />
                 </button>
 
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-3 w-60 overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-2 shadow-2xl shadow-black/30">
                     <div className="mb-2 flex items-center gap-3 rounded-xl bg-slate-900 p-3">
                       {photo ? (
-                        <img src={photo} alt={firstName} className="h-10 w-10 rounded-full object-cover" />
+                        <img
+                          src={photo}
+                          alt={firstName}
+                          className="h-10 w-10 rounded-full object-cover"
+                        />
                       ) : (
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 font-semibold text-white">
                           {userInitial}
                         </div>
                       )}
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold text-white">{firstName}</p>
-                        <p className="truncate text-xs text-slate-400">{email || "Member"}</p>
+                        <p className="truncate text-sm font-semibold text-white">
+                          {firstName}
+                        </p>
+                        <p className="truncate text-xs text-slate-400">
+                          {email || "Member"}
+                        </p>
                       </div>
                     </div>
 
                     {/* دایرکتوری لینک‌های منوی دراپ‌داون مجلل شما */}
-                    <Link href="/dashboard" onClick={() => setIsDropdownOpen(false)} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition ${pathname === "/dashboard" ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-900 hover:text-white"}`}>
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setIsDropdownOpen(false)}
+                      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition ${pathname === "/dashboard" ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-900 hover:text-white"}`}
+                    >
                       <FiGrid className="text-base" />
                       <span>Telegram Bot Dashboard</span>
                     </Link>
-                    <Link href="/copy-trading" onClick={() => setIsDropdownOpen(false)} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition ${pathname === "/copy-trading" ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-900 hover:text-white"}`}>
+                    <Link
+                      href="/copy-trading"
+                      onClick={() => setIsDropdownOpen(false)}
+                      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition ${pathname === "/copy-trading" ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-900 hover:text-white"}`}
+                    >
                       <FiCopy className="text-base" />
                       <span>Copy Trading Dashboard</span>
                     </Link>
-                    <Link href="/billing" onClick={() => setIsDropdownOpen(false)} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition ${pathname === "/billing" ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-900 hover:text-white"}`}>
+                    <Link
+                      href="/discount-premium"
+                      onClick={() => setIsDropdownOpen(false)}
+                      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition ${
+                        pathname === "/discount-premium"
+                          ? "bg-blue-600 text-white"
+                          : "text-slate-300 hover:bg-slate-900 hover:text-white"
+                      }`}
+                    >
+                      <FiBarChart2 className="text-base" />
+                      <span>Discount Premium Dashboard</span>
+                    </Link>
+                    <Link
+                      href="/billing"
+                      onClick={() => setIsDropdownOpen(false)}
+                      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition ${pathname === "/billing" ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-900 hover:text-white"}`}
+                    >
                       <FiCreditCard className="text-base" />
                       <span>Billing Wallet</span>
                     </Link>
-                    <button type="button" onClick={handleLogout} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium text-slate-400 hover:bg-red-950/40 hover:text-red-400 transition mt-1 border-t border-slate-900 pt-2">
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium text-slate-400 hover:bg-red-950/40 hover:text-red-400 transition mt-1 border-t border-slate-900 pt-2"
+                    >
                       <FiLogOut className="text-base" />
                       <span>Logout</span>
                     </button>
