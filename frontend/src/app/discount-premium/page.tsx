@@ -1,40 +1,32 @@
-import MarketSummary from "@/src/components/discount-premium/Overview/MarketSummary";
-import StructureStatus from "@/src/components/discount-premium/Overview/StructureStatus";
-import CurrentZone from "@/src/components/discount-premium/Overview/CurrentZone";
-import FVGStatus from "@/src/components/discount-premium/Overview/FVGStatus";
-import CurrentSetup from "@/src/components/discount-premium/Overview/CurrentSetup";
-import TradingChart from "@/src/components/discount-premium/Overview/TradingChart";
+"use client";
 
-export default function DiscountPremiumOverviewPage() {
+import OverviewHeader from "@/src/components/discount-premium/Overview/verviewHeader";
+import OverviewStats from "@/src/components/discount-premium/Overview/OverviewStats";
+import MarketSnapshot from "@/src/components/discount-premium/Overview/MarketSnapshot";
+import StrategySnapshot from "@/src/components/discount-premium/Overview/StrategySnapshot";
+import SignalsSnapshot from "@/src/components/discount-premium/Overview/SignalsSnapshot";
+import TradesSnapshot from "@/src/components/discount-premium/Overview/TradesSnapshot";
+import RecentActivity from "@/src/components/discount-premium/Overview/RecentActivity";
+
+export default function DiscountPremiumOverview() {
   return (
-    <div className=" space-y-6">
-      {/* Page Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-          Trading Overview
-        </h1>
+    <div className="min-h-screen p-4 md:p-6 lg:p-0">
+      <div className="mx-auto max-w-7xl space-y-6">
+        <OverviewHeader />
 
-        <p className="mt-1 text-sm text-gray-500">
-          Market structure, premium/discount, FVG and current trading setup.
-        </p>
-      </div>
+        <OverviewStats />
 
-      {/* Account Summary */}
-      <MarketSummary />
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+          <MarketSnapshot />
+          <StrategySnapshot />
+        </div>
 
-      {/* Trading Chart */}
-      <TradingChart />
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+          <SignalsSnapshot />
+          <TradesSnapshot />
+        </div>
 
-      {/* Structure + Setup */}
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <StructureStatus />
-        <CurrentSetup />
-      </div>
-
-      {/* Zone + FVG */}
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <CurrentZone />
-        <FVGStatus />
+        <RecentActivity />
       </div>
     </div>
   );
