@@ -1,173 +1,3 @@
-// "use client";
-// import Logo from "@/src/assets/images/logo.png";
-// import {usePathname, useRouter} from "next/navigation";
-// import {motion} from "framer-motion";
-// import {
-//   FiActivity,
-//   FiBarChart2,
-//   FiClock,
-//   FiGrid,
-//   FiHome,
-//   FiLayers,
-//   FiLogOut,
-//   FiTarget,
-//   FiTrendingUp,
-//   FiX,
-// } from "react-icons/fi";
-
-// interface DiscountPremiumSidebarProps {
-//   isOpen: boolean;
-//   onClose: () => void;
-// }
-
-// const menuItems = [
-//   {
-//     label: "Overview",
-//     href: "/discount-premium",
-//     icon: FiGrid,
-//   },
-//   {
-//     label: "Market Structure",
-//     href: "/discount-premium/market-structure",
-//     icon: FiBarChart2,
-//   },
-//   {
-//     label: "Premium & Discount",
-//     href: "/discount-premium/premium-discount",
-//     icon: FiLayers,
-//   },
-//   {
-//     label: "FVG",
-//     href: "/discount-premium/fvg",
-//     icon: FiActivity,
-//   },
-//   {
-//     label: "Trade Setup",
-//     href: "/discount-premium/trade-setup",
-//     icon: FiTarget,
-//   },
-//   {
-//     label: "Take Profit",
-//     href: "/discount-premium/take-profit",
-//     icon: FiTrendingUp,
-//   },
-//   {
-//     label: "History",
-//     href: "/discount-premium/history",
-//     icon: FiClock,
-//   },
-// ];
-
-// export default function DiscountPremiumSidebar({
-//   isOpen,
-//   onClose,
-// }: DiscountPremiumSidebarProps) {
-//   const pathname = usePathname();
-//   const router = useRouter();
-
-//   const handleLogout = () => {
-//     localStorage.removeItem("auth-token");
-//     localStorage.removeItem("auth-firstName");
-//     localStorage.removeItem("auth-lastName");
-//     localStorage.removeItem("auth-username");
-//     localStorage.removeItem("auth-email");
-//     localStorage.removeItem("auth-photo");
-
-//     window.dispatchEvent(new Event("auth-change"));
-
-//     router.push("/login");
-//   };
-
-//   const handleNavigation = (href: string) => {
-//     router.push(href);
-//     onClose();
-//   };
-
-//   return (
-//     <>
-//       {isOpen && (
-//         <div
-//           className="fixed inset-0 z-40 bg-black/40 lg:hidden"
-//           onClick={onClose}
-//         />
-//       )}
-
-//       <motion.aside
-//         initial={false}
-//         animate={{
-//           x: isOpen ? 0 : undefined,
-//         }}
-//         className={`fixed left-0 top-0 z-50 flex h-screen w-64 flex-col bg-slate-950 text-white transition-transform duration-300 lg:translate-x-0 ${
-//           isOpen ? "translate-x-0" : "-translate-x-full"
-//         }`}
-//       >
-//         {/* Logo */}
-//         <div className="flex h-[72px] items-center justify-between border-b border-slate-800 px-5">
-//           <img src={Logo.src} className="w-[100x] h-[50px]" />
-
-//           <button
-//             onClick={onClose}
-//             className="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white lg:hidden"
-//           >
-//             <FiX size={20} />
-//           </button>
-//         </div>
-
-//         {/* Navigation */}
-//         <nav className="flex-1 overflow-y-auto px-3 py-5">
-//           <p className="mb-3 px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-//             Trading
-//           </p>
-
-//           <div className="space-y-1">
-//             {menuItems.map((item) => {
-//               const Icon = item.icon;
-
-//               const isActive =
-//                 pathname === item.href ||
-//                 (item.href !== "/discount-premium" &&
-//                   pathname.startsWith(item.href));
-
-//               return (
-//                 <button
-//                   key={item.href}
-//                   onClick={() => handleNavigation(item.href)}
-//                   className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${
-//                     isActive
-//                       ? "bg-blue-600 text-white"
-//                       : "text-slate-400 hover:bg-slate-900 hover:text-white"
-//                   }`}
-//                 >
-//                   <Icon size={18} />
-//                   <span>{item.label}</span>
-//                 </button>
-//               );
-//             })}
-//           </div>
-//         </nav>
-
-//         {/* Bottom */}
-//         <div className="border-t border-slate-800 p-3">
-//           <button
-//             onClick={() => handleNavigation("/")}
-//             className="mb-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm text-slate-400 transition hover:bg-slate-900 hover:text-white"
-//           >
-//             <FiHome size={18} />
-//             <span>Back to Website</span>
-//           </button>
-
-//           <button
-//             onClick={handleLogout}
-//             className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm text-red-400 transition hover:bg-red-500/10 hover:text-red-300"
-//           >
-//             <FiLogOut size={18} />
-//             <span>Logout</span>
-//           </button>
-//         </div>
-//       </motion.aside>
-//     </>
-//   );
-// }
 "use client";
 
 import Image from "next/image";
@@ -177,14 +7,13 @@ import {AnimatePresence, motion} from "framer-motion";
 import {
   FiActivity,
   FiBarChart2,
-  FiClock,
-  FiGrid,
+  FiBriefcase,
   FiHome,
-  FiLayers,
   FiLogOut,
-  FiTarget,
   FiSettings,
+  FiTarget,
   FiX,
+  FiGrid,
 } from "react-icons/fi";
 import Logo from "@/src/assets/images/logo.png";
 
@@ -200,30 +29,24 @@ const menuItems = [
     icon: FiGrid,
   },
   {
-    label: "Market Structure",
-    href: "/discount-premium/market-structure",
+    label: "Market",
+    href: "/discount-premium/market",
     icon: FiBarChart2,
   },
   {
-    label: "Premium & Discount",
-    href: "/discount-premium/premium-discount",
-    icon: FiLayers,
+    label: "Strategy",
+    href: "/discount-premium/strategy",
+    icon: FiTarget,
   },
   {
-    label: "FVG",
-    href: "/discount-premium/fvg",
+    label: "Signals",
+    href: "/discount-premium/signals",
     icon: FiActivity,
   },
   {
-    label: "Trade Setup",
-    href: "/discount-premium/trade-setup",
-    icon: FiTarget,
-  },
-
-  {
-    label: "History",
-    href: "/discount-premium/history",
-    icon: FiClock,
+    label: "Trades",
+    href: "/discount-premium/trades",
+    icon: FiBriefcase,
   },
   {
     label: "Settings",
@@ -276,7 +99,7 @@ export default function DiscountPremiumSidebar({
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 space-y-2 overflow-y-auto px-4 py-6">
+          <nav className="flex-1 space-y-2 overflow-y-auto px-4 py-9">
             <p className="mb-4 px-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">
               Main Menu
             </p>

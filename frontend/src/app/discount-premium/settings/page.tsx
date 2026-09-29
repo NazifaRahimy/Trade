@@ -3,6 +3,8 @@ import StrategySettings from "@/src/components/discount-premium/Settings/Strateg
 import TakeProfitSettings from "@/src/components/discount-premium/Settings/TakeProfitSettings";
 import NotificationSettings from "@/src/components/discount-premium/Settings/NotificationSettings";
 import AppearanceSettings from "@/src/components/discount-premium/Settings/AppearanceSettings";
+import BrokerConnect from "@/src/components/discount-premium/Settings/BrokerConnect";
+import RiskSettings from "@/src/components/discount-premium/Settings/RiskSettings";
 
 export default function SettingsPage() {
   return (
@@ -25,6 +27,9 @@ export default function SettingsPage() {
         </span>
       </div>
 
+      <BrokerConnect />
+
+      <RiskSettings />
       <TradingSettings />
       <StrategySettings />
       <TakeProfitSettings />
