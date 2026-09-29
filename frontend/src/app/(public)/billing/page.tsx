@@ -4,10 +4,10 @@ import {FiLoader} from "react-icons/fi"; // 🟢 اصلاح پکیج آیکون�
 import api from "@/src/lib/axios"; // 🟢 تراز شدن آدرس اکسوس با بقیه فایل‌ها
 
 // 🚀 حفظ دقیق آدرس‌های ایمپورت بومی شما در تصویر سوم
-import BillingHeader from "@/src/components/copy-trading/billing/BillingHeader";
-import BillingStats from "@/src/components/copy-trading/billing/BillingStats";
-import RecentTransactions from "@/src/components/copy-trading/billing/RecentTransactions";
-import TelegramBotCard from "@/src/components/copy-trading/billing/TelegramBotCard"; // ایمپورت دکمه جدید ربات
+import BillingHeader from "@/src/components/billing/BillingHeader";
+import BillingStats from "@/src/components/billing/BillingStats";
+import RecentTransactions from "@/src/components/billing/RecentTransactions";
+import TelegramBotCard from "@/src/components/billing/TelegramBotCard"; // ایمپورت دکمه جدید ربات
 import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
 
 export default function BillingPage() {

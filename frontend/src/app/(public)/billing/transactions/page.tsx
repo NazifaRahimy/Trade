@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {FiArrowLeft, FiClock} from "react-icons/fi";
-import TransactionsTable from "@/src/components/copy-trading/billing/TransactionsTable";
+import TransactionsTable from "@/src/components/billing/TransactionsTable";
 
 export default function TransactionsPage() {
   return (
