@@ -1,11 +1,32 @@
 "use client";
 
+
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FiChevronLeft, FiChevronRight, FiLoader } from "react-icons/fi";
+import {
+  FiChevronLeft,
+  FiChevronRight,
+  FiLoader,
+  FiArrowUp,
+  FiArrowDown,
+} from "react-icons/fi";
 import api from "../../../lib/axios"; // ایمپورت هسته شبکه جهت ارسال فیلترها به آدرس پوشه آمار داشبورد stats
 import TradeFilters from "./TradeFilters";
 import TradeStats from "./TradeStats";
+
+type Trade = {
+  ticket: number;
+  symbol: string;
+  order_type: string;
+  volume: number;
+  entry_price: number;
+  close_price: number | null;
+  profit: number;
+  timestamp: string;
+  status: string;
+};
+
+
 
 export default function TradeTable() {
   const [trades, setTrades] = useState<any[]>([]);
@@ -48,15 +69,28 @@ export default function TradeTable() {
     fetchTradesFromDatabase();
   }, [days, type, status, search]);
 
-  return (
-    <motion.div
-      initial={{opacity: 0, y: 20}}
-      animate={{opacity: 1, y: 0}}
-      transition={{duration: 0.5, delay: 0.2}}
-      className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
-    >
-      {/* Header */}
-      <div className="p-5">
+return (
+  <motion.div
+    initial={{opacity: 0, y: 20}}
+    animate={{opacity: 1, y: 0}}
+    transition={{duration: 0.5, delay: 0.2}}
+    className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+  >
+    <TradeStats summary={summary} />
+
+    <TradeFilters
+      search={search}
+      setSearch={setSearch}
+      days={days}
+      setDays={setDays}
+      type={type}
+      setType={setType}
+      status={status}
+      setStatus={setStatus}
+    />
+
+    {/* Header */}
+    <div className="p-5">
         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-base font-semibold text-slate-900">
@@ -68,7 +102,9 @@ export default function TradeTable() {
             </p>
           </div>
 
-          <span className="text-xs text-slate-500">128 trades total</span>
+          <span className="text-xs text-slate-500">
+            {summary?.total_trades ?? 0} trades total
+          </span>
         </div>
       </div>
 
@@ -113,8 +149,8 @@ export default function TradeTable() {
 
           <tbody>
             {trades.map((trade, index) => {
-              const isBuy = trade.type === "Buy";
-              const isProfit = trade.profit.startsWith("+");
+          const isBuy = trade.order_type.toLowerCase() === "buy";
+          const isProfit = trade.profit > 0;
 
               return (
                 <motion.tr
@@ -130,7 +166,7 @@ export default function TradeTable() {
                   {/* Pair */}
                   <td className="px-5 py-4">
                     <span className="text-sm font-medium text-slate-900">
-                      {trade.pair}
+                     {trade.symbol}
                     </span>
                   </td>
 
@@ -147,7 +183,7 @@ export default function TradeTable() {
                         <FiArrowDown size={14} />
                       )}
 
-                      {trade.type}
+                     {trade.order_type}
                     </span>
                   </td>
 
@@ -158,12 +194,12 @@ export default function TradeTable() {
 
                   {/* Open */}
                   <td className="px-4 py-4 text-sm text-slate-600">
-                    {trade.openPrice}
+                  {trade.entry_price}
                   </td>
 
                   {/* Close */}
                   <td className="px-4 py-4 text-sm text-slate-600">
-                    {trade.closePrice}
+                  {trade.close_price}
                   </td>
 
                   {/* Profit */}
@@ -173,7 +209,7 @@ export default function TradeTable() {
                         isProfit ? "text-emerald-600" : "text-red-600"
                       }`}
                     >
-                      {trade.profit}
+                   {trade.profit >= 0 ? "+" : ""}${Number(trade.profit).toFixed(2)}
                     </span>
                   </td>
 
@@ -186,7 +222,7 @@ export default function TradeTable() {
 
                   {/* Time */}
                   <td className="px-5 py-4 text-right text-xs text-slate-500">
-                    {trade.time}
+                  {new Date(trade.timestamp).toLocaleString()}
                   </td>
                 </motion.tr>
               );
@@ -197,8 +233,9 @@ export default function TradeTable() {
 
       {/* Pagination */}
       <div className="flex flex-col gap-3 border-t border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-slate-500">Showing 1–7 of 128 trades</p>
-
+      <p className="text-xs text-slate-500">
+        Showing 1–{trades.length} of {summary?.total_trades ?? 0} trades
+      </p>
         <div className="flex items-center gap-2">
           <button
             type="button"

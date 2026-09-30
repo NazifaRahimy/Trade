@@ -22,7 +22,8 @@ export default function PerformancePage() {
   useEffect(() => {
     const fetchPerformanceMetrics = async () => {
       try {
-        const response = await api.get("/api/copy-trading/performance/metrics/");
+// 🟢 نمونه اصلاح آدرس خط ۳۰ برای هماهنگی کامل با فایل روت‌های جنگو
+        const response = await api.get("/api/copy-trading/overview/"); 
         if (response.data) {
           setPerfData(response.data);
         }

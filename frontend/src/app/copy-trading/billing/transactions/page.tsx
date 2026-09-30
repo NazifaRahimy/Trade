@@ -29,7 +29,7 @@ export default function TransactionsPage() {
           </p>
         </div>
 
-        <TransactionsTable />
+       <TransactionsTable transactions={[]} />
       </div>
     </main>
   );

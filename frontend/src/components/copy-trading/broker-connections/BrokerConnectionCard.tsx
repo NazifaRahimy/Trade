@@ -4,43 +4,78 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiCheckCircle, FiRefreshCw, FiServer, FiUser, FiInfo, FiLoader } from "react-icons/fi";
 import api from "@/src/lib/axios"; 
+import { getDashboardStats } from "@/src/lib/api";
 
 export default function BrokerConnectionCard() {
   const [account, setAccount] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [testing, setTesting] = useState(false);
-
-  // 📡 فچ کردن زنده وضعیت حساب کاربر از دیتابیس
-  const fetchConnection = async () => {
-    try {
-      const response = await api.get("/api/user/broker/");
-      if (response.data && response.data.mt5_login) {
-        setAccount(response.data);
-      } else {
-        setAccount(null);
-      }
-    } catch (error) {
-      console.error("Error loading active broker connection:", error);
-    } {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchConnection();
-  }, []);
-
+  // 🟢 نام متغیر تغییر دهنده وضعیت باید دقیقاً ست شود:
+const [connection, setConnection] = useState<any>(null);
+  
+// 🟢 ۱. تابع تست زنده اتصال حساب متاتریدر ۵ کاربر به بروکر طلا
   const handleTestConnection = async () => {
+    setTesting(true);
     try {
-      setTesting(true);
-      await api.get("/api/user/broker/");
-      alert("✅ Connection Status: Active & Synced with copy-trade node network.");
-    } catch (err) {
-      alert("❌ Connection Error: Cannot communicate with the server.");
+      // اتصال لایو به هسته بررسی پسورد و هندشیک متاتریدر ۵
+      await api.post("/api/market-data/broker/connect/");
+      
+      // به‌روزرسانی کارت پس از موفقیت‌آمیز بودن تست اتصال
+      await fetchConnection();
+    } catch (error) {
+      console.error("Error testing broker connection:", error);
     } finally {
       setTesting(false);
     }
   };
+
+// 🟢 ۲. تابع فچ کردن دیتای واقعی و زنده حساب متاتریدر ۵ کاربر از دیتابیس ربات طلا
+const fetchConnection = async () => {
+  try {
+    // تغییر آدرس قدیمی به اندپوینت واقعی فچ حساب معاملاتی طلا
+    const response = await api.get("/api/market-data/broker/connect/");
+    
+    if (response.data && response.data.mt5_login) {
+      setConnection(response.data);
+    } else {
+      setConnection(null);
+    }
+  } catch (error) {
+    console.error("Error loading active broker connection:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+useEffect(() => {
+  const fetchCurrentConnection = async () => {
+    // 🟢 گارد حفاظتی: اگر توکن هنوز در مرورگر لود نشده، اصلاً درخواست فرستاده نشود
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        console.log("Awaiting token initialization...");
+        return; 
+      }
+    }
+
+    try {
+      setLoading(true);
+      // تابع فچ دیتا یا لود داشبورد شما
+      const data = await getDashboardStats(); 
+      if (data) {
+        setConnection(data);
+      }
+    } catch (error) {
+      console.error("Error loading active broker connection:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchCurrentConnection();
+}, []);
+
 
   if (loading) {
     return (

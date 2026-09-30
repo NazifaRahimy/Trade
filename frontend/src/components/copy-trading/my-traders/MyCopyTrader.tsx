@@ -46,15 +46,7 @@ export default function MyCopyTrader({
   ) => {
     try {
       setProcessingId(trader.id);
-      /*
-       * IMPORTANT:
-       * این endpointها را با endpoint واقعی Backend هماهنگ کن.
-       *
-       * مثال فعلی:
-       * POST /api/copy-trading/my-traders/{id}/pause/
-       * POST /api/copy-trading/my-traders/{id}/resume/
-       * POST /api/copy-trading/my-traders/{id}/stop/
-       */
+
       await api.post(`/api/copy-trading/my-traders/${trader.id}/${action}/`);
       onRefresh?.();
     } catch (error) {
@@ -98,7 +90,7 @@ export default function MyCopyTrader({
       <div className="grid gap-5 xl:grid-cols-2">
         {subscriptions.map((trader) => {
           const name =
-            trader.trader_name ?? trader.name ?? "Professional Trader";
+          trader.trader_name ?? trader.name ?? "Professional Trader";
           const investment = trader.investment ?? trader.allocated_amount ?? 0;
           const profit = trader.profit ?? trader.total_profit ?? 0;
           const winRate = trader.win_rate ?? trader.winRate ?? 0;
@@ -221,90 +213,90 @@ export default function MyCopyTrader({
     </section>
   );
 }
-function StatItem({
-  label,
-  value,
-  positive,
-  negative,
-}: {
-  label: string;
-  value: string;
-  positive?: boolean;
-  negative?: boolean;
-}) {
-  return (
-    <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-      <p className="text-xs text-slate-400">{label}</p>
-      <div className="mt-1 flex items-center gap-1">
-        {positive && <FiTrendingUp size={14} className="text-emerald-500" />}
-        {negative && <FiTrendingDown size={14} className="text-red-500" />}
-        <p
-          className={`text-sm font-semibold ${
-            positive
-              ? "text-emerald-600"
-              : negative
-                ? "text-red-600"
-                : "text-slate-700" }`}  >
-          {value}
-        </p>
-      </div>
-    </div>
-  );
-}
+    function StatItem({
+      label,
+      value,
+      positive,
+      negative,
+    }: {
+      label: string;
+      value: string;
+      positive?: boolean;
+      negative?: boolean;
+    }) {
+      return (
+        <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
+          <p className="text-xs text-slate-400">{label}</p>
+          <div className="mt-1 flex items-center gap-1">
+            {positive && <FiTrendingUp size={14} className="text-emerald-500" />}
+            {negative && <FiTrendingDown size={14} className="text-red-500" />}
+            <p
+              className={`text-sm font-semibold ${
+                positive
+                  ? "text-emerald-600"
+                  : negative
+                    ? "text-red-600"
+                    : "text-slate-700" }`}  >
+              {value}
+            </p>
+          </div>
+        </div>
+      );
+    }
 
-function StatusBadge({status}: {status: string}) {
-  const isActive = status === "active";
-  const isPaused = status === "paused";
-  if (isActive) {
-    return (
-      <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-600">
-        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-        Active
-      </span>
-    );
-  }
-  if (isPaused) {
-    return (
-      <span className="flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-600">
-        <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-        Paused
-      </span>
-    );
-  }
-  return (
-    <span className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-500">
-      Stopped
-    </span>
-  );
-}
-function formatDate(date?: string) {
-  if (!date) return "";
+    function StatusBadge({status}: {status: string}) {
+      const isActive = status === "active";
+      const isPaused = status === "paused";
+      if (isActive) {
+        return (
+          <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-600">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            Active
+          </span>
+        );
+      }
+      if (isPaused) {
+        return (
+          <span className="flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-600">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+            Paused
+          </span>
+        );
+      }
+      return (
+        <span className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-500">
+          Stopped
+        </span>
+      );
+    }
+    function formatDate(date?: string) {
+      if (!date) return "";
 
-  const parsedDate = new Date(date);
+      const parsedDate = new Date(date);
 
-  if (Number.isNaN(parsedDate.getTime())) {
-    return date;
-  }
+      if (Number.isNaN(parsedDate.getTime())) {
+        return date;
+      }
 
-  return parsedDate.toLocaleDateString();
-}
+      return parsedDate.toLocaleDateString();
+    }
 
-function FiUsersIcon() {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
-  );
-}
+    function FiUsersIcon() {
+      return (
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      );
+    }

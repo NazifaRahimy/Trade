@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiCheckCircle, FiRefreshCw, FiServer, FiUser, FiInfo, FiLoader } from "react-icons/fi";
 // 🚀 ایمپورت کردن سرویس‌های واقعی پلتفرم شما
-import { getDashboardStats, toggleBotStatus } from "../../../lib/api"; 
+// 🟢 Absolute import format ensures Turbopack tracks the file smoothly
+import { getDashboardStats, toggleBotStatus } from "@/src/lib/api"; 
 
 export default function BrokerConnectionCard() {
   const [connection, setConnection] = useState<any>(null);

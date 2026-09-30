@@ -1,11 +1,9 @@
 "use client";
 
-import {useEffect, useState} from "react"; // 🚀 اضافه شدن هوک‌ها برای دریافت نقش
-import {FiLogOut, FiHome} from "react-icons/fi";
-import Link from "next/link";
-import Image from "next/image";
-import {usePathname} from "next/navigation";
+import { useEffect, useState } from "react";
 import {
+  FiLogOut,
+  FiHome,
   FiGrid,
   FiLink,
   FiCopy,
@@ -15,11 +13,14 @@ import {
   FiClock,
   FiX,
   FiCreditCard,
-  FiDollarSign, // آیکون دلار دریافتی از کدهای شما
+  FiDollarSign,
 } from "react-icons/fi";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 
 import logo from "@/src/assets/images/logo.png";
-import api from "@/src/lib/axios"; // کلاینت شبکه اکسوس پلتفرم شما
+import api from "@/src/lib/axios";
 
 interface CopyTradingSidebarProps {
   isOpen?: boolean;
@@ -31,37 +32,59 @@ export default function CopyTradingSidebar({
   onClose,
 }: CopyTradingSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
 
-  // 🧠 ۱. استیت ذخیره نقش کاربر (پیش‌فرض روی فلوور یا کاربر عادی)
   const [userRole, setUserRole] = useState<string>("follower");
 
-  // 📡 ۲. فچ کردن زنده وضعیت مستر بودن یا نبودن کاربر از پروفایل احراز هویت جنگو
-  // 📡 فچ کردن آنلاین و زنده وضعیت واقعی نقش کاربر بدون حالت تستی پیش‌فرض
+  // دریافت نقش واقعی کاربر
   useEffect(() => {
-    const checkUserAuthorizationRole = async () => {
+    const fetchUserProfileRole = async () => {
+      const accessToken = localStorage.getItem("access_token");
+
+      if (!accessToken) {
+        return;
+      }
+
       try {
         const response = await api.get("/api/user/profile/");
-        if (response.data && response.data.role) {
-          // 🟢 ثبت نقش واقعی کاربر از دیتابیس (master یا follower)
-          setUserRole(response.data.role);
-        } else {
-          // 🛡️ اگر نقشی در پاسخ سرور نبود، به عنوان کاربر عادی قفلش کن
-          setUserRole("follower");
+
+        const role = response.data?.role;
+
+        if (role) {
+          setUserRole(role);
         }
       } catch (error) {
         console.error(
-          "Security Alert: Failed to fetch profile node role.",
-          error,
+          "Security Alert: Failed to fetch profile role.",
+          error
         );
-
-        setUserRole("follower");
       }
     };
 
-    checkUserAuthorizationRole();
-  }, [pathname]); // هماهنگ‌سازی اتوماتیک با تغییر آدرس صفحات داشبورد
+    fetchUserProfileRole();
+  }, []);
 
-  // 📊 ۳. لیست منوهای عمومی و مشترک برای تمام کاربران (دقیقاً کدهای خودتان)
+  // Logout
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+
+    localStorage.removeItem("auth-username");
+    localStorage.removeItem("auth-firstName");
+    localStorage.removeItem("auth-lastName");
+    localStorage.removeItem("auth-email");
+    localStorage.removeItem("auth-photo");
+    localStorage.removeItem("auth-role");
+
+    window.dispatchEvent(new Event("auth-change"));
+
+    if (onClose) {
+      onClose();
+    }
+
+    router.replace("/login");
+  };
+
   const menuItems = [
     {
       name: "Overview",
@@ -109,7 +132,11 @@ export default function CopyTradingSidebar({
     if (href === "/copy-trading") {
       return pathname === "/copy-trading";
     }
-    return pathname === href || pathname.startsWith(`${href}/`);
+
+    return (
+      pathname === href ||
+      pathname.startsWith(`${href}/`)
+    );
   };
 
   return (
@@ -132,7 +159,7 @@ export default function CopyTradingSidebar({
         <div className="flex h-[80px] items-center justify-between border-b border-slate-800 px-6">
           <div
             onClick={onClose}
-            className="flex items-center justify-between w-full "
+            className="flex w-full items-center justify-between"
           >
             <Image
               src={logo}
@@ -141,7 +168,6 @@ export default function CopyTradingSidebar({
             />
           </div>
 
-          {/* Mobile Close Button */}
           <button
             type="button"
             onClick={onClose}
@@ -157,14 +183,13 @@ export default function CopyTradingSidebar({
           <Link
             href="/"
             onClick={onClose}
-            className=" hidden lg:flex items-center px-4 pb-4 gap-2 text-sm font-medium text-slate-300 transition hover:text-white"
+            className="hidden items-center gap-2 px-4 pb-4 text-sm font-medium text-slate-300 transition hover:text-white lg:flex"
           >
             <FiHome className="h-4 w-4" />
             <span>Back Home</span>
           </Link>
 
           <nav className="space-y-2">
-            {/* رندر لیست منوهای عمومی بومی خودتان */}
             {menuItems.map((item) => {
               const active = isActive(item.href);
               const Icon = item.icon;
@@ -187,12 +212,13 @@ export default function CopyTradingSidebar({
                         : "text-slate-400 group-hover:text-white"
                     }`}
                   />
+
                   <span>{item.name}</span>
                 </Link>
               );
             })}
 
-            {/* 🛡️ ۴. قفل امنیتی فرانت‌اَند: منوی درآمدها فقط و فقط در صورت مستر بودن کاربر رندر می‌شود */}
+            {/* Master Earnings */}
             {userRole === "master" && (
               <Link
                 href="/copy-trading/earnings"
@@ -210,13 +236,16 @@ export default function CopyTradingSidebar({
                       : "text-slate-400 group-hover:text-white"
                   }`}
                 />
+
                 <span>Master Earnings</span>
               </Link>
             )}
 
+            {/* Mobile Back Home */}
             <Link
               href="/"
-              className={`group flex lg:hidden items-center gap-4 rounded-xl px-4 py-2.5 text-sm font-medium transition-all `}
+              onClick={onClose}
+              className="flex items-center gap-4 rounded-xl px-4 py-2.5 text-sm font-medium lg:hidden"
             >
               <FiHome />
               <span>Back Home</span>
@@ -224,11 +253,11 @@ export default function CopyTradingSidebar({
           </nav>
         </div>
 
-        {/* Copy Trading Label */}
+        {/* Logout */}
         <div className="border-t border-slate-800 p-3">
-          {/* Logout */}
           <button
             type="button"
+            onClick={handleLogout}
             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-400 transition hover:bg-red-950/40 hover:text-red-400"
           >
             <FiLogOut />

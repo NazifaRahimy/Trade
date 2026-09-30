@@ -5,25 +5,21 @@ import { motion } from "framer-motion";
 import { FiSave, FiLoader, FiCheckCircle } from "react-icons/fi";
 // 🚀 اتصال به کلاینت متمرکز شبکه پلتفرم شما
 import api from "@/src/lib/axios";
-
 export default function CopySettingsPanel() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
-
-  // ⚙️ ۱. دقیقاً همان استیت‌های بومی و تمیز خودتان در تصویر اول و دوم
+  // ⚙️ ۱. دقیقاً همان استیت‌های بومی و تمیز خودتان در تصیر اول و دوم
   const [copyMode, setCopyMode] = useState("percentage");
   const [copyRatio, setCopyRatio] = useState(100);
   const [maxDrawdown, setMaxDrawdown] = useState(10);
   const [maxDailyLoss, setMaxDailyLoss] = useState(5);
   const [maxLotSize, setMaxLotSize] = useState(1.0);
   const [maxOpenPositions, setMaxOpenPositions] = useState(5);
-
   const [copyNewTrades, setCopyNewTrades] = useState(true);
   const [copyStopLoss, setCopyStopLoss] = useState(true);
   const [copyTakeProfit, setCopyTakeProfit] = useState(true);
   const [pauseCopying, setPauseCopying] = useState(false);
-
   // 📡 ۲. متد GET: خواندن مستقیم اطلاعات ذخیره شده دیتابیس جنگو به محض لود شدن صفحه
   useEffect(() => {
     const loadCloudSettings = async () => {

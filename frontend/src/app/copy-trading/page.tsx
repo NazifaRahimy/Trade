@@ -1,11 +1,103 @@
+
 "use client";
+
+import { useEffect, useState } from "react";
 
 import OverviewHeader from "@/src/components/copy-trading/overview/OverviewHeader";
 import OverviewStats from "@/src/components/copy-trading/overview/OverviewStats";
 import PortfolioGrowth from "@/src/components/copy-trading/overview/PortfolioGrowth";
 import CopyAllocation from "@/src/components/copy-trading/overview/CopyAllocation";
 import ActiveCopyTraders from "@/src/components/copy-trading/overview/ActiveCopyTraders";
+
+type CopyTradingData = {
+  stats: {
+    total_balance: string;
+    copy_trading_balance: string;
+    total_profit: string;
+    active_traders: number;
+    win_rate: string;
+  };
+
+  growth_chart: {
+    date: string;
+    balance: number;
+  }[];
+
+  allocation: {
+    total_allocated: string;
+    traders: {
+      id: number;
+      name: string;
+      percentage: string;
+      color: string;
+    }[];
+  };
+
+  traders: {
+    id: number;
+    name: string;
+    status: string;
+    pair: string;
+    investment: string;
+    profit: string;
+    return_pct: string;
+    win_rate: string;
+    active_positions: number;
+    copy_ratio: string;
+  }[];
+};
+
 export default function CopyTradingPage() {
+  const [data, setData] = useState<CopyTradingData | null>(null);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const fetchOverview = async () => {
+      try {
+        const token = localStorage.getItem("access_token");
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/copy-trading/overview/`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to load copy trading overview");
+        }
+
+        const result: CopyTradingData = await response.json();
+
+        setData(result);
+      } catch (err) {
+        console.error("Copy Trading Overview Error:", err);
+        setError(true);
+      }
+    };
+
+    fetchOverview();
+  }, []);
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-white p-8 text-center text-red-500">
+        Failed to load copy trading data.
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-white p-8 text-center text-slate-400">
+        Loading copy trading data...
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <main>
@@ -14,14 +106,16 @@ export default function CopyTradingPage() {
           <OverviewHeader />
 
           {/* Stats */}
-          <OverviewStats />
+          <OverviewStats statsData={data.stats} />
 
           {/* Performance + Allocation */}
           <section className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
             <PortfolioGrowth />
-            <CopyAllocation />
+            <CopyAllocation allocation={data.allocation} />
           </section>
-          <ActiveCopyTraders />
+
+          {/* Active Copy Traders */}
+          <ActiveCopyTraders tradersList={data.traders} />
         </div>
       </main>
     </div>

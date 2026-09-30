@@ -1,11 +1,10 @@
-// 👈 ایمپورت کردن کلاینت شبکه که در فایل بغلی تنظیم کردید
-import api from './axios';
+// 🟢 ایمپورت دقیق از فایل اکسوس جدید شما (نام فایل خود را چک کنید، مثلاً ./axios یا ./axiosInstance)
+import axiosInstance from './axios';
 
 /**
  * سرویس ارسال اطلاعات ثبت‌نام کاربران به دیتابیس جنگو
  */
 export const registerUser = async (email: string, password: string) => {
-  // تبدیل ایمیل به متن خالص جهت ساخت یوزرنیم بدون علامت @ در جنگو
   const generatedUsername = email.split('@')[0]; 
   
   const payload = {
@@ -13,7 +12,7 @@ export const registerUser = async (email: string, password: string) => {
     email: email,
     password: password
   };
-  const response = await api.post('/api/auth/register/', payload);
+  const response = await axiosInstance.post('/api/auth/register/', payload);
   return response.data;
 };
 
@@ -26,37 +25,40 @@ export const loginUser = async (loginInput: string, password: string) => {
     password: password
   };
 
-  const response = await api.post('/api/auth/token/', payload);
-  return response.data; // حاوی توکن‌های access و refresh
-};
-
-export const getDashboardStats = async () => {
-  const response = await api.get('/api/stats/overview/'); // 👈 فیکس شد
+  const response = await axiosInstance.post('/api/auth/token/', payload);
   return response.data;
 };
 
 /**
- * ۲. دکمه توقف اضطراری و روشن/خاموش کردن ربات کپی‌ترید (Stop / On Switch)
+ * دریافت آمارهای کلی داشبورد
+ */
+export const getDashboardStats = async () => {
+  const response = await axiosInstance.get('/api/stats/overview/');
+  return response.data;
+};
+
+/**
+ * دکمه توقف اضطراری و روشن/خاموش کردن ربات
  */
 export const toggleBotStatus = async (isActive: boolean) => {
-  const response = await api.post('/api/user/toggle-bot/', { is_active: isActive });
+  const response = await axiosInstance.post('/api/user/toggle-bot/', { is_active: isActive });
   return response.data;
 };
 
 /**
- * ۳. ذخیره و به‌روزرسانی مشخصات بروکر متاتریدر ۵ (Broker Connection)
+ * ذخیره و به‌روزرسانی مشخصات بروکر متاتریدر ۵ ربات طلا
  */
 export const updateBrokerConnection = async (brokerData: {
   mt5_login: number;
   mt5_password: string;
   mt5_server: string;
 }) => {
-  const response = await api.post('/api/user/broker/', brokerData);
+  const response = await axiosInstance.post('/api/user/broker/', brokerData);
   return response.data;
 };
 
 /**
- * ۴. ذخیره تنظیمات مدیریت ریسک و وزن پوزیشن‌ها در اندپوینت متمرکز جنگو
+ * ذخیره تنظیمات مدیریت ریسک و وزن پوزیشن‌ها
  */
 export const updateRiskSettings = async (riskData: {
   risk_percent: number;
@@ -65,11 +67,14 @@ export const updateRiskSettings = async (riskData: {
   max_open_trades: number;
   custom_lot: number;
 }) => {
-  const response = await api.post('/api/user/broker/', riskData); // 👈 فیکس آدرس به بخش متمرکز broker
+  const response = await axiosInstance.post('/api/user/broker/', riskData);
   return response.data;
 };
 
+/**
+ * دریافت تاریخچه معاملات بسته شده
+ */
 export const getTradeHistory = async () => {
-  const response = await api.get('/api/stats/trade-history/'); // 👈 فیکس آدرس به دیتای واقعی جنگو
+  const response = await axiosInstance.get('/api/stats/trade-history/');
   return response.data;
 };

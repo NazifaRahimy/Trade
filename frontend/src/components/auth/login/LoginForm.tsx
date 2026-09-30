@@ -5,12 +5,9 @@ import Link from "next/link";
 import {motion} from "framer-motion";
 import {FiMail, FiLock, FiEye, FiEyeOff} from "react-icons/fi";
 import SocialLogin from "@/src/components/auth/SocialLogin";
-import {loginUser} from "../../../lib/api";
-import { useRouter } from "next/navigation";
 import api from "@/src/lib/axios";
 
 export default function LoginForm() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -32,8 +29,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
     if (response.status === 200) {
       // 🚀 ۱. ذخیره اطلاعات دقیقاً با همان کلیدهایی که هدر شما برای خواندن نیاز دارد
-      localStorage.setItem("auth-token", response.data.access);
-      localStorage.setItem("auth-refresh", response.data.refresh);
+      localStorage.setItem("access_token", response.data.access);
+      localStorage.setItem("refresh_token", response.data.refresh);
       localStorage.setItem("auth-username", response.data.username || formData.email);
       localStorage.setItem("auth-firstName", response.data.first_name || "Member");
       localStorage.setItem("auth-email", formData.email);

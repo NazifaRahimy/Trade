@@ -1,21 +1,24 @@
 "use client";
 
-import {useEffect, useState} from "react";
-import {useRouter} from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
 };
 
-export default function ProtectedRoute({children}: ProtectedRouteProps) {
+export default function ProtectedRoute({
+  children,
+}: ProtectedRouteProps) {
   const router = useRouter();
+
   const [checking, setChecking] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("auth-token");
+    const accessToken = localStorage.getItem("access_token");
 
-    if (!token) {
+    if (!accessToken) {
       router.replace("/login");
       return;
     }
@@ -27,7 +30,9 @@ export default function ProtectedRoute({children}: ProtectedRouteProps) {
   if (checking) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-white">
-        <div className="text-sm text-slate-500">Checking authentication...</div>
+        <div className="text-sm text-slate-500">
+          Checking authentication...
+        </div>
       </div>
     );
   }

@@ -48,7 +48,7 @@ export default function Header() {
 
   useEffect(() => {
     const checkAuth = () => {
-      const token = localStorage.getItem("auth-token");
+      const token = localStorage.getItem("access_token");
       const role = localStorage.getItem("auth-role");
 
       setIsLoggedIn(Boolean(token));

@@ -30,7 +30,7 @@ const menuItems = [
   },
   {
     label: "Market",
-    href: "/discount-premium/market",
+    href: "/discount-premium/market-structure",
     icon: FiBarChart2,
   },
   {

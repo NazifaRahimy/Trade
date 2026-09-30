@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiActivity, FiArrowDownLeft, FiArrowUpRight, FiTrendingUp } from "react-icons/fi";
+import { FiActivity, FiArrowUpRight, FiTrendingUp } from "react-icons/fi";
 import Link from "next/link";
 
 type TraderItem = {

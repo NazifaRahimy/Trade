@@ -1,9 +1,8 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import api from "@/src/lib/axios";
 
-// ایمپورت ابزارک‌های فیکس شده شما
 import PositionsHeader from "@/src/components/copy-trading/active-positions/PositionsHeader";
 import PositionsStats from "@/src/components/copy-trading/active-positions/PositionsStats";
 import ActivePositionsTable from "@/src/components/copy-trading/active-positions/ActivePositionsTable";
@@ -15,45 +14,82 @@ export default function ActivePositionsPage() {
 
   const fetchLivePositions = async () => {
     try {
-      const response = await api.get("/api/copy-trading/active-positions/");
-      if (response.data) {
-        setPositions(response.data);
+      const token = localStorage.getItem("access_token");
+
+      if (!token) {
+        console.log("No access token found.");
+        setPositions([]);
+        return;
       }
-    } catch (error) {
-      console.error("Error pooling active MT5 ledger streams:", error);
+
+      const response = await api.get(
+        "/api/copy-trading/active-positions/"
+      );
+
+      console.log("Active positions response:", response.data);
+
+      if (Array.isArray(response.data)) {
+        setPositions(response.data);
+      } else if (Array.isArray(response.data?.results)) {
+        setPositions(response.data.results);
+      } else {
+        setPositions([]);
+      }
+    } catch (error: any) {
+      console.error(
+        "Error loading active positions:",
+        error
+      );
+
+      if (error?.response) {
+        console.error(
+          "STATUS:",
+          error.response.status
+        );
+
+        console.error(
+          "DATA:",
+          error.response.data
+        );
+      }
+
+      setPositions([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // 🔄 فچ آنی به محض ورود + ایجاد لوپ مانیتورینگ خودکار هر ۱۰ ثانیه یک‌بار برای سودها
   useEffect(() => {
     fetchLivePositions();
-    const interval = setInterval(fetchLivePositions, 10000);
-    return () => clearInterval(interval);
-  }, []);
 
-  if (loading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center gap-2 text-sm text-slate-400 italic bg-white">
-        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600" />
-        <span>Streaming active ledger positions from broker...</span>
-      </div>
-    );
-  }
+    const interval = setInterval(() => {
+      fetchLivePositions();
+    }, 15000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-50/50 p-4 lg:p-6 w-full max-w-[1700px] mx-auto space-y-6">
-        {/* ۱. هدر صفحه */}
-        <PositionsHeader />
+      {loading ? (
+        <div className="flex h-screen w-full items-center justify-center gap-2 bg-white text-sm italic text-slate-400">
+          <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-blue-600" />
 
-        {/* ۲. ۴ کارت محاسباتی بالای صفحه (کامپوننت زنده شده شما) */}
-        <PositionsStats positions={positions} />
+          <span>
+            Loading active positions...
+          </span>
+        </div>
+      ) : (
+        <div className="mx-auto min-h-screen w-full max-w-[1700px] space-y-6 bg-slate-50/50 p-4 lg:p-6">
+          <PositionsHeader />
 
-        {/* ۳. جدول اصلی معاملات لایو (کامپوننت زنده شده شما) */}
-        <ActivePositionsTable positions={positions} />
-      </div>
+          <PositionsStats positions={positions} />
+
+          <ActivePositionsTable positions={positions} />
+        </div>
+      )}
     </ProtectedRoute>
   );
 }

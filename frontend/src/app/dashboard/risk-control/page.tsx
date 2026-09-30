@@ -34,8 +34,7 @@ export default function RiskControlPage() {
 
       {/* Risk + Emergency */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <RiskGauge />
-
+        <RiskGauge currentRisk={totalRisk} />
         <EmergencyStop botActive={botActive} onToggleBot={handleToggleBot} />
       </div>
 
