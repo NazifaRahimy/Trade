@@ -1,12 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
+import {motion} from "framer-motion";
 import {
   FiArrowDownLeft,
   FiArrowUpRight,
   FiDollarSign,
   FiTrendingUp,
 } from "react-icons/fi";
+import {useTranslation} from "react-i18next";
 // 🚀 ۱. تراز تمام فیلدها با خروجی واقعی دیتابیس جنگو
 type BillingStatsProps = {
   walletData: {
@@ -17,37 +18,37 @@ type BillingStatsProps = {
     account_activity: string; // متغیر داینامیک جدید کارت چهارم
   } | null;
 };
-export default function BillingStats({ walletData }: BillingStatsProps) {
-  // 📊 ۲. مپ کردن مستقیم متغیرها روی استایل‌ها و آیکون‌های بومی خودتان
+export default function BillingStats({walletData}: BillingStatsProps) {
+  const {t} = useTranslation();
   const stats = [
     {
-      title: "Available Balance",
-      value: walletData?.available_balance || "\$0.00",
-      description: "Current account balance.",
+      title: t("billing.availableBalance"),
+      value: walletData?.available_balance || "$0.00",
+      description: t("billing.currentAccountBalance"),
       icon: FiDollarSign,
       iconBg: "bg-blue-50",
       iconColor: "text-blue-600",
     },
     {
-      title: "Total Deposits",
-      value: walletData?.total_deposits || "\$0.00",
-      description: "Total funds deposited.",
+      title: t("billing.totalDeposits"),
+      value: walletData?.total_deposits || "$0.00",
+      description: t("billing.totalFundsDeposited"),
       icon: FiArrowDownLeft,
       iconBg: "bg-emerald-50",
       iconColor: "text-emerald-600",
     },
     {
-      title: "Total Paid Fees",
-      value: walletData?.total_paid_fees || "\$0.00",
-      description: "Total fees & subscriptions paid.",
+      title: t("billing.totalPaidFees"),
+      value: walletData?.total_paid_fees || "$0.00",
+      description: t("billing.totalFeesSubscriptionsPaid"),
       icon: FiArrowUpRight,
       iconBg: "bg-orange-50",
       iconColor: "text-orange-600",
     },
     {
-      title: "Account Activity",
-      value: walletData?.account_activity || "0.0%", // 🚀 اتصال لایو کارت چهارم (حذف کامل عدد ثابت قبلی)
-      description: "Net growth trajectory return.",
+      title: t("billing.accountActivity"),
+      value: walletData?.account_activity || "0.0%",
+      description: t("billing.netGrowthTrajectoryReturn"),
       icon: FiTrendingUp,
       iconBg: "bg-cyan-50",
       iconColor: "text-cyan-600",
@@ -60,8 +61,8 @@ export default function BillingStats({ walletData }: BillingStatsProps) {
         return (
           <motion.div
             key={stat.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{opacity: 0, y: 20}}
+            animate={{opacity: 1, y: 0}}
             transition={{
               duration: 0.4,
               delay: index * 0.08,
@@ -70,7 +71,9 @@ export default function BillingStats({ walletData }: BillingStatsProps) {
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500">{stat.title}</p>
+                <p className="text-sm font-medium text-slate-500">
+                  {stat.title}
+                </p>
                 <h2 className="mt-2 text-2xl font-bold text-slate-900">
                   {stat.value}
                 </h2>

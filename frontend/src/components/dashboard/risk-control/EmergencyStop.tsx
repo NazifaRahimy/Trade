@@ -1,6 +1,6 @@
 "use client";
-import { toggleBotStatus } from "../../../lib/api"; 
-
+import {toggleBotStatus} from "../../../lib/api";
+import {useTranslation} from "react-i18next";
 import {FiPauseCircle, FiPower} from "react-icons/fi";
 
 type EmergencyStopProps = {
@@ -12,6 +12,7 @@ export default function EmergencyStop({
   botActive,
   onToggleBot,
 }: EmergencyStopProps) {
+  const {t} = useTranslation();
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
       {/* Header */}
@@ -20,17 +21,21 @@ export default function EmergencyStop({
           <FiPauseCircle size={22} />
         </div>
 
-        <h3 className="text-xl font-semibold text-slate-900">Emergency Stop</h3>
+        <h3 className="text-xl font-semibold text-slate-900">
+          {t("telegramBotDashboard.emergencyStopTitle")}
+        </h3>
       </div>
 
       <p className="mt-4 text-sm text-slate-500">
-        Control your trading bot instantly.
+        {t("telegramBotDashboard.emergencyStopDescription")}
       </p>
 
       {/* Bot Status */}
       <div className="mt-6 rounded-xl bg-slate-50 p-4">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-slate-600">Bot Status</span>
+          <span className="text-sm font-medium text-slate-600">
+            {t("telegramBotDashboard.botStatus")}
+          </span>
 
           <span
             className={`flex items-center gap-2 text-sm font-semibold ${
@@ -43,7 +48,9 @@ export default function EmergencyStop({
               }`}
             />
 
-            {botActive ? "Running" : "Stopped"}
+            {botActive
+              ? t("telegramBotDashboard.running")
+              : t("telegramBotDashboard.stopped")}
           </span>
         </div>
       </div>
@@ -61,12 +68,12 @@ export default function EmergencyStop({
         {botActive ? (
           <>
             <FiPauseCircle size={18} />
-            Turn Off Bot
+            {t("telegramBotDashboard.turnOffBot")}
           </>
         ) : (
           <>
             <FiPower size={18} />
-            Turn On Bot
+            {t("telegramBotDashboard.turnOnBot")}
           </>
         )}
       </button>

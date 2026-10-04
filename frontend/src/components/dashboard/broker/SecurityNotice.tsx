@@ -1,14 +1,15 @@
 "use client";
-
-import { motion } from "framer-motion";
-import { FiLock, FiShield } from "react-icons/fi";
+import {useTranslation} from "react-i18next";
+import {motion} from "framer-motion";
+import {FiLock, FiShield} from "react-icons/fi";
 
 export default function SecurityNotice() {
+  const {t} = useTranslation();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, delay: 0.25 }}
+      initial={{opacity: 0, y: 15}}
+      animate={{opacity: 1, y: 0}}
+      transition={{duration: 0.45, delay: 0.25}}
       className="rounded-2xl border border-blue-100 bg-blue-50/70 p-5"
     >
       <div className="flex gap-4">
@@ -20,14 +21,12 @@ export default function SecurityNotice() {
         <div>
           <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
             <FiLock className="text-blue-600" size={14} />
-            End-to-End Encryption Active
+            {t("telegramBotBrokerForm.encryptionActive")}
           </h3>
 
           {/* متن به‌روزرسانی‌شده منطبق بر لایه رمزنگاری واقعی بک‌اَند شما */}
           <p className="mt-2 text-xs leading-5 text-slate-600">
-            Your MT5 trading passwords are fully encrypted using military-grade security standards. 
-            Credentials are securely isolated and processed strictly via dedicated cloud nodes to synchronize 
-            the copy-trade execution.
+            {t("telegramBotBrokerForm.securityDescription")}
           </p>
         </div>
       </div>

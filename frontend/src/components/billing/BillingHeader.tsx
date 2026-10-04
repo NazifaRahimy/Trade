@@ -1,10 +1,11 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import Link from "next/link";
-import {FiArrowRight, FiCreditCard, FiPlus} from "react-icons/fi";
+import {FiArrowLeft, FiArrowRight, FiCreditCard, FiPlus} from "react-icons/fi";
 import {motion} from "framer-motion";
 
 export default function BillingHeader() {
+  const {t, i18n} = useTranslation();
   return (
     <motion.div
       initial={{opacity: 0, y: -15}}
@@ -15,16 +16,15 @@ export default function BillingHeader() {
       <div>
         <div className="mb-3 flex items-center gap-2 text-sm text-slate-500">
           <FiCreditCard className="text-blue-600" />
-          <span>Financial Center</span>
+          <span>{t("billing.financialCenter")}</span>
         </div>
 
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-          Billing
+          {t("billing.billing")}
         </h1>
 
         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 md:text-base">
-          Manage your balance, cryptocurrency payments, and transaction history
-          in one place.
+          {t("billing.billingDescription")}
         </p>
       </div>
 
@@ -33,8 +33,13 @@ export default function BillingHeader() {
         className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
       >
         <FiPlus />
-        Add Funds
-        <FiArrowRight />
+        {t("billing.addFunds")}
+
+        {i18n.language.startsWith("fa") ? (
+          <FiArrowLeft className="mt-1" />
+        ) : (
+          <FiArrowRight className="mt-1" />
+        )}
       </Link>
     </motion.div>
   );

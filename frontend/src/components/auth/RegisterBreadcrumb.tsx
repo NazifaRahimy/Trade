@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import {FiChevronRight, FiHome} from "react-icons/fi";
-
+import {useTranslation} from "react-i18next";
 export default function RegisterBreadcrumb() {
+  const {t} = useTranslation();
   return (
     <section className="bg-transparent py-8">
       <div className="container mx-auto px-4">
@@ -14,22 +15,26 @@ export default function RegisterBreadcrumb() {
             className="flex items-center gap-1.5 text-slate-500 transition-colors hover:text-blue-600"
           >
             <FiHome className="text-sm" />
-            <span>Home</span>
+            <span>
+              <span>{t("register.home")}</span>
+            </span>
           </Link>
 
           <FiChevronRight className="text-slate-400" />
 
-          <span className="font-medium text-blue-600">Register</span>
+          <span className="font-medium text-blue-600">
+            {t("auth.register")}
+          </span>
         </div>
 
         {/* Page Title */}
         <div className="text-center">
           <h1 className="mb-3 text-3xl font-bold text-slate-900 md:text-4xl">
-            Create Account
+            {t("register.title")}
           </h1>
 
           <p className="text-sm text-black md:text-base ">
-            Create your account and start your trading journey today.
+            {t("register.description")}
           </p>
         </div>
       </div>

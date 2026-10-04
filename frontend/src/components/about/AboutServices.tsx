@@ -1,27 +1,27 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {FiCopy, FiMessageSquare, FiHeadphones} from "react-icons/fi";
 
 const services = [
   {
     icon: FiCopy,
-    title: "Copy Trading",
-    text: "Follow selected trading strategies through a structured copy-trading system.",
+    title: "about.copyTrading",
+    text: "about.copyTradingDescription",
   },
   {
     icon: FiMessageSquare,
-    title: "Trading Signals",
-    text: "Receive market insights and educational trade ideas based on technical and fundamental analysis.",
+    title: "about.tradingSignals",
+    text: "about.tradingSignalsDescription",
   },
   {
     icon: FiHeadphones,
-    title: "Support & Guidance",
-    text: "Our support team helps users throughout the account connection and service setup process.",
+    title: "about.supportAndGuidance",
+    text: "about.supportAndGuidanceDescription",
   },
 ];
-
 export default function AboutServices() {
+  const {t} = useTranslation();
   return (
     <section className="bg-white py-20">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
@@ -33,18 +33,18 @@ export default function AboutServices() {
             transition={{duration: 0.5}}
           >
             <p className="text-xs font-bold uppercase tracking-wider text-blue-600">
-              What We Offer
+              {t("about.whatWeOffer")}
             </p>
 
             <h2 className="mt-3 text-3xl font-black text-slate-900 md:text-4xl">
-              Services Designed Around
-              <span className="block text-blue-600">Your Trading Journey</span>
+              {t("about.servicesDesignedAround")}
+              <span className="block text-blue-600">
+                {t("about.yourTradingJourney")}
+              </span>
             </h2>
 
             <p className="mt-5 text-sm leading-7 text-slate-600">
-              Our platform combines practical market experience with modern
-              services designed to make accessing trading education, insights
-              and copy-trading tools easier.
+              {t("about.servicesDescription")}
             </p>
           </motion.div>
 
@@ -71,11 +71,11 @@ export default function AboutServices() {
 
                   <div>
                     <h3 className="font-bold text-slate-900">
-                      {service.title}
+                      {t(service.title)}
                     </h3>
 
                     <p className="mt-2 text-sm leading-6 text-slate-500">
-                      {service.text}
+                      {t(service.text)}
                     </p>
                   </div>
                 </motion.div>

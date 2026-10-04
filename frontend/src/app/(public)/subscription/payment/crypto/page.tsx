@@ -1,8 +1,16 @@
 "use client";
 import Link from "next/link";
+import {useTranslation} from "react-i18next";
 import {useSearchParams} from "next/navigation";
-import {FiArrowLeft, FiCheck, FiCopy, FiCreditCard} from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiArrowRight,
+  FiCheck,
+  FiCopy,
+  FiCreditCard,
+} from "react-icons/fi";
 export default function CryptoPaymentPage() {
+  const {t, i18n} = useTranslation();
   const searchParams = useSearchParams();
   const service = searchParams.get("service");
   const isTelegram = service === "telegram";
@@ -15,17 +23,22 @@ export default function CryptoPaymentPage() {
       {/* Back */}
       <Link
         href={`/subscription/payment?service=${service}`}
-        className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600">
-        <FiArrowLeft size={16} />
-        Back to Payment
+        className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-blue-600"
+      >
+        {i18n.language.startsWith("fa") ? (
+          <FiArrowRight size={16} />
+        ) : (
+          <FiArrowLeft size={16} />
+        )}
+        {t("cryptoPayment.backToPayment")}
       </Link>
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-slate-900">
-          Cryptocurrency Payment
+          {t("cryptoPayment.title")}
         </h1>
         <p className="mt-2 text-sm text-slate-500">
-          Send the exact amount to the wallet address below.
+          {t("cryptoPayment.description")}
         </p>
       </div>
       {/* Payment Card */}
@@ -37,19 +50,25 @@ export default function CryptoPaymentPage() {
           </div>
           <div>
             <h2 className="text-lg font-semibold text-slate-900">{planName}</h2>
-            <p className="mt-1 text-sm text-slate-500">Subscription {period}</p>
+            <p className="mt-1 text-sm text-slate-500">
+              {" "}
+              {t("cryptoPayment.subscription")} {period}
+            </p>
           </div>
         </div>
         <div className="my-6 h-px bg-slate-200" />
         {/* Amount */}
         <div className="text-center">
-          <p className="text-sm text-slate-500">Amount to Pay</p>
+          <p className="text-sm text-slate-500">
+            {" "}
+            {t("cryptoPayment.amountToPay")}
+          </p>
           <p className="mt-2 text-4xl font-semibold text-slate-900">{price}</p>
         </div>
         {/* Payment Code */}
         <div className="mt-8">
           <p className="mb-2 text-sm font-medium text-slate-700">
-            Payment Code
+            {t("cryptoPayment.paymentCode")}
           </p>
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
             <div className="flex items-center justify-between gap-3">
@@ -59,7 +78,8 @@ export default function CryptoPaymentPage() {
               <button
                 type="button"
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-slate-600 shadow-sm transition hover:text-blue-600"
-                title="Copy payment code">
+                title={t("cryptoPayment.copyPaymentCode")}
+              >
                 <FiCopy size={16} />
               </button>
             </div>
@@ -68,29 +88,31 @@ export default function CryptoPaymentPage() {
         {/* Instructions */}
         <div className="mt-6 rounded-xl bg-blue-50 p-4">
           <h3 className="text-sm font-semibold text-slate-900">
-            Payment Instructions
+            {t("cryptoPayment.paymentInstructions")}
           </h3>
           <ul className="mt-3 space-y-2">
             <li className="flex gap-2 text-sm text-slate-600">
               <FiCheck className="mt-0.5 shrink-0 text-emerald-600" />
-              Send exactly {price}.
+              {t("cryptoPayment.sendExactAmount")} {price}.
             </li>
             <li className="flex gap-2 text-sm text-slate-600">
               <FiCheck className="mt-0.5 shrink-0 text-emerald-600" />
-              Send the payment to the address above.
+              {t("cryptoPayment.sendToAddress")}
             </li>
             <li className="flex gap-2 text-sm text-slate-600">
               <FiCheck className="mt-0.5 shrink-0 text-emerald-600" />
-              Your subscription will be activated after verification.
+              {t("cryptoPayment.activationAfterVerification")}
             </li>
           </ul>
         </div>
         {/* Verification */}
         <button
           type="button"
-          className="mt-6 flex w-full items-center justify-center rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-blue-500" >
-          I Have Completed the Payment
+          className="mt-6 flex w-full items-center justify-center rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-blue-500"
+        >
+          {t("cryptoPayment.completedPayment")}
         </button>
       </section>
     </main>
-  );}
+  );
+}

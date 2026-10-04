@@ -2,6 +2,7 @@
 import {useEffect, useState} from "react";
 import {FiLoader} from "react-icons/fi"; // 🟢 اصلاح پکیج آیکون‌های بومی شما
 import api from "@/src/lib/axios"; // 🟢 تراز شدن آدرس اکسوس با بقیه فایل‌ها
+import {useTranslation} from "react-i18next";
 
 // 🚀 حفظ دقیق آدرس‌های ایمپورت بومی شما در تصویر سوم
 import BillingHeader from "@/src/components/billing/BillingHeader";
@@ -13,6 +14,7 @@ import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
 export default function BillingPage() {
   const [billingData, setBillingData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const {t} = useTranslation();
 
   // 📡 فچ لایو اطلاعات مانده حساب و تراکنش‌ها از اندپوینت دیتابیس جنگو
   const fetchBillingOverview = async () => {
@@ -60,7 +62,6 @@ export default function BillingPage() {
               }
               onRefresh={fetchBillingOverview}
             />
-
             {/* لیست جدول تراکنش‌های دهگانه پایینی متصل به دیتابیس */}
             <RecentTransactions
               transactions={billingData?.transactions || []}

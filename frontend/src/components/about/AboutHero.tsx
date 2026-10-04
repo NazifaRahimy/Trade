@@ -1,9 +1,11 @@
 "use client";
+import {useTranslation} from "react-i18next";
 import photoA from "@/src/assets/images/phtotoA.png";
 import {motion} from "framer-motion";
 import {FiActivity, FiBarChart2, FiShield, FiTrendingUp} from "react-icons/fi";
 
 export default function AboutHero() {
+  const {t} = useTranslation();
   return (
     <section className="relative overflow-hidden bg-slate-50 py-20 lg:py-24">
       {/* Background decoration */}
@@ -20,32 +22,32 @@ export default function AboutHero() {
           >
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-600">
               <FiActivity />
-              About Amiri Finance Academy
+              {t("about.aboutAmiriFinanceAcademy")}
             </div>
 
             <h1 className="text-4xl font-black leading-tight text-slate-900 md:text-5xl">
-              Experience That
-              <span className="block text-blue-600">Moves With The Market</span>
+              {t("about.experienceThat")}
+              <span className="block text-blue-600">
+                {t("about.movesWithTheMarket")}
+              </span>
             </h1>
 
             <p className="mt-6 max-w-xl text-base leading-7 text-slate-600 md:text-lg">
-              Amiri Finance Academy is led by Mr. Ebrahim Amiri, a professional
-              trader and market analyst with more than 7 years of experience
-              across the Forex and Cryptocurrency markets.
+              {t("about.heroDescription")}
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <div className="flex items-center gap-2 rounded-xl bg-white px-4 py-3 shadow-sm">
                 <FiTrendingUp className="text-blue-600" />
                 <span className="text-sm font-semibold text-slate-700">
-                  7+ Years Experience
+                  {t("about.sevenPlusYearsExperience")}
                 </span>
               </div>
 
               <div className="flex items-center gap-2 rounded-xl bg-white px-4 py-3 shadow-sm">
                 <FiShield className="text-green-600" />
                 <span className="text-sm font-semibold text-slate-700">
-                  Risk Focused
+                  {t("about.riskFocused")}
                 </span>
               </div>
             </div>
@@ -62,7 +64,7 @@ export default function AboutHero() {
             <div>
               <img
                 src={photoA.src}
-                alt="Amiri Finance Academy Trading"
+                alt={t("about.tradingImageAlt")}
                 className=" h-full lg:h-[440px] w-full ransition-transform duration-700 hover:scale-105"
               />
             </div>

@@ -1,10 +1,11 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import Link from "next/link";
 import {motion} from "framer-motion";
-import {FiArrowRight, FiHelpCircle} from "react-icons/fi";
+import {FiArrowRight, FiArrowLeft, FiHelpCircle} from "react-icons/fi";
 
 export default function ContactFaq() {
+  const {t, i18n} = useTranslation();
   return (
     <section className="bg-white py-8 md:py-10">
       <div className="container mx-auto px-4">
@@ -31,12 +32,11 @@ export default function ContactFaq() {
             {/* Text */}
             <div>
               <h3 className="text-lg font-bold text-slate-900">
-                Looking for quick answers?
+                {t("contact.lookingForQuickAnswers")}
               </h3>
 
               <p className="mt-1 max-w-lg text-sm leading-6 text-slate-500">
-                Check out our FAQ section for answers to the most common
-                questions about our services.
+                {t("contact.faqDescription")}
               </p>
             </div>
           </div>
@@ -56,8 +56,12 @@ export default function ContactFaq() {
               hover:text-white
             "
           >
-            View FAQ
-            <FiArrowRight size={18} />
+            {t("contact.viewFaq")}
+            {i18n.language.startsWith("fa") ? (
+              <FiArrowLeft size={18} className="mt-1" />
+            ) : (
+              <FiArrowRight size={18} />
+            )}
           </Link>
         </motion.div>
       </div>

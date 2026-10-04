@@ -1,47 +1,43 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {FiCopy, FiBarChart2, FiShield, FiHeadphones} from "react-icons/fi";
-
 const services = [
   {
     icon: FiCopy,
-    title: "Copy Trading",
-    description:
-      "Automatically copy selected trading strategies in real-time and learn from structured market activity.",
+    title: "home.copyTrading",
+    description: "home.copyTradingDescription",
   },
   {
     icon: FiBarChart2,
-    title: "Trading Signals",
-    description:
-      "Receive market insights and educational trade ideas based on technical and fundamental analysis.",
+    title: "home.tradingSignals",
+    description: "home.tradingSignalsDescription",
   },
   {
     icon: FiShield,
-    title: "Risk Management",
-    description:
-      "Professional risk-control strategies designed to help users understand position sizing and exposure.",
+    title: "home.riskManagementService",
+    description: "home.riskManagementDescription",
   },
   {
     icon: FiHeadphones,
-    title: "Account Support",
-    description:
-      "Guidance for account connection, platform setup and service management.",
+    title: "home.accountSupport",
+    description: "home.accountSupportDescription",
   },
 ];
 
 export default function Features() {
+  const {t} = useTranslation();
   return (
     <section id="services" className="bg-slate-50 py-20">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-xs font-bold uppercase tracking-wider text-blue-600">
-            Our Services
+            {t("home.ourServices")}
           </p>
 
           <h2 className="mt-3 text-3xl font-black text-slate-900">
-            Professional Solutions for{" "}
-            <span className="text-blue-600">Smart Traders</span>
+            {t("home.professionalSolutionsFor")}
+            <span className="text-blue-600">{t("home.smartTraders")}</span>
           </h2>
         </div>
 
@@ -64,11 +60,11 @@ export default function Features() {
                 </div>
 
                 <h3 className="mt-5 font-bold text-slate-900">
-                  {service.title}
+                  {t(service.title)}
                 </h3>
 
                 <p className="mt-3 text-sm leading-6 text-slate-500">
-                  {service.description}
+                  {t(service.description)}
                 </p>
               </motion.div>
             );

@@ -1,11 +1,12 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {GoogleAuthProvider, signInWithPopup} from "firebase/auth";
 import {useRouter} from "next/navigation";
 import {auth} from "@/src/firebase/config";
 import {FcGoogle} from "react-icons/fc";
 
 export default function SocialLogin() {
+  const {t} = useTranslation();
   const router = useRouter();
 
   const handleGoogleLogin = async () => {
@@ -44,7 +45,7 @@ export default function SocialLogin() {
       className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-300 bg-white py-3 text-slate-700 transition hover:bg-blue-600 hover:text-white dark:border-slate-700"
     >
       <FcGoogle size={24} />
-      Continue with Google
+      {t("auth.continueWithGoogle")}
     </button>
   );
 }

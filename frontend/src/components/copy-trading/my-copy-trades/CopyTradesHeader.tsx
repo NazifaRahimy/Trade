@@ -1,9 +1,10 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {FiCopy, FiInfo} from "react-icons/fi";
 
 export default function CopyTradesHeader() {
+  const {t} = useTranslation();
   return (
     <motion.div
       initial={{opacity: 0, y: 15}}
@@ -17,23 +18,23 @@ export default function CopyTradesHeader() {
 
         <div>
           <div className="mb-1 flex items-center gap-2 text-sm font-medium text-blue-600">
-            <span>Copy Trading</span>
+            <span>{t("myCopyTrading.copyTradingLabel")}</span>
           </div>
 
-          <h1 className="text-2xl font-bold text-slate-900">My Copy Trades</h1>
+          <h1 className="text-2xl font-bold text-slate-900">
+            {" "}
+            {t("myCopyTrading.myCopyTradesTitle")}
+          </h1>
 
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-            View the trades copied from Amiri Pro Trader to your connected
-            trading account.
+            {t("myCopyTrading.myCopyTradesDescription")}
           </p>
         </div>
       </div>
 
       <div className="mt-5 flex items-center gap-2 rounded-lg bg-blue-50 px-4 py-3 text-sm text-blue-700">
         <FiInfo size={17} />
-        <span>
-          These trades are automatically copied from Amiri Pro Trader.
-        </span>
+        <span>{t("myCopyTrading.automaticCopyNotice")}</span>
       </div>
     </motion.div>
   );

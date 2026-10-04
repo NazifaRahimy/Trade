@@ -1,9 +1,10 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {FiLink, FiShield} from "react-icons/fi";
 
 export default function BrokerHeader() {
+  const {t} = useTranslation();
   return (
     <motion.div
       initial={{opacity: 0, y: -15}}
@@ -19,17 +20,16 @@ export default function BrokerHeader() {
             </div>
 
             <span className="text-sm font-medium text-blue-600">
-              Broker Connection
+              {t("copyTradingBrokerConnections.brokerConnection")}
             </span>
           </div>
 
           <h1 className="text-2xl font-semibold text-slate-900 md:text-3xl">
-            Connect Your Broker
+            {t("copyTradingBrokerConnections.connectYourBroker")}
           </h1>
 
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-            Connect your trading account to manage your trades and monitor your
-            portfolio from one place.
+            {t("copyTradingBrokerConnections.headerDescription")}
           </p>
         </div>
 
@@ -37,7 +37,7 @@ export default function BrokerHeader() {
           <FiShield className="text-emerald-600" size={17} />
 
           <span className="text-xs font-medium text-emerald-700">
-            Secure Connection
+            {t("copyTradingBrokerConnections.secureConnection")}
           </span>
         </div>
       </div>

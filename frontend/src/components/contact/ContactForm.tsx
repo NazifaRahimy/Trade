@@ -1,4 +1,5 @@
 "use client";
+import {useTranslation} from "react-i18next";
 import photoc from "@/src/assets/images/photoC.png";
 import {FormEvent, useState} from "react";
 import {motion} from "framer-motion";
@@ -20,6 +21,7 @@ type FormData = {
 };
 
 export default function ContactForm() {
+  const {t, i18n} = useTranslation();
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -54,21 +56,21 @@ export default function ContactForm() {
     const newErrors: Partial<FormData> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = "Please enter your name.";
+      newErrors.name = t("contact.pleaseEnterName");
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = "Please enter your email.";
+      newErrors.email = t("contact.pleaseEnterEmail");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email.";
+      newErrors.email = t("contact.pleaseEnterValidEmail");
     }
 
     if (!formData.subject.trim()) {
-      newErrors.subject = "Please enter a subject.";
+      newErrors.subject = t("contact.pleaseEnterSubject");
     }
 
     if (!formData.message.trim()) {
-      newErrors.message = "Please enter your message.";
+      newErrors.message = t("contact.pleaseEnterMessage");
     }
 
     setErrors(newErrors);
@@ -104,7 +106,7 @@ export default function ContactForm() {
         throw new Error("Failed to send message");
       }
 
-      setSuccess("Your message has been sent successfully.");
+      setSuccess(t("contact.messageSentSuccessfully"));
 
       setFormData({
         name: "",
@@ -114,7 +116,7 @@ export default function ContactForm() {
       });
     } catch (error) {
       console.error(error);
-      setSuccess("Something went wrong. Please try again later.");
+      setSuccess(t("contact.somethingWentWrong"));
     } finally {
       setLoading(false);
     }
@@ -139,11 +141,11 @@ export default function ContactForm() {
 
           <div className="p-6 sm:p-8 md:p-10">
             <h2 className="text-2xl font-bold text-slate-900 md:text-3xl">
-              Send Us a Message
+              {t("contact.sendUsMessage")}
             </h2>
 
             <p className="mt-2 text-sm text-slate-500">
-              Fill out the form below and we will get back to you shortly.
+              {t("contact.formDescription")}
             </p>
 
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -156,14 +158,18 @@ export default function ContactForm() {
                       errors.name ? "border-red-400" : "border-slate-200"
                     }`}
                   >
-                    <FiUser className="mr-2 text-slate-400" />
+                    <FiUser
+                      className={` ${
+                        i18n.language.startsWith("fa") ? "ml-2" : "mr-2"
+                      } text-slate-400  <FiArrowRight size={18} /> `}
+                    />
 
                     <input
                       type="text"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      placeholder="Your Name"
+                      placeholder={t("contact.yourName")}
                       className="h-11 w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
                     />
                   </div>
@@ -180,14 +186,18 @@ export default function ContactForm() {
                       errors.email ? "border-red-400" : "border-slate-200"
                     }`}
                   >
-                    <FiMail className="mr-2 text-slate-400" />
+                    <FiMail
+                      className={` ${
+                        i18n.language.startsWith("fa") ? "ml-2" : "mr-2"
+                      } text-slate-400  <FiArrowRight size={18} /> `}
+                    />
 
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="Your Email"
+                      placeholder={t("contact.yourEmail")}
                       className="h-11 w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
                     />
                   </div>
@@ -205,14 +215,18 @@ export default function ContactForm() {
                     errors.subject ? "border-red-400" : "border-slate-200"
                   }`}
                 >
-                  <FiFileText className="mr-2 text-slate-400" />
+                  <FiFileText
+                    className={` ${
+                      i18n.language.startsWith("fa") ? "ml-2" : "mr-2"
+                    } text-slate-400  <FiArrowRight size={18} /> `}
+                  />
 
                   <input
                     type="text"
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
-                    placeholder="Subject"
+                    placeholder={t("contact.subject")}
                     className="h-11 w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
                   />
                 </div>
@@ -229,13 +243,17 @@ export default function ContactForm() {
                     errors.message ? "border-red-400" : "border-slate-200"
                   }`}
                 >
-                  <FiMessageSquare className="mr-2 mt-1 shrink-0 text-slate-400" />
+                  <FiMessageSquare
+                    className={` ${
+                      i18n.language.startsWith("fa") ? "ml-2" : "mr-2"
+                    } text-slate-400  <FiArrowRight size={18} /> `}
+                  />
 
                   <textarea
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
-                    placeholder="Your Message"
+                    placeholder={t("contact.yourMessage")}
                     rows={4}
                     className="w-full resize-none bg-transparent text-sm outline-none placeholder:text-slate-400"
                   />
@@ -275,7 +293,7 @@ export default function ContactForm() {
                   "Sending..."
                 ) : (
                   <>
-                    Send Message
+                    {t("contact.sendMessage")}
                     <FiSend size={16} />
                   </>
                 )}
@@ -288,18 +306,9 @@ export default function ContactForm() {
           <div className="flex p-8 lg:pl-0 lg:py-8 lg:pr-8 ">
             <img
               src={photoc.src}
-              alt="Customer Support"
+              alt={t("contact.customerSupport")}
               className="w-full h-full "
             />
-
-            {/* <h3 className="mt-2 text-xl font-bold text-slate-900">
-              We’re Here to Help
-            </h3>
-
-            <p className="mt-3 max-w-sm text-sm leading-6 text-slate-500">
-              Have a question or need assistance? Our support team is ready to
-              connect with you through Telegram, email, phone, or chat.
-            </p> */}
           </div>
         </motion.div>
       </div>

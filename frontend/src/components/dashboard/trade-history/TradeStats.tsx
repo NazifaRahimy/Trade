@@ -1,7 +1,8 @@
 "use client";
+import {useTranslation} from "react-i18next";
 
-import { motion } from "framer-motion";
-import { FiActivity, FiAward, FiTrendingUp, FiPieChart } from "react-icons/fi";
+import {motion} from "framer-motion";
+import {FiActivity, FiAward, FiTrendingUp, FiPieChart} from "react-icons/fi";
 
 // ساختار دریافت اطلاعات خلاصه مالی از دیتابیس واقعی جنگو
 type TradeStatsProps = {
@@ -15,7 +16,7 @@ type TradeStatsProps = {
   } | null;
 };
 
-export default function TradeStats({ summary }: TradeStatsProps) {
+export default function TradeStats({summary}: TradeStatsProps) {
   // اگر دیتا هنوز لود نشده بود، مقادیر صفر نمایش داده شوند
   const displayStats = summary || {
     total_trades: 0,
@@ -25,36 +26,41 @@ export default function TradeStats({ summary }: TradeStatsProps) {
     total_loss: "\$0.00",
     trading_volume: 0,
   };
-
-  // آرایه کارت‌ها همراه با فیلدهای داینامیک و آیکون‌های متناظر
+  const {t} = useTranslation();
   const cards = [
-    { 
-      title: "Total Trades", 
-      value: displayStats.total_trades, 
-      change: `Winning: ${displayStats.winning_trades}`,
+    {
+      title: t("telegramBotTradeHistory.totalTrades"),
+      value: displayStats.total_trades,
+      change: t("telegramBotTradeHistory.winning", {
+        count: displayStats.winning_trades,
+      }),
       icon: FiActivity,
-      iconStyle: "bg-blue-50 text-blue-600"
+      iconStyle: "bg-blue-50 text-blue-600",
     },
-    { 
-      title: "Win Rate", 
-      value: displayStats.win_rate, 
-      change: "Real historical stats",
+    {
+      title: t("telegramBotTradeHistory.winRate"),
+      value: displayStats.win_rate,
+      change: t("telegramBotTradeHistory.realHistoricalStats"),
       icon: FiAward,
-      iconStyle: "bg-purple-50 text-purple-600"
+      iconStyle: "bg-purple-50 text-purple-600",
     },
-    { 
-      title: "Total Profit", 
-      value: displayStats.total_profit, 
-      change: `Loss: ${displayStats.total_loss}`,
+    {
+      title: t("telegramBotTradeHistory.totalProfit"),
+      value: displayStats.total_profit,
+      change: t("telegramBotTradeHistory.loss", {
+        amount: displayStats.total_loss,
+      }),
       icon: FiTrendingUp,
-      iconStyle: "bg-emerald-50 text-emerald-600"
+      iconStyle: "bg-emerald-50 text-emerald-600",
     },
-    { 
-      title: "Trading Volume", 
-      value: `${displayStats.trading_volume} Lots`, 
-      change: "Accumulated volume",
+    {
+      title: t("telegramBotTradeHistory.tradingVolume"),
+      value: `${displayStats.trading_volume} ${t(
+        "telegramBotTradeHistory.lots",
+      )}`,
+      change: t("telegramBotTradeHistory.accumulatedVolume"),
       icon: FiPieChart,
-      iconStyle: "bg-orange-50 text-orange-600"
+      iconStyle: "bg-orange-50 text-orange-600",
     },
   ];
 
@@ -66,17 +72,21 @@ export default function TradeStats({ summary }: TradeStatsProps) {
         return (
           <motion.div
             key={stat.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.08 }}
+            initial={{opacity: 0, y: 20}}
+            animate={{opacity: 1, y: 0}}
+            transition={{duration: 0.4, delay: index * 0.08}}
             className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm flex items-center justify-between"
           >
             <div>
               <p className="text-xs text-slate-500 font-medium">{stat.title}</p>
-              <h3 className="text-xl font-bold text-slate-900 mt-2">{stat.value}</h3>
+              <h3 className="text-xl font-bold text-slate-900 mt-2">
+                {stat.value}
+              </h3>
               <p className="text-[11px] text-slate-400 mt-1">{stat.change}</p>
             </div>
-            <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${stat.iconStyle}`}>
+            <div
+              className={`flex h-10 w-10 items-center justify-center rounded-xl ${stat.iconStyle}`}
+            >
               <Icon size={19} />
             </div>
           </motion.div>

@@ -1,12 +1,13 @@
 "use client";
-
-import { useEffect, useState, FormEvent } from "react";
-import { motion } from "framer-motion";
-import { FiSave, FiLoader, FiCheckCircle } from "react-icons/fi";
+import {useTranslation} from "react-i18next";
+import {useEffect, useState, FormEvent} from "react";
+import {motion} from "framer-motion";
+import {FiSave, FiLoader, FiCheckCircle} from "react-icons/fi";
 // 🚀 اتصال به کلاینت متمرکز شبکه پلتفرم شما
 import api from "@/src/lib/axios";
 
 export default function CopySettingsPanel() {
+  const {t} = useTranslation();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -74,10 +75,10 @@ export default function CopySettingsPanel() {
       };
 
       await api.post("/api/copy-trading/settings/", payload);
-      setSuccessMsg("Strategy parameters successfully deployed to cloud network.");
+      setSuccessMsg(t("copyTradingCopySettings.strategyParametersDeployed"));
       setTimeout(() => setSuccessMsg(""), 4000);
     } catch (error) {
-      alert("❌ Cloud Sync Error: Failed to commit modifications.");
+      alert(t("copyTradingCopySettings.cloudSyncError"));
     } finally {
       setSaving(false);
     }
@@ -87,12 +88,13 @@ export default function CopySettingsPanel() {
     return (
       <div className="flex h-96 items-center justify-center gap-2 text-sm text-slate-400 italic bg-white rounded-2xl border border-slate-100">
         <FiLoader className="animate-spin text-blue-600" size={22} />
-        <span>Synchronizing allocation protocols...</span>
+        <span>
+          {" "}
+          {t("copyTradingCopySettings.synchronizingAllocationProtocols")}
+        </span>
       </div>
     );
   }
-
-
 
   return (
     <motion.div
@@ -102,10 +104,12 @@ export default function CopySettingsPanel() {
       className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
     >
       <div>
-        <h2 className="text-lg font-bold text-slate-900">Copy Settings</h2>
+        <h2 className="text-lg font-bold text-slate-900">
+          {t("copyTradingCopySettings.configureCopySettingsTitle")}
+        </h2>
 
         <p className="mt-1 text-sm text-slate-500">
-          Configure how trades from Amiri Pro Trader are copied to your account.
+          {t("copyTradingCopySettings.configureCopySettingsDescription")}
         </p>
       </div>
 
@@ -113,7 +117,7 @@ export default function CopySettingsPanel() {
         {/* Copy Mode */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">
-            Copy Mode
+            {t("copyTradingCopySettings.copyMode")}
           </label>
 
           <select
@@ -121,15 +125,21 @@ export default function CopySettingsPanel() {
             onChange={(e) => setCopyMode(e.target.value)}
             className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
           >
-            <option value="Percentage">Percentage</option>
-            <option value="Fixed Lot">Fixed Lot</option>
+            <option value="Percentage">
+              {" "}
+              {t("copyTradingCopySettings.percentage")}
+            </option>
+            <option value="Fixed Lot">
+              {" "}
+              {t("copyTradingCopySettings.fixedLot")}
+            </option>
           </select>
         </div>
 
         {/* Copy Ratio */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">
-            Copy Ratio / Multiplier
+            {t("copyTradingCopySettings.copyRatioMultiplier")}
           </label>
 
           <div className="relative">
@@ -151,7 +161,7 @@ export default function CopySettingsPanel() {
         {/* Maximum Drawdown */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">
-            Maximum Drawdown
+            {t("copyTradingCopySettings.maximumDrawdown")}
           </label>
 
           <div className="relative">
@@ -173,7 +183,7 @@ export default function CopySettingsPanel() {
         {/* Maximum Daily Loss */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">
-            Maximum Daily Loss
+            {t("copyTradingCopySettings.maximumDailyLoss")}
           </label>
 
           <div className="relative">
@@ -195,7 +205,7 @@ export default function CopySettingsPanel() {
         {/* Maximum Lot Size */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">
-            Maximum Lot Size
+            {t("copyTradingCopySettings.maximumLotSize")}
           </label>
 
           <input
@@ -211,7 +221,7 @@ export default function CopySettingsPanel() {
         {/* Maximum Open Positions */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">
-            Maximum Open Positions
+            {t("copyTradingCopySettings.maximumOpenPositions")}
           </label>
 
           <input
@@ -227,38 +237,40 @@ export default function CopySettingsPanel() {
 
       {/* Trade Controls */}
       <div className="mt-8 border-t border-slate-100 pt-6">
-        <h3 className="text-base font-bold text-slate-900">Trade Controls</h3>
+        <h3 className="text-base font-bold text-slate-900">
+          {" "}
+          {t("copyTradingCopySettings.tradeControls")}
+        </h3>
 
         <p className="mt-1 text-sm text-slate-500">
-          Choose which parts of the professional trader's trades should be
-          copied.
+          {t("copyTradingCopySettings.tradeControlsDescription")}
         </p>
 
         <div className="mt-5 space-y-4">
           <ToggleRow
-            label="Copy New Trades"
-            description="Automatically copy new trades opened by the trader."
+            label={t("copyTradingCopySettings.copyNewTrades")}
+            description={t("copyTradingCopySettings.copyNewTradesDescription")}
             enabled={copyNewTrades}
             onChange={() => setCopyNewTrades(!copyNewTrades)}
           />
 
           <ToggleRow
-            label="Copy Stop Loss"
-            description="Apply the trader's stop loss to copied trades."
+            label={t("copyTradingCopySettings.copyStopLoss")}
+            description={t("copyTradingCopySettings.copyStopLossDescription")}
             enabled={copyStopLoss}
             onChange={() => setCopyStopLoss(!copyStopLoss)}
           />
 
           <ToggleRow
-            label="Copy Take Profit"
-            description="Apply the trader's take profit to copied trades."
+            label={t("copyTradingCopySettings.copyTakeProfit")}
+            description={t("copyTradingCopySettings.copyTakeProfitDescription")}
             enabled={copyTakeProfit}
             onChange={() => setCopyTakeProfit(!copyTakeProfit)}
           />
 
           <ToggleRow
-            label="Pause Copying"
-            description="Temporarily stop copying new trades without disconnecting the account."
+            label={t("copyTradingCopySettings.pauseCopying")}
+            description={t("copyTradingCopySettings.pauseCopyingDescription")}
             enabled={pauseCopying}
             onChange={() => setPauseCopying(!pauseCopying)}
           />
@@ -269,22 +281,19 @@ export default function CopySettingsPanel() {
       <div className="mt-6 rounded-xl border border-red-100 bg-red-50 p-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="font-semibold text-red-700">Stop Copying</h3>
-
-            <p className="mt-1 text-sm leading-5 text-red-600">
-              Stop copying trades from Amiri Pro Trader.
-            </p>
+            label={t("copyTradingCopySettings.pauseCopying")}
+            description={t("copyTradingCopySettings.pauseCopyingDescription")}
           </div>
 
           <button
             type="button"
             className="w-full rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100 sm:w-auto"
           >
-            Stop Copying
+            {t("copyTradingCopySettings.stopCopying")}
           </button>
         </div>
       </div>
-            {/* 🟢 نمایش پیام هماهنگی ابری درست بالای دکمه سابمیت شما */}
+      {/* 🟢 نمایش پیام هماهنگی ابری درست بالای دکمه سابمیت شما */}
       {/* 🟢 نمایش پیام هماهنگی ابری درست بالای دکمه سابمیت شما */}
       {successMsg && (
         <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-100 text-xs font-medium text-emerald-700 flex items-center gap-2">
@@ -302,20 +311,18 @@ export default function CopySettingsPanel() {
         {saving ? (
           <>
             <FiLoader className="animate-spin" size={16} />
-            <span>Deploying...</span>
+            <span>{t("copyTradingCopySettings.deploying")}</span>
           </>
         ) : (
           <>
             <FiSave size={16} />
-            <span>Save Settings</span>
+            <span>{t("copyTradingCopySettings.saveSettings")}</span>
           </>
         )}
       </button>
-
     </motion.div>
   );
 }
-
 
 function ToggleRow({
   label,

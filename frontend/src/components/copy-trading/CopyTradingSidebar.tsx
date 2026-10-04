@@ -19,6 +19,7 @@ import {
 
 import logo from "@/src/assets/images/logo.png";
 import api from "@/src/lib/axios"; // کلاینت شبکه اکسوس پلتفرم شما
+import {useTranslation} from "react-i18next";
 
 interface CopyTradingSidebarProps {
   isOpen?: boolean;
@@ -30,7 +31,8 @@ export default function CopyTradingSidebar({
   onClose,
 }: CopyTradingSidebarProps) {
   const pathname = usePathname();
-
+  const {t, i18n} = useTranslation();
+  const isPersain = i18n.language.startsWith("fa");
   // 🧠 ۱. استیت ذخیره نقش کاربر (پیش‌فرض روی فلوور یا کاربر عادی)
   const [userRole, setUserRole] = useState<string>("follower");
 
@@ -62,38 +64,37 @@ export default function CopyTradingSidebar({
 
   const menuItems = [
     {
-      name: "Overview",
+      name: t("copyTradingSidebar.overview"),
       href: "/copy-trading",
       icon: FiGrid,
     },
     {
-      name: "Broker Connections",
+      name: t("copyTradingSidebar.brokerConnections"),
       href: "/copy-trading/broker-connections",
       icon: FiLink,
     },
     {
-      name: "My Copy Trades",
+      name: t("copyTradingSidebar.myCopyTrades"),
       href: "/copy-trading/my-copy-trades",
       icon: FiCopy,
     },
     {
-      name: "Active Positions",
+      name: t("copyTrading.activePositions"),
       href: "/copy-trading/active-positions",
       icon: FiActivity,
     },
     {
-      name: "Performance",
+      name: t("copyTradingSidebar.performance"),
       href: "/copy-trading/performance",
       icon: FiTrendingUp,
     },
     {
-      name: "Copy Settings",
+      name: t("copyTradingSidebar.copySettings"),
       href: "/copy-trading/copy-settings",
       icon: FiSettings,
     },
-
     {
-      name: "History",
+      name: t("copyTradingSidebar.history"),
       href: "/copy-trading/history",
       icon: FiClock,
     },
@@ -118,8 +119,14 @@ export default function CopyTradingSidebar({
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 z-50 flex h-screen w-64 flex-col bg-slate-950 text-white transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed ${
+          isPersain ? "right-0 border-l" : "left-0 border-r"
+        } top-0 z-50 flex h-screen w-64 flex-col border-slate-800 bg-slate-950 text-white transition-transform duration-300 ${
+          isOpen
+            ? "translate-x-0"
+            : isPersain
+              ? "translate-x-full"
+              : "-translate-x-full"
         } lg:translate-x-0`}
       >
         {/* Logo */}
@@ -148,15 +155,6 @@ export default function CopyTradingSidebar({
 
         {/* Main Menu */}
         <div className="flex-1 overflow-y-auto px-4 pt-6">
-          <Link
-            href="/"
-            onClick={onClose}
-            className=" hidden lg:flex items-center px-4 pb-4 gap-2 text-sm font-medium text-slate-300 transition hover:text-white"
-          >
-            <FiHome className="h-4 w-4" />
-            <span>Back Home</span>
-          </Link>
-
           <nav className="space-y-2">
             {/* رندر لیست منوهای عمومی بومی خودتان */}
             {menuItems.map((item) => {
@@ -204,18 +202,29 @@ export default function CopyTradingSidebar({
                       : "text-slate-400 group-hover:text-white"
                   }`}
                 />
-                <span>Master Earnings</span>
+                <span>
+                  {" "}
+                  <span>{t("copyTradingSidebar.masterEarnings")}</span>
+                </span>
               </Link>
             )}
 
             <Link
               href="/"
-              className={`group flex lg:hidden items-center gap-4 rounded-xl px-4 py-2.5 text-sm font-medium transition-all `}
+              className={`group flex lg:hidden items-center gap-4 rounded-xl px-5 py-2.5 text-sm font-medium transition-all `}
             >
               <FiHome />
-              <span>Back Home</span>
+              <span>{t("copyTradingSidebar.backHome")}</span>
             </Link>
           </nav>
+          <Link
+            href="/"
+            onClick={onClose}
+            className=" hidden lg:flex items-center pt-1 px-4 pb-4 gap-2 text-sm font-medium text-slate-300 transition hover:text-white"
+          >
+            <FiHome className="h-4 w-4" />
+            <span>{t("copyTradingSidebar.backHome")}</span>
+          </Link>
         </div>
 
         {/* Copy Trading Label */}
@@ -225,8 +234,8 @@ export default function CopyTradingSidebar({
             type="button"
             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-400 transition hover:bg-red-950/40 hover:text-red-400"
           >
-            <FiLogOut />
-            <span>Logout</span>
+            {isPersain ? <FiLogOut className="rotate-180" /> : <FiLogOut />}
+            <span>{t("copyTradingSidebar.logout")}</span>
           </button>
         </div>
       </aside>

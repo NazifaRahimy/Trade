@@ -1,5 +1,5 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {FiShield, FiTrendingDown, FiAlertTriangle} from "react-icons/fi";
 
 type RiskStatsProps = {
@@ -8,19 +8,23 @@ type RiskStatsProps = {
 };
 
 export default function RiskStats({totalRisk, botActive}: RiskStatsProps) {
+  const {t} = useTranslation();
+
   const stats = [
     {
-      title: "Max Daily Loss",
+      title: t("telegramBotDashboard.maxDailyLoss"),
       value: `${totalRisk}%`,
       icon: FiTrendingDown,
     },
     {
-      title: "Protection Status",
-      value: botActive ? "Active" : "Inactive",
+      title: t("telegramBotDashboard.protectionStatus"),
+      value: botActive
+        ? t("telegramBotDashboard.active")
+        : t("telegramBotDashboard.inactive"),
       icon: FiShield,
     },
     {
-      title: "Risk Alerts",
+      title: t("telegramBotDashboard.riskAlerts"),
       value: "1",
       icon: FiAlertTriangle,
     },

@@ -1,5 +1,5 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {
   FiDollarSign,
   FiCopy,
@@ -19,38 +19,39 @@ type OverviewStatsProps = {
   } | null;
 };
 
-export default function OverviewStats({ statsData }: OverviewStatsProps) {
+export default function OverviewStats({statsData}: OverviewStatsProps) {
+  const {t} = useTranslation();
   const stats = [
     {
-      title: "Total Balance",
-      value: statsData?.total_balance || "\$0.00",
+      title: t("copyTrading.totalBalance"),
+      value: statsData?.total_balance || "$0.00",
       icon: FiDollarSign,
       iconBg: "bg-blue-50",
       iconColor: "text-blue-600",
     },
     {
-      title: "Copy Trading Balance",
-      value: statsData?.copy_trading_balance || "\$0.00",
+      title: t("copyTrading.copyTradingBalance"),
+      value: statsData?.copy_trading_balance || "$0.00",
       icon: FiCopy,
       iconBg: "bg-indigo-50",
       iconColor: "text-indigo-600",
     },
     {
-      title: "Total Profit",
-      value: statsData?.total_profit || "\$0.00",
+      title: t("copyTrading.totalProfit"),
+      value: statsData?.total_profit || "$0.00",
       icon: FiTrendingUp,
       iconBg: "bg-emerald-50",
       iconColor: "text-emerald-600",
     },
     {
-      title: "Active Traders",
+      title: t("copyTrading.activeTraders"),
       value: statsData?.active_traders?.toString() || "0",
       icon: FiUsers,
       iconBg: "bg-purple-50",
       iconColor: "text-purple-600",
     },
     {
-      title: "Win Rate",
+      title: t("copyTrading.winRate"),
       value: statsData?.win_rate || "0.0%",
       icon: FiTarget,
       iconBg: "bg-orange-50",
@@ -74,7 +75,9 @@ export default function OverviewStats({ statsData }: OverviewStatsProps) {
                   {stat.value}
                 </h3>
               </div>
-              <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${stat.iconBg} ${stat.iconColor}`}>
+              <div
+                className={`flex h-11 w-11 items-center justify-center rounded-xl ${stat.iconBg} ${stat.iconColor}`}
+              >
                 <Icon size={21} />
               </div>
             </div>

@@ -1,9 +1,10 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {FiClock, FiRefreshCw} from "react-icons/fi";
 
 export default function SubscriptionProgress() {
+  const {t} = useTranslation();
   const totalDays = 30;
   const remainingDays = 12;
   const usedDays = totalDays - remainingDays;
@@ -19,11 +20,11 @@ export default function SubscriptionProgress() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-base font-semibold text-slate-900">
-            Subscription Status
+            {t("subscription.subscriptionStatus")}
           </h2>
 
           <p className="mt-1 text-xs text-slate-500">
-            Track your remaining subscription time.
+            {t("subscription.trackRemainingTime")}
           </p>
         </div>
 
@@ -39,11 +40,14 @@ export default function SubscriptionProgress() {
               {remainingDays}
             </p>
 
-            <p className="mt-1 text-xs text-slate-500">days remaining</p>
+            <p className="mt-1 text-xs text-slate-500">
+              {" "}
+              {t("subscription.daysRemaining")}
+            </p>
           </div>
 
           <p className="text-xs text-slate-500">
-            {usedDays} of {totalDays} days used
+            {usedDays} of {totalDays} {t("subscription.daysUsed")}
           </p>
         </div>
 
@@ -67,7 +71,7 @@ export default function SubscriptionProgress() {
         className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500 active:scale-[0.99]"
       >
         <FiRefreshCw size={16} />
-        Renew Subscription
+        {t("subscription.renewSubscription")}
       </button>
     </motion.div>
   );

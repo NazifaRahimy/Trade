@@ -1,8 +1,9 @@
 "use client";
+import {useTranslation} from "react-i18next";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { FiBell, FiChevronDown, FiMenu } from "react-icons/fi";
+import {useEffect, useState} from "react";
+import {motion} from "framer-motion";
+import {FiBell, FiChevronDown, FiMenu} from "react-icons/fi";
 type DashboardHeaderProps = {
   onMenuClick: () => void;
 };
@@ -12,7 +13,9 @@ type UserData = {
   email: string;
   photo: string;
 };
-export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
+export default function DashboardHeader({onMenuClick}: DashboardHeaderProps) {
+  const {t, i18n} = useTranslation();
+  const isPersain = i18n.language.startsWith("fa");
   const [user, setUser] = useState<UserData>({
     firstName: "",
     lastName: "",
@@ -28,10 +31,12 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
       let extractedName = "Trader";
       if (username) {
         extractedName = username.split("@")[0];
-        extractedName = extractedName.charAt(0).toUpperCase() + extractedName.slice(1);
+        extractedName =
+          extractedName.charAt(0).toUpperCase() + extractedName.slice(1);
       } else if (email) {
         extractedName = email.split("@")[0];
-        extractedName = extractedName.charAt(0).toUpperCase() + extractedName.slice(1);
+        extractedName =
+          extractedName.charAt(0).toUpperCase() + extractedName.slice(1);
       }
       setUser({
         firstName: extractedName,
@@ -55,22 +60,25 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
     : "U";
   return (
     <header className="border-b border-slate-200 bg-white px-5 py-4 text-slate-900 lg:px-8">
-      <div className="flex items-center justify-between gap-4 lg:ml-64">
-        
+      <div
+        className={`flex items-center justify-between gap-4 ${isPersain ? "lg:mr-64" : "lg:ml-64"} `}
+      >
         {/* Left Section: Welcome Message */}
         <div className="flex items-center gap-3">
           <motion.div
-            initial={{ opacity: 0, x: -15 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{opacity: 0, x: -15}}
+            animate={{opacity: 1, x: 0}}
           >
-            <p className="text-xs text-slate-400 font-medium">Welcome back,</p>
+            <p className="text-xs text-slate-400 font-medium">
+              {t("headerTelegramBotDashboard.welcomeBack")}
+            </p>
             <div className="mt-1 flex items-center gap-2">
               {/* 🚀 رندر کاملا داینامیک نام واقعی یا استخراج‌شده تریدر */}
               <h1 className="text-lg font-bold text-slate-900 lg:text-xl">
-                {fullName || "Pro Trader"}
+                {fullName || t("telegramBotDashboard.userFallback")}
               </h1>
               <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-600">
-                Pro Trader
+                {t("headerTelegramBotDashboard.proTrader")}
               </span>
             </div>
           </motion.div>
@@ -82,7 +90,7 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
             type="button"
             onClick={onMenuClick}
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 lg:hidden"
-            aria-label="Open menu"
+            aria-label={t("headerTelegramBotDashboard.openMenu")}
           >
             <FiMenu size={21} />
           </button>
@@ -91,7 +99,7 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
           <button
             type="button"
             className="relative hidden text-slate-500 transition hover:text-slate-900 lg:flex"
-            aria-label="Notifications"
+            aria-label={t("headerTelegramBotDashboard.openMenu")}
           >
             <FiBell className="text-xl" />
             <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-blue-500 ring-2 ring-white" />
@@ -124,7 +132,10 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
                 {user.email}
               </p>
             </div>
-            <FiChevronDown className="hidden text-slate-400 md:block transition group-hover:text-slate-600" size={14} />
+            <FiChevronDown
+              className="hidden text-slate-400 md:block transition group-hover:text-slate-600"
+              size={14}
+            />
           </button>
         </div>
       </div>

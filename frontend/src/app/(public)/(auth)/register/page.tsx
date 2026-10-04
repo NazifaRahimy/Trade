@@ -1,6 +1,7 @@
 import RegisterBreadcrumb from "@/src/components/auth/RegisterBreadcrumb";
 import RegisterBenefits from "@/src/components/auth/RegisterBenefits";
 import RegisterForm from "@/src/components/auth/RegisterForm";
+
 export default function RegisterPage() {
   return (
     <>

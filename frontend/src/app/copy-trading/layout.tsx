@@ -1,27 +1,37 @@
-"use client";
+import type {Metadata} from "next";
+import {cookies} from "next/headers";
 
-import {useState} from "react";
+import CopyTradingDashboardShell from "@/src/components/copy-trading/CopyTradingDashboardShell";
 
-import CopyTradingSidebar from "@/src/components/copy-trading/CopyTradingSidebar";
-import DashboardHeader from "@/src/components/dashboard/DashboardHeader";
+const metadata = {
+  fa: {
+    title: "داشبورد کپی تریدینگ",
+    description:
+      "پلتفرم کپی تریدینگ Trade-platform را بررسی کنید و معاملات معامله‌گران موفق را کپی کنید.",
+  },
 
-export default function CopyTradingDashboardLayout({
+  en: {
+    title: "Copy Trading Dashboard",
+    description:
+      "Explore our copy trading platform and start copying successful traders.",
+  },
+};
+
+export async function generateMetadata(): Promise<Metadata> {
+  const cookieStore = await cookies();
+
+  const language = cookieStore.get("language")?.value === "en" ? "en" : "fa";
+
+  return {
+    title: metadata[language].title,
+    description: metadata[language].description,
+  };
+}
+
+export default function CopyTradingLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  return (
-    <div className="min-h-screen bg-white text-slate-900">
-      <CopyTradingSidebar
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      />
-
-      <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
-
-      <main className="min-h-screen lg:ml-64">{children}</main>
-    </div>
-  );
+  return <CopyTradingDashboardShell>{children}</CopyTradingDashboardShell>;
 }

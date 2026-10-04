@@ -1,44 +1,44 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {FiClock, FiMail, FiPhone, FiMessageCircle} from "react-icons/fi";
 
-const contactItems = [
-  {
-    icon: FiPhone,
-    title: "Phone Number",
-    value: <>+93 71 189 5929</>,
-  },
-  {
-    icon: FiMessageCircle,
-    title: "Telegram Support",
-    value: (
-      <>
-        Available on Telegram
-        <br />
-        Direct Support
-      </>
-    ),
-  },
-  {
-    icon: FiMail,
-    title: "Email Address",
-    value: <>Ibraibrahem.amiri94@gmail.com</>,
-  },
-  {
-    icon: FiClock,
-    title: "Working Hours",
-    value: (
-      <>
-        Saturday - Thursday
-        <br />
-        8:00 AM - 5:00 PM
-      </>
-    ),
-  },
-];
-
 export default function ContactInfo() {
+  const {t} = useTranslation();
+  const contactItems = [
+    {
+      icon: FiPhone,
+      title: "contact.phoneNumber",
+      value: <>+93 71 189 5929</>,
+    },
+    {
+      icon: FiMessageCircle,
+      title: "contact.telegramSupport",
+      value: (
+        <>
+          {t("contact.availableOnTelegram")}
+          <br />
+          {t("contact.directSupport")}
+        </>
+      ),
+    },
+    {
+      icon: FiMail,
+      title: "contact.emailAddress",
+      value: <>Ibraibrahem.amiri94@gmail.com</>,
+    },
+    {
+      icon: FiClock,
+      title: "contact.workingHours",
+      value: (
+        <>
+          {t("contact.workingDays")}
+          <br />
+          {t("contact.workingTime")}
+        </>
+      ),
+    },
+  ];
   return (
     <section className="bg-white py-8 md:py-10">
       <div className="container mx-auto px-4">
@@ -71,7 +71,7 @@ export default function ContactInfo() {
 
                 {/* Title */}
                 <h3 className="mb-2 text-base font-semibold text-slate-800">
-                  {item.title}
+                  {t(item.title)}
                 </h3>
 
                 {/* Description */}

@@ -1,9 +1,10 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {FiActivity, FiRefreshCw} from "react-icons/fi";
 
 export default function PositionsHeader() {
+  const {t} = useTranslation();
   return (
     <motion.div
       initial={{opacity: 0, y: 15}}
@@ -18,17 +19,17 @@ export default function PositionsHeader() {
           </div>
 
           <span className="text-sm font-medium text-blue-600">
-            Copy Trading
+            {t("copyTradingActivePositions.activePositions")}
           </span>
         </div>
-
         <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">
-          Active Positions
+          {t("copyTradingActivePositions.copyTradingActivePositionsTitle")}
         </h1>
 
         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-          Monitor your currently open positions that are being copied from the
-          professional trader.
+          {t(
+            "copyTradingActivePositions.copyTradingActivePositionsDescription",
+          )}
         </p>
       </div>
 
@@ -37,7 +38,7 @@ export default function PositionsHeader() {
         className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
       >
         <FiRefreshCw size={16} />
-        Refresh
+        {t("copyTradingActivePositions.copyTradingActivePositionsRefresh")}
       </button>
     </motion.div>
   );

@@ -1,5 +1,5 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {
   FiUsers,
@@ -10,32 +10,33 @@ import {
 
 const stats = [
   {
-    icon: FiUsers,
+    icon: FiActivity,
     value: "7+",
-    title: "Years of",
-    subtitle: "Experience",
+    title: "home.yearsOf",
+    subtitle: "home.experience",
   },
   {
     icon: FiUsers,
     value: "1000+",
-    title: "Happy",
-    subtitle: "Traders",
+    title: "home.happy",
+    subtitle: "home.traders",
   },
   {
     icon: FiDollarSign,
     value: "$20M+",
-    title: "Managed Trading",
-    subtitle: "Volume",
+    title: "home.managedTrading",
+    subtitle: "home.volume",
   },
   {
     icon: FiMessageCircle,
     value: "24/7",
-    title: "Customer",
-    subtitle: "Support",
+    title: "home.customer",
+    subtitle: "home.support",
   },
 ];
 
 export default function Stats() {
+  const {t} = useTranslation();
   return (
     <section className="border-y border-slate-100 bg-white py-7">
       <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-5 md:grid-cols-4">
@@ -65,9 +66,9 @@ export default function Stats() {
                 <p className="font-black text-slate-900">{stat.value}</p>
 
                 <p className="text-[10px] text-slate-500">
-                  {stat.title}
+                  {t(stat.title)}
                   <br />
-                  {stat.subtitle}
+                  {t(stat.subtitle)}
                 </p>
               </div>
             </motion.div>

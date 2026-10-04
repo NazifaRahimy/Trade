@@ -1,39 +1,40 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { FiLoader, FiActivity } from "react-icons/fi";
-import { useRouter } from "next/navigation"; // 🚀 ابزار ناوبری بومی نکست برای دکمه View All
+import {useTranslation} from "react-i18next";
+import {useEffect, useState} from "react";
+import {motion} from "framer-motion";
+import {FiLoader, FiActivity} from "react-icons/fi";
+import {useRouter} from "next/navigation"; // 🚀 ابزار ناوبری بومی نکست برای دکمه View All
 import api from "../../lib/axios"; // 🚀 ایمپورت هسته مرکزی شبکه پلتفرم شما
 
 export default function RecentTrades() {
+  const {t} = useTranslation();
   const router = useRouter();
   const [recentTrades, setRecentTrades] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   // 📡 ۱. فچ کردن زنده آخرین معاملات کپی‌شده از دیتابیس جنگو
-// 🚀 تعریف استیت برای ذخیره تعداد ردیف‌های دلخواه کاربر (مثلاً ۵ ردیف به صورت پیش‌فرض)
-const [displayLimit, setDisplayLimit] = useState<number>(5);
+  // 🚀 تعریف استیت برای ذخیره تعداد ردیف‌های دلخواه کاربر (مثلاً ۵ ردیف به صورت پیش‌فرض)
+  const [displayLimit, setDisplayLimit] = useState<number>(5);
 
-useEffect(() => {
-  const fetchRecentTrades = async () => {
-    try {
-      // 🟢 ارسال کاملاً پویا و داینامیک متغیر به بک‌اَند پایتون
-      const response = await api.get("/api/stats/trade-history/", {
-        params: { limit: displayLimit } 
-      });
-      
-      if (response.data && response.data.recent_trades) {
-        setRecentTrades(response.data.recent_trades);
+  useEffect(() => {
+    const fetchRecentTrades = async () => {
+      try {
+        // 🟢 ارسال کاملاً پویا و داینامیک متغیر به بک‌اَند پایتون
+        const response = await api.get("/api/stats/trade-history/", {
+          params: {limit: displayLimit},
+        });
+
+        if (response.data && response.data.recent_trades) {
+          setRecentTrades(response.data.recent_trades);
+        }
+      } catch (error) {
+        console.error("Failed to load home dashboard recent trades:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to load home dashboard recent trades:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchRecentTrades();
-}, [displayLimit]); // 🎯 به محض اینکه کاربر تعداد نمایشی را تغییر دهد، جدول زنده آپدیت می‌شود
+    };
+    fetchRecentTrades();
+  }, [displayLimit]); // 🎯 به محض اینکه کاربر تعداد نمایشی را تغییر دهد، جدول زنده آپدیت می‌شود
 
   // 🚀 ۲. هدایت کاربر به صفحه تمام‌عرض تاریخچه معاملات با کلیک روی View All
   const handleViewAllRedirect = () => {
@@ -42,15 +43,19 @@ useEffect(() => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{opacity: 0, y: 20}}
+      animate={{opacity: 1, y: 0}}
       className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
     >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-200 p-6">
         <div>
-          <p className="text-sm font-medium text-slate-500">Activity</p>
-          <h3 className="mt-1 text-xl font-bold text-slate-900">Recent Trades</h3>
+          <p className="text-sm font-medium text-slate-500">
+            {t("telegramBotDashboard.activity")}
+          </p>
+          <h3 className="mt-1 text-xl font-bold text-slate-900">
+            {t("telegramBotDashboard.recentTradesTitle")}
+          </h3>
         </div>
 
         {/* دکمه View All متصل به روتور ناوبری */}
@@ -59,7 +64,7 @@ useEffect(() => {
           onClick={handleViewAllRedirect}
           className="text-xs font-semibold text-blue-600 transition hover:text-blue-700"
         >
-          View All
+          {t("telegramBotDashboard.viewAll")}
         </button>
       </div>
 
@@ -68,10 +73,19 @@ useEffect(() => {
         <table className="w-full min-w-[600px]">
           <thead>
             <tr className="border-b border-slate-200 text-left text-xs text-slate-500">
-              <th className="px-6 py-4 font-medium">Asset</th>
-              <th className="px-6 py-4 font-medium">Type</th>
-              <th className="px-6 py-4 font-medium">Size</th>
-              <th className="px-6 py-4 font-medium">Result</th>
+              <th className="px-6 py-4 font-medium">
+                {t("telegramBotDashboard.asset")}
+              </th>
+              <th className="px-6 py-4 font-medium">
+                {" "}
+                {t("telegramBotDashboard.type")}
+              </th>
+              <th className="px-6 py-4 font-medium">
+                {t("telegramBotDashboard.size")}
+              </th>
+              <th className="px-6 py-4 font-medium">
+                {t("telegramBotDashboard.result")}
+              </th>
             </tr>
           </thead>
 
@@ -79,15 +93,26 @@ useEffect(() => {
             {loading ? (
               <tr>
                 <td colSpan={4} className="p-8 text-center text-slate-400">
-                  <FiLoader className="animate-spin text-blue-600 mx-auto" size={18} />
-                  <span className="mt-1 block text-xs">Syncing operations ledger...</span>
+                  <FiLoader
+                    className="animate-spin text-blue-600 mx-auto"
+                    size={18}
+                  />
+                  <span className="mt-1 block text-xs">
+                    {t("telegramBotDashboard.syncing")}
+                  </span>
                 </td>
               </tr>
             ) : recentTrades.length === 0 ? (
               <tr>
-                <td colSpan={4} className="p-8 text-center text-slate-400 italic text-sm">
-                  <FiActivity className="mx-auto text-slate-300 mb-2" size={20} />
-                  No live trades executed by the bot yet.
+                <td
+                  colSpan={4}
+                  className="p-8 text-center text-slate-400 italic text-sm"
+                >
+                  <FiActivity
+                    className="mx-auto text-slate-300 mb-2"
+                    size={20}
+                  />
+                  {t("telegramBotDashboard.noTrades")}
                 </td>
               </tr>
             ) : (
@@ -105,7 +130,9 @@ useEffect(() => {
                   {/* Order Type (BUY / SELL) */}
                   <td
                     className={`px-6 py-4 text-xs font-bold ${
-                      trade.type === "BUY" ? "text-emerald-600" : "text-rose-600"
+                      trade.type === "BUY"
+                        ? "text-emerald-600"
+                        : "text-rose-600"
                     }`}
                   >
                     {trade.type}

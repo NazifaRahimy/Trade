@@ -1,9 +1,10 @@
-// components/layout/Footer.tsx
-
+"use client";
+import {useTranslation} from "react-i18next";
 import Link from "next/link";
 import {FaTelegram, FaInstagram, FaYoutube} from "react-icons/fa";
 import logo from "../../assets/images/logo.png";
 export default function Footer() {
+  const {t} = useTranslation();
   return (
     <footer className="bg-slate-950 text-white">
       <div className="container mx-auto px-4 pt-14 pb-8">
@@ -17,8 +18,7 @@ export default function Footer() {
             />
 
             <p className="text-sm leading-7 text-slate-300">
-              Professional copy trading and signals provider for Forex and
-              Cryptocurrency markets.
+              {t("footer.description")}
             </p>
 
             <div className="mt-6 flex items-center gap-4">
@@ -56,24 +56,27 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold">Quick Links</h3>
+            <h3 className="mb-4 text-lg font-semibold">
+              {" "}
+              {t("footer.quickLinks")}
+            </h3>
 
             <ul className="space-y-3 text-slate-300">
               <li>
                 <Link href="/" className="hover:text-blue-400">
-                  Home
+                  {t("footer.home")}
                 </Link>
               </li>
 
               <li>
                 <Link href="/about" className="hover:text-blue-400">
-                  About Us
+                  {t("footer.aboutUs")}
                 </Link>
               </li>
 
               <li>
                 <Link href="/contact" className="hover:text-blue-400">
-                  Contact
+                  {t("footer.contact")}
                 </Link>
               </li>
             </ul>
@@ -81,24 +84,27 @@ export default function Footer() {
 
           {/* Account */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold">Account</h3>
+            <h3 className="mb-4 text-lg font-semibold">
+              {" "}
+              {t("footer.account")}
+            </h3>
 
             <ul className="space-y-3 text-slate-300">
               <li>
                 <Link href="/login" className="hover:text-blue-400">
-                  Login
+                  {t("footer.login")}
                 </Link>
               </li>
 
               <li>
                 <Link href="/register" className="hover:text-blue-400">
-                  Register
+                  {t("footer.register")}
                 </Link>
               </li>
 
               <li>
                 <Link href="/dashboard" className="hover:text-blue-400">
-                  Dashboard
+                  {t("footer.dashboard")}
                 </Link>
               </li>
             </ul>
@@ -106,7 +112,10 @@ export default function Footer() {
 
           {/* Support */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold"> Contact & Support</h3>
+            <h3 className="mb-4 text-lg font-semibold">
+              {" "}
+              {t("footer.contactSupport")}
+            </h3>
 
             <ul className="space-y-3 text-slate-300">
               <li>
@@ -116,7 +125,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="hover:text-blue-400"
                 >
-                  Telegram Support
+                  {t("footer.telegramSupport")}
                 </a>
               </li>
 
@@ -125,7 +134,7 @@ export default function Footer() {
                   href="mailto:Ibraibrahem.amiri94@gmail.com"
                   className="hover:text-blue-400"
                 >
-                  Email Support
+                  {t("footer.emailSupport")}
                 </a>
               </li>
             </ul>
@@ -134,9 +143,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-12 border-t border-slate-800 pt-6 text-center">
-          <p className="text-sm text-slate-400">
-            © 2025 Amiri Finance Academy. All Rights Reserved.
-          </p>
+          <p className="text-sm text-slate-400">{t("footer.copyright")}</p>
         </div>
       </div>
     </footer>

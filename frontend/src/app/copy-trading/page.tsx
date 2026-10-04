@@ -1,5 +1,3 @@
-"use client";
-
 import OverviewHeader from "@/src/components/copy-trading/overview/OverviewHeader";
 import OverviewStats from "@/src/components/copy-trading/overview/OverviewStats";
 import PortfolioGrowth from "@/src/components/copy-trading/overview/PortfolioGrowth";

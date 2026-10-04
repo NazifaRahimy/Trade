@@ -1,7 +1,7 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import { FiLoader } from "react-icons/fi";
+import {useTranslation} from "react-i18next";
+import {useEffect, useState} from "react";
+import {FiLoader} from "react-icons/fi";
 // 🚀 اصلاح آدرس ایمپورت اکسوس برای رفع ارور خط ۵
 import api from "@/src/lib/axios";
 
@@ -15,6 +15,7 @@ import DailyPerformance from "@/src/components/copy-trading/performance/DailyPer
 import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
 
 export default function PerformancePage() {
+  const {t} = useTranslation();
   const [perfData, setPerfData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -22,7 +23,9 @@ export default function PerformancePage() {
   useEffect(() => {
     const fetchPerformanceMetrics = async () => {
       try {
-        const response = await api.get("/api/copy-trading/performance/metrics/");
+        const response = await api.get(
+          "/api/copy-trading/performance/metrics/",
+        );
         if (response.data) {
           setPerfData(response.data);
         }
@@ -39,7 +42,7 @@ export default function PerformancePage() {
     return (
       <div className="flex h-screen w-full items-center justify-center gap-2 text-sm text-slate-400 italic bg-white">
         <FiLoader className="animate-spin text-blue-600" size={22} />
-        <span>Auditing MetaTrader 5 closed order history sequences...</span>
+        <span>{t("copyTradingPerformance.copyTradingPerformanceLoading")}</span>
       </div>
     );
   }
@@ -49,9 +52,8 @@ export default function PerformancePage() {
       {/* 🚀 حفظ ۱۰۰٪ استایل، کلاس‌ها و لایوت عریض اختصاصی شما در تصویر */}
       <main className="min-h-screen bg-white text-slate-900">
         <div className="space-y-6 p-5 md:p-8 lg:p-10 max-w-[1700px] mx-auto w-full">
-          
           <PerformanceHeader />
-          
+
           {/* 📊 پاس دادن متغیرهای زنده به کامپوننت‌ها جهت برطرف شدن نهایی خطوط قرمز */}
           <PerformanceStats stats={perfData?.metrics} />
 
@@ -61,9 +63,8 @@ export default function PerformancePage() {
           </section>
 
           <PerformanceBreakdown breakdownData={perfData?.breakdown} />
-          
-          <DailyPerformance dailyData={perfData?.daily_performance} />
 
+          <DailyPerformance dailyData={perfData?.daily_performance} />
         </div>
       </main>
     </ProtectedRoute>

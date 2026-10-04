@@ -1,7 +1,7 @@
 "use client";
 
-import { FiCalendar, FiFilter, FiSearch } from "react-icons/fi";
-
+import {FiCalendar, FiFilter, FiSearch} from "react-icons/fi";
+import {useTranslation} from "react-i18next";
 // 🚀 ۱. تعریف پرپس‌ها برای فرستادن فیلترها به جدول اصلی معاملات
 type TradeFiltersProps = {
   search: string;
@@ -24,6 +24,7 @@ export default function TradeFilters({
   status,
   setStatus,
 }: TradeFiltersProps) {
+  const {t} = useTranslation();
 
   return (
     <div className="border-b border-slate-200 p-5">
@@ -36,7 +37,7 @@ export default function TradeFilters({
           />
           <input
             type="text"
-            placeholder="Search pair..."
+            placeholder={t("telegramBotTradeHistory.searchPlaceholder")}
             className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 outline-none placeholder:text-slate-400 transition focus:border-blue-500"
           />
         </div>
@@ -51,10 +52,21 @@ export default function TradeFilters({
               defaultValue="30"
               className="w-full appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-8 text-sm text-slate-700 outline-none focus:border-blue-500"
             >
-              <option value="7">Last 7 Days</option>
-              <option value="30">Last 30 Days</option>
-              <option value="90">Last 90 Days</option>
-              <option value="all">All Time</option>
+              <option value="7">
+                {" "}
+                {t("telegramBotTradeHistory.last7Days")}
+              </option>
+              <option value="30">
+                {" "}
+                {t("telegramBotTradeHistory.last30Days")}
+              </option>
+              <option value="90">
+                {t("telegramBotTradeHistory.last90Days")}
+              </option>
+              <option value="all">
+                {" "}
+                {t("telegramBotTradeHistory.allTime")}
+              </option>
             </select>
           </div>
           {/* Type */}
@@ -62,24 +74,32 @@ export default function TradeFilters({
             defaultValue="all"
             className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none focus:border-blue-500"
           >
-            <option value="all">All Types</option>
-            <option value="buy">Buy</option>
-            <option value="sell">Sell</option>
+            <option value="all">
+              {" "}
+              {t("telegramBotTradeHistory.allTypes")}
+            </option>
+            <option value="buy"> {t("telegramBotTradeHistory.buy")}</option>
+            <option value="sell"> {t("telegramBotTradeHistory.sell")}</option>
           </select>
           {/* Status */}
           <select
             defaultValue="all"
             className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none focus:border-blue-500"
           >
-            <option value="all">All Status</option>
-            <option value="closed">Closed</option>
-            <option value="open">Open</option>
+            <option value="all">
+              {" "}
+              {t("telegramBotTradeHistory.allStatus")}
+            </option>
+            <option value="closed">
+              {t("telegramBotTradeHistory.closed")}
+            </option>
+            <option value="open">{t("telegramBotTradeHistory.open")}</option>
           </select>
         </div>
       </div>
       <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
         <FiFilter size={14} />
-        <span>Filters are applied to your trade history.</span>
+        <span> {t("telegramBotTradeHistory.appliedMessage")}</span>
       </div>
     </div>
   );

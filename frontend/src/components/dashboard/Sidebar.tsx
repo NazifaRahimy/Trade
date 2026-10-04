@@ -1,5 +1,5 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import Image from "next/image";
 import Link from "next/link";
 import {usePathname, useRouter} from "next/navigation";
@@ -24,7 +24,8 @@ type UserData = {
 export default function Sidebar({isOpen, onClose}: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
-
+  const {t, i18n} = useTranslation();
+  const isPersain = i18n.language.startsWith("fa");
   const [user, setUser] = useState<UserData>({
     firstName: "",
     lastName: "",
@@ -92,9 +93,9 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
       {/* ================================================= */}
       {/* DESKTOP SIDEBAR */}
       {/* ================================================= */}
-
-      {/* <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-slate-200 bg-white lg:block"> */}
-      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-slate-800 bg-slate-950 lg:block">
+      <aside
+        className={`fixed  ${isPersain ? "right-0" : "left-0"} top-0 z-40 hidden h-screen w-64 border-r border-slate-800 bg-slate-950 lg:block`}
+      >
         <div className="flex h-full flex-col">
           {/* Logo */}
           <div className="flex h-[87px] items-center gap-3 border-b border-slate-200 px-4">
@@ -108,7 +109,7 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
           {/* Navigation */}
           <nav className="flex-1 space-y-2 overflow-y-auto px-4 py-6">
             <p className="mb-4 px-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">
-              Main Menu
+              {t("SidebarTelegramBotDashboard.mainMenu")}
             </p>
             <Link
               href="/"
@@ -116,7 +117,7 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
               className=" hidden lg:flex items-center px-4 pb-4 gap-2 text-sm font-medium text-slate-300 transition hover:text-white"
             >
               <FiHome className="h-4 w-4" />
-              <span>Back Home</span>
+              <span>{t("SidebarTelegramBotDashboard.backHome")}</span>
             </Link>
             {dashboardMenu.map((item) => {
               const Icon = item.icon;
@@ -133,7 +134,7 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
                     }`}
                   >
                     <Icon className="text-lg" />
-                    <span>{item.label}</span>
+                    <span>{t(`SidebarTelegramBotDashboard.${item.key}`)}</span>
                   </motion.div>
                 </Link>
               );
@@ -161,11 +162,11 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
               {/* User Info */}
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold text-white">
-                  {fullName || "User"}
+                  {fullName || t("SidebarTelegramBotDashboard.user")}
                 </p>
 
                 <p className="truncate text-xs text-slate-400">
-                  {user.email || "Member"}
+                  {user.email || t("SidebarTelegramBotDashboard.member")}
                 </p>
               </div>
             </div>
@@ -175,11 +176,10 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
               type="button"
               onClick={handleLogout}
               className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-400 transition hover:bg-red-950/40 hover:text-red-400"
-              // className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-red-50 hover:text-red-600"
             >
-              <FiLogOut />
+              {isPersain ? <FiLogOut className="rotate-180" /> : <FiLogOut />}
 
-              <span>Logout</span>
+              <span>{t("SidebarTelegramBotDashboard.logout")}</span>
             </button>
           </div>
         </div>
@@ -204,14 +204,22 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
 
             {/* Sidebar */}
             <motion.aside
-              initial={{x: "-100%"}}
-              animate={{x: 0}}
-              exit={{x: "-100%"}}
+              initial={{
+                x: isPersain ? "100%" : "-100%",
+              }}
+              animate={{
+                x: 0,
+              }}
+              exit={{
+                x: isPersain ? "100%" : "-100%",
+              }}
               transition={{
                 duration: 0.25,
                 ease: "easeOut",
               }}
-              className="fixed left-0 top-0 z-[60] h-screen w-72 border-r border-slate-800 bg-slate-950  lg:hidden"
+              className={`fixed ${
+                isPersain ? "right-0 border-l" : "left-0 border-r"
+              } top-0 z-[60] h-screen w-72 border-slate-800 bg-slate-950 lg:hidden`}
             >
               <div className="flex h-full flex-col">
                 {/* Mobile Logo Header */}
@@ -239,7 +247,7 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
                 {/* Mobile Navigation */}
                 <nav className="flex-1 space-y-2 overflow-y-auto px-4 py-6">
                   <p className="mb-4 px-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                    Main Menu
+                    {t("SidebarTelegramBotDashboard.mainMenu")}
                   </p>
                   {dashboardMenu.map((item) => {
                     const Icon = item.icon;
@@ -257,7 +265,9 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
                         >
                           <Icon className="text-lg" />
 
-                          <span>{item.label}</span>
+                          <span>
+                            {t(`SidebarTelegramBotDashboard.${item.key}`)}
+                          </span>
                         </motion.div>
                       </Link>
                     );
@@ -268,9 +278,8 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
                     className={`flex items-center text-slate-600 hover:bg-slate-50 hover:text-slate-900 gap-3 rounded-xl px-4 py-3 text-sm font-medium transition`}
                   >
                     <FiHome className="h-4 w-4" />
-                    <span>Back Home</span>
+                    <span>{t("SidebarTelegramBotDashboard.backHome")}</span>
                   </Link>
-                  z
                 </nav>
 
                 {/* Mobile User */}
@@ -294,11 +303,11 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
                     {/* User Info */}
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold text-white">
-                        {fullName || "User"}
+                        {fullName || t("SidebarTelegramBotDashboard.user")}
                       </p>
 
                       <p className="truncate text-xs text-slate-500">
-                        {user.email || "Member"}
+                        {user.email || t("SidebarTelegramBotDashboard.member")}
                       </p>
                     </div>
                   </div>
@@ -309,9 +318,13 @@ export default function Sidebar({isOpen, onClose}: SidebarProps) {
                     onClick={handleLogout}
                     className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-400 transition hover:bg-red-950/40 hover:text-red-400"
                   >
-                    <FiLogOut />
+                    {isPersain ? (
+                      <FiLogOut className="rotate-180" />
+                    ) : (
+                      <FiLogOut />
+                    )}
 
-                    <span>Logout</span>
+                    <span>{t("SidebarTelegramBotDashboard.logout")}</span>
                   </button>
                 </div>
               </div>

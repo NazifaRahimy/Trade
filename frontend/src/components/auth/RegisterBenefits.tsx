@@ -1,5 +1,5 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import Image from "next/image";
 import Logo from "@/src/assets/images/logo.png";
 import photoregister from "@/src/assets/images/photoregister.png";
@@ -14,33 +14,35 @@ import {
 const features = [
   {
     icon: FiTrendingUp,
-    title: "Professional Trading Signals",
-    desc: "Get access to professional Forex and Crypto trading signals.",
+    title: "register.signalsTitle",
+    desc: "register.signalsDescription",
   },
   {
     icon: FiBarChart2,
-    title: "Advanced Analysis",
-    desc: "Learn from accurate market analysis and professional strategies.",
+    title: "register.analysisTitle",
+    desc: "register.analysisDescription",
   },
   {
     icon: FiShield,
-    title: "Risk Management",
-    desc: "Learn how to manage your trading risk and protect your capital.",
+    title: "register.riskManagementTitle",
+    desc: "register.riskManagementDescription",
   },
   {
     icon: FiHeadphones,
-    title: "24/7 Support",
-    desc: "Our support team is available whenever you need assistance.",
+    title: "register.supportTitle",
+    desc: "register.supportDescription",
   },
 ];
 
 export default function RegisterBenefits() {
+  const {t, i18n} = useTranslation();
+  const isPersian = i18n.language.startsWith("fa");
   return (
     <motion.div
       initial={{opacity: 0, x: 30}}
       animate={{opacity: 1, x: 0}}
       transition={{duration: 0.5}}
-      className="relative h-full rounded-t-md lg:rounded-l-none  min-h-[650px] overflow-hidden lg:rounded-r-3xl bg-gradient-to-b from-slate-950 via-slate-900 to-blue-950 text-white"
+      className={`relative h-full rounded-t-md lg:rounded-t-none ${isPersian ? "lg:rounded-tl-3xl lg:rounded-bl-3xl" : "lg:rounded-tr-3xl lg:rounded-br-3xl"}   min-h-[650px] overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-blue-950 text-white`}
     >
       <div className="w-full px-8 py-5  z-20">
         {/* Logo */}
@@ -57,12 +59,11 @@ export default function RegisterBenefits() {
         {/* Heading */}
         <div className="mb-8 text-center">
           <h2 className="mb-3 text-xl font-bold">
-            Why register at Amiri Finance Academy?
+            {t("register.benefitsTitle")}
           </h2>
 
           <p className="text-sm leading-7 text-slate-300">
-            Join our academy and improve your trading knowledge with
-            professional educational resources.
+            {t("register.benefitsDescription")}
           </p>
         </div>
 
@@ -78,10 +79,12 @@ export default function RegisterBenefits() {
                 </div>
 
                 <div>
-                  <h3 className="mb-1 text-sm font-semibold">{item.title}</h3>
+                  <h3 className="mb-1 text-sm font-semibold">
+                    {t(item.title)}
+                  </h3>
 
                   <p className="text-xs leading-6 text-slate-400">
-                    {item.desc}
+                    {t(item.desc)}
                   </p>
                 </div>
               </div>

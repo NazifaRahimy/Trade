@@ -1,24 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { FiDollarSign, FiTrendingUp, FiActivity, FiTarget, FiLoader } from "react-icons/fi";
+import {useEffect, useState} from "react";
+import {motion} from "framer-motion";
+import {
+  FiDollarSign,
+  FiTrendingUp,
+  FiActivity,
+  FiTarget,
+  FiLoader,
+} from "react-icons/fi";
 
 // 🚀 ایمپورت‌های کاملاً استاندارد و تایید شده توسط شما
-import api from "@/src/lib/axios"; 
+import api from "@/src/lib/axios";
 import DashboardCard from "@/src/components/dashboard/DashboardCard";
 import PortfolioChart from "@/src/components/dashboard/PortfolioChart";
 import AccountAllocation from "@/src/components/dashboard/AccountAllocation";
 import BrokerConnection from "@/src/components/dashboard/BrokerConnection";
-import RiskControl from "@/src/components/dashboard/RiskControl"; 
+import RiskControl from "@/src/components/dashboard/RiskControl";
 import RecentTrades from "@/src/components/dashboard/RecentTrades";
 import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
+import {useTranslation} from "react-i18next";
 
 export default function DashboardPage() {
+  const {t} = useTranslation();
   const [stats, setStats] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  // 📡 دریافت آنلاین و یکجای اطلاعات حساب متاتریدر ۵ از بک‌اَند جنگو
   useEffect(() => {
     const fetchLiveDashboardData = async () => {
       try {
@@ -27,7 +34,10 @@ export default function DashboardPage() {
           setStats(response.data);
         }
       } catch (error) {
-        console.error("Critical: Failed to stream real-time dashboard ledger:", error);
+        console.error(
+          "Critical: Failed to stream real-time dashboard ledger:",
+          error,
+        );
       } finally {
         setLoading(false);
       }
@@ -39,7 +49,7 @@ export default function DashboardPage() {
     return (
       <div className="flex h-screen w-full items-center justify-center gap-2 text-sm text-slate-400 italic bg-white">
         <FiLoader className="animate-spin text-blue-600" size={22} />
-        <span>Synchronizing institutional cloud nodes...</span>
+        <span>{t("telegramBotDashboard.synchronizing")}</span>
       </div>
     );
   }
@@ -48,51 +58,50 @@ export default function DashboardPage() {
     <ProtectedRoute>
       <div className="min-h-screen bg-slate-50/50 p-4 lg:p-6 text-slate-900 w-full  overflow-x-hidden">
         <main className="space-y-6 w-full">
-          
           {/* هدر بالایی وب‌سایت */}
           <motion.div
-            initial={{ opacity: 0, y: -15 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{opacity: 0, y: -15}}
+            animate={{opacity: 1, y: 0}}
             className="mb-2"
           >
-            <h1 className="text-xl font-bold text-slate-900 md:text-2xl">Financial Overview</h1>
+            <h1 className="text-xl font-bold text-slate-900 md:text-2xl">
+              {t("telegramBotDashboard.title")}
+            </h1>
             <p className="text-xs text-slate-500 mt-1">
-              Monitor your active copy-trade terminals and asset execution ratios in real-time.
+              {t("telegramBotDashboard.description")}
             </p>
           </motion.div>
 
           {/* 📊 ردیف اول: ۴ کارت آمار زنده متصل به دیتابیس */}
           <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 w-full">
             <DashboardCard
-              title="Account Balance"
+              title={t("telegramBotDashboard.accountBalanceTitle")}
               value={stats?.account_balance || "$0.00"}
-              subtitle="Live MetaTrader 5 Balance"
+              subtitle={t("telegramBotDashboard.accountBalanceSubtitle")}
               icon={FiDollarSign}
             />
             <DashboardCard
-              title="Total Net Profit"
+              title={t("telegramBotDashboard.totalNetProfitTitle")}
               value={stats?.total_profit || "$0.00"}
-              subtitle="Accumulated trade gains"
+              trend={t("telegramBotDashboard.totalNetProfitTrend")}
               icon={FiTrendingUp}
-              trend="+ Profit active"
             />
             <DashboardCard
-              title="Win Rate Ratio"
+              title={t("telegramBotDashboard.winRateTitle")}
               value={stats?.win_rate || "0%"}
-              subtitle="Historical hit formula"
+              subtitle={t("telegramBotDashboard.winRateSubtitle")}
               icon={FiTarget}
             />
             <DashboardCard
-              title="Available Capital"
+              title={t("telegramBotDashboard.availableCapitalTitle")}
               value={stats?.available_balance || "$0.00"}
-              subtitle="Free margin safety buffer"
+              subtitle={t("telegramBotDashboard.availableCapitalSubtitle")}
               icon={FiActivity}
             />
           </section>
 
           {/* 🚀 مگا گرید دو ستونه سراسری (چپ ۷۰٪ برای جداول و نمودارها | راست ۳۰٪ برای پنل ریسک) */}
           <div className="grid grid-cols-1  gap-6 w-full items-start">
-            
             {/* 🟦 ستون سمت چپ (عریض) */}
             <div className=" space-y-6 w-full">
               {/* بخش نمودار رشد و پورتفو کنار هم */}
@@ -107,26 +116,24 @@ export default function DashboardPage() {
 
               {/* کارت وضعیت اتصال کارگزار */}
               <div className="w-full">
-              <BrokerConnection />
+                <BrokerConnection />
               </div>
 
               {/* جدول آخرین معاملات کپی شده */}
-            
             </div>
 
             {/* 🟥 ستون سمت راست (مخصوص ایستگاه مدیریت ریسک متمرکز) */}
 
-          <div className=" w-full bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+            <div className=" w-full bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
               <h3 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3 mb-4">
-                Risk Management Station
+                {t("telegramBotDashboard.riskManagementStation")}
               </h3>
               <RiskControl />
             </div>
-              <div className="w-full">
-                <RecentTrades />
-              </div>
+            <div className="w-full">
+              <RecentTrades />
+            </div>
           </div>
-
         </main>
       </div>
     </ProtectedRoute>

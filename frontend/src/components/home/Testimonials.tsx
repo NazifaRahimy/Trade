@@ -1,37 +1,38 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {FiStar, FiUser} from "react-icons/fi";
 
 const testimonials = [
   {
     name: "James T.",
-    role: "Forex Trader",
-    text: "The educational structure helped me understand the market process much better.",
+    role: "home.jamesTraderRole",
+    text: "home.jamesTestimonial",
   },
   {
     name: "Sarah M.",
-    role: "Crypto Investor",
-    text: "Clear explanations, organized signals and useful risk-management guidance.",
+    role: "home.sarahInvestorRole",
+    text: "home.sarahTestimonial",
   },
   {
     name: "David R.",
-    role: "Full-time Trader",
-    text: "The platform provides a simple way to follow the learning journey.",
+    role: "home.davidTraderRole",
+    text: "home.davidTestimonial",
   },
 ];
 
 export default function Testimonials() {
+  const {t} = useTranslation();
   return (
     <section className="bg-slate-50 py-20">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <div className="mb-10">
           <p className="text-xs font-bold uppercase tracking-wider text-center text-blue-600">
-            What Our Clients Say
+            {t("home.whatOurClientsSay")}
           </p>
 
           <h2 className="mt-2 text-xl text-center md:text-3xl font-black text-slate-900">
-            Trusted by Traders Worldwide
+            {t("home.trustedByTradersWorldwide")}
           </h2>
         </div>
 
@@ -56,7 +57,7 @@ export default function Testimonials() {
               </div>
 
               <p className="mt-5 text-sm leading-6 text-slate-600">
-                “{item.text}”
+                {t(item.text)}
               </p>
 
               <div className="mt-6 flex items-center gap-3 border-t border-slate-100 pt-5">
@@ -69,7 +70,7 @@ export default function Testimonials() {
                     {item.name}
                   </p>
 
-                  <p className="text-xs text-slate-400">{item.role}</p>
+                  <p className="text-xs text-slate-400"> {t(item.role)}</p>
                 </div>
               </div>
             </motion.div>

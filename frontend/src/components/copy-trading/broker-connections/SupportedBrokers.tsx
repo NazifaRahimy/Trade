@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { FiCheckCircle, FiLoader } from "react-icons/fi";
+import {useEffect, useState} from "react";
+import {motion} from "framer-motion";
+import {FiCheckCircle, FiLoader} from "react-icons/fi";
 // 🚀 اتصال به کلاینت متمرکز شبکه پلتفرم شما
 import api from "@/src/lib/axios";
+import {useTranslation} from "react-i18next";
 
 export default function SupportedBrokers() {
+  const {t} = useTranslation();
   // 📦 ۱. استیت داینامیک برای ذخیره نام کارگزاران دریافت شده از دیتابیس جنگو
   const [brokers, setBrokers] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +22,10 @@ export default function SupportedBrokers() {
           setBrokers(response.data.supported_brokers);
         }
       } catch (error) {
-        console.error("Critical: Failed to load dynamic brokers list from database:", error);
+        console.error(
+          "Critical: Failed to load dynamic brokers list from database:",
+          error,
+        );
       } finally {
         setLoading(false);
       }
@@ -32,27 +37,32 @@ export default function SupportedBrokers() {
     return (
       <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-xs text-slate-400 italic flex items-center justify-center gap-2 min-h-[200px]">
         <FiLoader className="animate-spin text-blue-600" size={16} />
-        <span>Loading verified broker nodes...</span>
+        <span> {t("copyTradingBrokerConnections.loadingVerifiedBrokers")}</span>
       </div>
     );
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.2 }}
+      initial={{opacity: 0, y: 20}}
+      animate={{opacity: 1, y: 0}}
+      transition={{duration: 0.5, delay: 0.2}}
       className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4"
     >
       <div>
-        <h3 className="font-semibold text-slate-900 text-sm">Supported Brokers</h3>
-        <p className="text-xs text-slate-400 mt-1">Select one of the supported trading platforms.</p>
+        <h3 className="text-sm font-semibold text-slate-900">
+          {t("copyTradingBrokerConnections.supportedBrokers")}
+        </h3>
+
+        <p className="mt-1 text-xs text-slate-400">
+          {t("copyTradingBrokerConnections.supportedBrokersDescription")}
+        </p>
       </div>
 
       <div className="space-y-2">
         {brokers.length === 0 ? (
           <p className="text-xs text-slate-400 italic p-3 text-center bg-slate-50 rounded-xl border border-dashed border-slate-200">
-            No active brokers registered in the core ledger yet.
+            {t("copyTradingBrokerConnections.noActiveBrokers")}
           </p>
         ) : (
           // 🚀 ۳. رندر کاملاً داینامیک بروکرهای واقعی همراه با استخراج خودکار ۲ حرف اول برای لوگوی متنی
@@ -67,8 +77,13 @@ export default function SupportedBrokers() {
                   {brokerName.substring(0, 2).toUpperCase()}
                 </div>
                 <div>
-                  <span className="text-xs font-semibold text-slate-800 block">{brokerName}</span>
-                  <span className="text-[10px] text-slate-400">Forex & CFD Verified</span>
+                  <span className="text-xs font-semibold text-slate-800 block">
+                    {brokerName}
+                  </span>
+                  <span className="text-[10px] text-slate-400">
+                    {" "}
+                    {t("copyTradingBrokerConnections.forexCfdVerified")}
+                  </span>
                 </div>
               </div>
               <FiCheckCircle className="text-emerald-500 shrink-0" size={16} />

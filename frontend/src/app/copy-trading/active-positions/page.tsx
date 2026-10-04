@@ -2,6 +2,7 @@
 
 import {useEffect, useState} from "react";
 import api from "@/src/lib/axios";
+import {useTranslation} from "react-i18next";
 
 // ایمپورت ابزارک‌های فیکس شده شما
 import PositionsHeader from "@/src/components/copy-trading/active-positions/PositionsHeader";
@@ -10,6 +11,7 @@ import ActivePositionsTable from "@/src/components/copy-trading/active-positions
 import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
 
 export default function ActivePositionsPage() {
+  const {t} = useTranslation();
   const [positions, setPositions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -37,7 +39,10 @@ export default function ActivePositionsPage() {
     return (
       <div className="flex h-screen w-full items-center justify-center gap-2 text-sm text-slate-400 italic bg-white">
         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600" />
-        <span>Streaming active ledger positions from broker...</span>
+        <span>
+          {" "}
+          {t("copyTradingActivePositions.copyTradingActivePositionsLoading")}
+        </span>
       </div>
     );
   }

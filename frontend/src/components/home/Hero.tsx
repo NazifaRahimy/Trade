@@ -1,10 +1,11 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import Link from "next/link";
 import {motion} from "framer-motion";
 import hometBunner from "@/src/assets/images/home-bunner.png";
 import {
   FiArrowRight,
+  FiArrowLeft,
   FiShield,
   FiUsers,
   FiTrendingUp,
@@ -12,6 +13,7 @@ import {
 } from "react-icons/fi";
 
 export default function Hero() {
+  const {t, i18n} = useTranslation();
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-white via-blue-50/40 to-blue-100/40">
       {/* Background */}
@@ -26,19 +28,17 @@ export default function Hero() {
           className="max-w-xl py-16  px-10 lg:px-8"
         >
           <p className="mb-5 text-xs font-bold uppercase tracking-wider text-blue-600">
-            Professional Copy Trading & Signals
+            {t("home.professionalCopyTradingSignals")}
           </p>
 
           <h1 className="text-4xl font-black leading-[1.15] text-slate-900 sm:text-5xl lg:text-6xl">
-            Trade Smarter.
+            {t("home.tradeSmarter")}
             <br />
-            <span className="text-blue-600">Grow Consistently.</span>
+            <span className="text-blue-600"> {t("home.growConsistently")}</span>
           </h1>
 
           <p className="mt-6 max-w-lg text-base leading-7 text-slate-600">
-            Benefit from 7+ years of real market experience in Forex and
-            Cryptocurrency. Learn, analyze and build better trading habits with
-            structured strategies.
+            {t("home.heroDescription")}
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -46,27 +46,31 @@ export default function Hero() {
               href="/register"
               className="group flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-200 transition hover:bg-blue-700"
             >
-              Get Started Now
-              <FiArrowRight className="transition group-hover:translate-x-1" />
+              {t("home.getStartedNow")}
+              {i18n.language.startsWith("fa") ? (
+                <FiArrowLeft className="transition group-hover:translate-x-1 mt-1" />
+              ) : (
+                <FiArrowRight className="transition group-hover:translate-x-1 mt-1" />
+              )}
             </Link>
 
             <Link
               href="/about"
               className="rounded-lg border border-blue-300 bg-white px-7 py-3.5 text-center text-sm font-bold text-slate-700 transition hover:border-blue-500 hover:text-blue-600"
             >
-              Learn More
+              {t("home.learnMore")}
             </Link>
           </div>
 
           <div className="mt-7 flex flex-wrap gap-6">
             <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
               <FiShield className="text-blue-600" />
-              Secure & Transparent
+              {t("home.secureTransparent")}
             </div>
 
             <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
               <FiUsers className="text-blue-600" />
-              Trusted by 1000+ Traders
+              {t("home.trustedByTraders")}
             </div>
           </div>
         </motion.div>
