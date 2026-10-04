@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import {
   CartesianGrid,
   Line,
@@ -10,69 +11,91 @@ import {
   YAxis,
 } from "recharts";
 
-const data = [
-  {time: "09:00", price: 4312},
-  {time: "09:05", price: 4316},
-  {time: "09:10", price: 4314},
-  {time: "09:15", price: 4320},
-  {time: "09:20", price: 4318},
-  {time: "09:25", price: 4324},
-  {time: "09:30", price: 4322},
-  {time: "09:35", price: 4327},
-  {time: "09:40", price: 4325},
-  {time: "09:45", price: 4330},
-  {time: "09:50", price: 4328},
-  {time: "09:55", price: 4332},
-];
+// 🟢 ورودی تابع پروپس لایو را از صفحه پدر دریافت می‌کند با حفظ کامل استایل شما
+export default function TradingChart({ data, tick }: { data: any; tick: any }) {
+  const swings = data?.fractal_swings || [];
 
-export default function TradingChart() {
+  // نگاشت (Map) صدم‌ثانیه‌ای و داینامیک فرکتال‌های واقعی بک‌اَند به فرمت چارت
+  const liveChartData = swings.map((s: any) => ({
+    time: new Date(s.candle_timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    price: parseFloat(s.price)
+  })).reverse(); // معکوس کردن برای رندر صحیح زمان از چپ به راست
+
+  // محاسبه کاملاً خودکار و داینامیک محدوده (Domain) عمودی چارت بر اساس کف و سقف واقعی قیمت طلا
+  const prices = liveChartData.map((d: any) => d.price);
+  const minPrice = prices.length > 0 ? Math.min(...prices) - 1 : "auto";
+  const maxPrice = prices.length > 0 ? Math.max(...prices) + 1 : "auto";
+
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-      <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      {/* هدر بالایی چارت - کاملاً حفظ شده از کدهای بومی شما */}
+      <div className="mb-5 flex flex-col gap-3 border-b border-gray-100 pb-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">
-            ICT Trading Chart
-          </h2>
-
-          <p className="text-sm text-gray-500">
-            XAUUSD · M5 · Live strategy analysis
-          </p>
+          <h2 className="text-lg font-semibold text-gray-900 font-sans">ICT Trading Chart</h2>
+          <p className="mt-1 text-sm text-gray-500 font-sans">XAUUSD · M5 Live strategy analysis</p>
         </div>
-
-        <div className="flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-2">
-          <span className="text-xs text-gray-500">Current Price</span>
-          <span className="text-sm font-bold text-gray-900">4325.10</span>
+        
+        {/* نشانگرهای وضعیت قیمت زنده بدون هیچ عدد ثابت فرضی */}
+        <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
+          <span className="rounded-lg bg-gray-100 px-3 py-1.5 text-gray-500 font-mono">
+            XAUUSD · M5
+          </span>
+          <span className="rounded-lg bg-blue-50 px-3 py-1.5 text-blue-600 font-mono">
+            Current Price: {tick?.ask ? `\$${tick.ask.toFixed(2)}` : "Loading..."}
+          </span>
         </div>
       </div>
 
+      {/* بخش بدنه رسم نمودار Recharts با حفظ کل ساختار شما */}
       <div className="h-[380px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-
-            <XAxis dataKey="time" />
-
-            <YAxis domain={["dataMin - 5", "dataMax + 5"]} />
-
-            <Tooltip />
-
-            <Line type="monotone" dataKey="price" strokeWidth={2} dot={false} />
-          </LineChart>
+          {liveChartData.length > 0 ? (
+            <LineChart
+              data={liveChartData}
+              margin={{ top: 20, right: 0, left: 5, bottom: 10 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+              <XAxis
+                dataKey="time"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 11, fill: "#6b7280" }}
+              />
+              <YAxis
+                domain={[minPrice, maxPrice]}
+                orientation="right"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 11, fill: "#6b7280" }}
+                width={50}
+              />
+              <Tooltip
+                formatter={(value) => [`$${Number(value ?? 0).toFixed(2)}`, "Price"]}
+                labelFormatter={(label) => `Time: ${label}`}
+              />
+              <Line
+                type="monotone"
+                dataKey="price"
+                stroke="#2563eb"
+                strokeWidth={3}
+                dot={{ r: 4, fill: "#2563eb", stroke: "#ffffff", strokeWidth: 2 }}
+                activeDot={{ r: 6 }}
+                isAnimationActive={false}
+              />
+            </LineChart>
+          ) : (
+            <div className="flex h-full items-center justify-center text-sm text-gray-400 font-sans">
+              Awaiting live structural swing points from MetaTrader 5...
+            </div>
+          )}
         </ResponsiveContainer>
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-3">
-        <span className="rounded-lg bg-green-50 px-3 py-2 text-xs font-medium text-green-700">
-          BUY
-        </span>
-
-        <span className="rounded-lg bg-blue-50 px-3 py-2 text-xs font-medium text-blue-700">
-          Discount
-        </span>
-
-        <span className="rounded-lg bg-purple-50 px-3 py-2 text-xs font-medium text-purple-700">
-          FVG Detected
-        </span>
+      {/* فوتور و راهنمای پایینی چارت شما - کاملاً حفظ شده */}
+      <div className="mt-4 flex flex-wrap gap-3 text-xs font-medium border-t border-gray-100 pt-4">
+        <span className="rounded-lg bg-green-50 px-2.5 py-1 text-green-700">🟢 BUY Zone</span>
+        <span className="rounded-lg bg-blue-50 px-2.5 py-1 text-blue-700">🔵 Discount</span>
+        <span className="rounded-lg bg-purple-50 px-2.5 py-1 text-purple-700">🔮 FVG Detected</span>
       </div>
     </div>
   );

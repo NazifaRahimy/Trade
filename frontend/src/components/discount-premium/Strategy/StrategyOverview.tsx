@@ -25,7 +25,6 @@ export default function StrategyOverview() {
       value: "87%",
     },
   ];
-
   return (
     <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
       {items.map((item) => (
@@ -36,7 +35,6 @@ export default function StrategyOverview() {
           <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
             {item.label}
           </p>
-
           <p
             className={`mt-2 text-lg font-bold ${
               item.label === "Direction"
@@ -44,12 +42,11 @@ export default function StrategyOverview() {
                 : item.label === "Zone"
                   ? "text-blue-600"
                   : "text-gray-900"
-            }`}
-          >
+            }`} >
             {item.value}
           </p>
         </div>
-      ))}
+      ))}َ
     </div>
   );
 }

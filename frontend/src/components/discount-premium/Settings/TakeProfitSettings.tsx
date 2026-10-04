@@ -38,7 +38,6 @@ export default function TakeProfitSettings() {
         <h2 className="text-lg font-semibold text-gray-900">
           Take Profit Settings
         </h2>
-
         <p className="mt-1 text-sm text-gray-500">
           Define how take profit levels should be calculated.
         </p>

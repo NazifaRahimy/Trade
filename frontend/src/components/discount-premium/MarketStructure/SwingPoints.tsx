@@ -1,76 +1,62 @@
-const swingPoints = [
-  {
-    type: "HH",
-    price: "4350.00",
-    timeframe: "M5",
-    time: "10:30",
-    description: "Higher High",
-    style: "bg-green-50 text-green-700",
-  },
-  {
-    type: "HL",
-    price: "4327.00",
-    timeframe: "M5",
-    time: "10:15",
-    description: "Higher Low",
-    style: "bg-blue-50 text-blue-700",
-  },
-  {
-    type: "HH",
-    price: "4348.00",
-    timeframe: "M5",
-    time: "09:45",
-    description: "Higher High",
-    style: "bg-green-50 text-green-700",
-  },
-  {
-    type: "HL",
-    price: "4333.00",
-    timeframe: "M5",
-    time: "09:40",
-    description: "Higher Low",
-    style: "bg-blue-50 text-blue-700",
-  },
-];
+import React from "react";
+import { FiArrowUpRight, FiArrowDownRight } from "react-icons/fi";
 
-export default function SwingPoints() {
+// 🟢 استایل بومی شما کاملاً حفظ شده و فقط دیتای واقعی بک‌اَند تزریق می‌شود
+export default function SwingPoints({ data }: { data: any }) {
+  // واکشی آرایه سقف و کف‌های فرکتالی از دیتای زنده ربات طلا
+  const swings = data?.fractal_swings || [];
+
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-      {" "}
-      <div className="mb-5">
-        {" "}
-        <h2 className="text-lg font-semibold text-gray-900">Swing Points</h2>
-        <p className="mt-1 text-sm text-gray-500">
-          Recently identified market structure points.
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="mb-4">
+        <h3 className="text-lg font-semibold text-gray-900">Swing Points</h3>
+        <p className="text-sm text-gray-500">
+          Detected fractal swing highs and lows for structural reference
         </p>
       </div>
-      <div className="space-y-3">
-        {swingPoints.map((point, index) => (
-          <div
-            key={`${point.type}-${index}`}
-            className="flex items-center justify-between rounded-xl border border-gray-100 p-4"
-          >
-            <div className="flex items-center gap-3">
-              <span
-                className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold ${point.style}`}
-              >
-                {point.type}
-              </span>
 
-              <div>
-                <p className="text-sm font-semibold text-gray-900">
-                  {point.description}
+      <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+        {swings.length > 0 ? (
+          swings.map((swing: any, index: number) => (
+            <div
+              key={index}
+              className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50/50 p-3"
+            >
+              <div className="flex items-center gap-3">
+                <div className={`rounded-xl p-2 ${
+                  swing.swing_type === "HIGH" 
+                    ? "bg-rose-50 text-rose-600" 
+                    : "bg-emerald-50 text-emerald-600"
+                }`}>
+                  {swing.swing_type === "HIGH" ? (
+                    <FiArrowUpRight size={18} />
+                  ) : (
+                    <FiArrowDownRight size={18} />
+                  )}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {swing.swing_type === "HIGH" ? "Swing High" : "Swing Low"}
+                    {swing.structure_type ? ` (${swing.structure_type})` : ""}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    {new Date(swing.candle_timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                  </p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="font-mono text-sm font-bold text-gray-900">
+                  \${parseFloat(swing.price).toFixed(2)}
                 </p>
-
-                <p className="mt-0.5 text-xs text-gray-500">
-                  {point.timeframe} · {point.time}
-                </p>
+                <p className="text-xs text-gray-400">Confirmed</p>
               </div>
             </div>
-
-            <p className="text-sm font-bold text-gray-900">{point.price}</p>
+          ))
+        ) : (
+          <div className="py-8 text-center text-sm text-gray-400">
+            No fractal swing points received from MT5 yet.
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

@@ -1,52 +1,38 @@
-const radarStats = [
-  {
-    label: "Pending Signals",
-    value: "4",
-    description: "Waiting for confirmation",
-  },
-  {
-    label: "Strong Signals",
-    value: "2",
-    description: "Confidence above 80%",
-  },
-  {
-    label: "Bullish",
-    value: "3",
-    description: "Buy opportunities",
-  },
-  {
-    label: "Bearish",
-    value: "1",
-    description: "Sell opportunities",
-  },
-];
+// 🟢 لایو کردن محاسبات چهار کارت رادار سیگنال‌ها با حفظ کامل استایل و کلاس‌های شما
+export default function SignalRadar({ signals }: { signals: any[] }) {
+  const pendingCount = signals.length;
+  const strongCount = signals.filter(s => s.confidence >= 80).length;
+  const bullishCount = signals.filter(s => s.direction === "BUY").length;
+  const bearishCount = signals.filter(s => s.direction === "SELL").length;
 
-export default function SignalRadar() {
   return (
-    <div className="mb-6">
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold text-gray-900">Signal Radar</h2>
-
-        <p className="mt-1 text-sm text-gray-500">
-          Live overview of signals detected by the strategy scanner.
-        </p>
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {/* کارت اول: Pending Signals */}
+      <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <p className="text-sm text-gray-500">Pending Signals</p>
+        <h3 className="text-2xl font-bold text-gray-900 font-mono">{pendingCount}</h3>
+        <p className="mt-1 text-xs text-gray-400">Awaiting user confirmation</p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {radarStats.map((item) => (
-          <div
-            key={item.label}
-            className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"
-          >
-            <p className="text-sm font-medium text-gray-500">{item.label}</p>
+      {/* کارت دوم: Strong Signals */}
+      <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <p className="text-sm text-gray-500">Strong Signals</p>
+        <h3 className="text-2xl font-bold text-gray-900 font-mono">{strongCount}</h3>
+        <p className="mt-1 text-xs text-gray-400">Confidence limits above 80%</p>
+      </div>
 
-            <p className="mt-2 text-2xl font-bold text-gray-900">
-              {item.value}
-            </p>
+      {/* کارت سوم: Bullish */}
+      <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <p className="text-sm text-gray-500">Bullish</p>
+        <h3 className="text-2xl font-bold text-emerald-600 font-mono">{bullishCount}</h3>
+        <p className="mt-1 text-xs text-gray-400">Buy expansion opportunities</p>
+      </div>
 
-            <p className="mt-1 text-xs text-gray-400">{item.description}</p>
-          </div>
-        ))}
+      {/* کارت چهارم: Bearish */}
+      <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <p className="text-sm text-gray-500">Bearish</p>
+        <h3 className="text-2xl font-bold text-rose-600 font-mono">{bearishCount}</h3>
+        <p className="mt-1 text-xs text-gray-400">Sell distribution opportunities</p>
       </div>
     </div>
   );

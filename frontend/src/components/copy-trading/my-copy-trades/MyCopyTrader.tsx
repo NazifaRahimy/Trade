@@ -49,16 +49,16 @@ export default function MyCopyTrader({ trades, onRefresh }: MyCopyTraderProps) {
       <div className="overflow-x-auto">
         <table className="w-full min-w-[800px] text-left">
           <thead>
-            <tr className="border-b border-slate-200 text-xs font-semibold uppercase tracking-wider text-slate-500 bg-slate-50">
-              <th className="p-4 pl-6">Symbol</th>
-              <th className="p-4">Type</th>
-              <th className="p-4">Volume</th>
-              <th className="p-4">Entry</th>
-              <th className="p-4">Exit</th>
-              <th className="p-4">P&L</th>
-              <th className="p-4">Status</th>
-              <th className="p-4 pr-6 text-center">Actions</th> {/* 🚀 اضافه شدن ستون کنترلرها */}
-            </tr>
+ 
+          <tr className="border-b border-slate-200 text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <th>Symbol</th>
+            <th>Type</th>
+            <th>Volume</th>
+            <th>Entry Price</th>
+            <th>Exit Price</th>
+            <th>Profit</th>
+            <th>Status</th>
+          </tr>
           </thead>
           <tbody className="text-xs divide-y divide-slate-50 font-medium">
             {!trades || trades.length === 0 ? (

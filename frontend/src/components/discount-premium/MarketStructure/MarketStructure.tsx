@@ -1,7 +1,9 @@
 import StructureChart from "../MarketStructure/StructureChar";
 import StructureStatusCard from "../MarketStructure/StructureStatusCard";
 
-export default function MarketStructure() {
+export default function MarketStructure({ data }: { data: any }) {
+  const structure = data?.structure || {};
+
   return (
     <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm xl:col-span-2">
@@ -9,36 +11,41 @@ export default function MarketStructure() {
           <h2 className="text-lg font-semibold text-gray-900">
             XAUUSD Market Structure
           </h2>
-
           <p className="mt-1 text-sm text-gray-500">
             Current structural condition of the gold market
           </p>
         </div>
-
         <StructureChart />
       </div>
 
       <div className="space-y-4">
+        {/* ۱. باکس وضعیت تایم‌فریم ساختار اصلی (M5) */}
         <StructureStatusCard
           timeframe="M5"
-          trend="BULLISH"
+          trend={structure?.timeframe === "M5" ? structure.trend : "BULLISH"}
           structure="BOS"
-          lastStructure="HH"
-          previousStructure="HL"
+          lastStructure={structure?.timeframe === "M5" && structure.last_high ? floatFix(structure.last_high) : "HH"}
+          previousStructure={structure?.timeframe === "M5" && structure.last_low ? floatFix(structure.last_low) : "HL"}
           strength="Strong"
           confirmation="Primary Direction"
         />
 
+        {/* ۲. باکس وضعیت تایم‌فریم ورود لایو ربات (M1) */}
         <StructureStatusCard
           timeframe="M1"
-          trend="BULLISH"
+          trend={structure?.timeframe === "M1" ? structure.trend : "BULLISH"}
           structure="BOS"
-          lastStructure="HH"
-          previousStructure="HL"
+          lastStructure={structure?.timeframe === "M1" && structure.last_high ? floatFix(structure.last_high) : "HH"}
+          previousStructure={structure?.timeframe === "M1" && structure.last_low ? floatFix(structure.last_low) : "HL"}
           strength="Confirmed"
           confirmation="Entry Confirmation"
         />
       </div>
     </section>
   );
+}
+
+// 🟢 ساخت تابع محاسباتی اعشار جهت رفع ارور ناپدید بودن فیلد تراز
+function floatFix(val: string | number) {
+  return parseFloat(val.toString()).toFixed(2);
 }

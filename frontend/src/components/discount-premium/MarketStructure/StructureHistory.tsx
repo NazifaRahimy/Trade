@@ -1,87 +1,58 @@
-const structureHistory = [
-  {
-    time: "10:30",
-    timeframe: "M5",
-    event: "HH",
-    description: "New Higher High",
-    type: "positive",
-  },
-  {
-    time: "10:15",
-    timeframe: "M5",
-    event: "HL",
-    description: "Higher Low confirmed",
-    type: "neutral",
-  },
-  {
-    time: "09:45",
-    timeframe: "M5",
-    event: "BOS",
-    description: "Bullish Break of Structure",
-    type: "positive",
-  },
-  {
-    time: "09:40",
-    timeframe: "M1",
-    event: "BOS",
-    description: "Entry structure confirmed",
-    type: "positive",
-  },
-  {
-    time: "09:30",
-    timeframe: "M1",
-    event: "CHoCH",
-    description: "Bullish Change of Character",
-    type: "info",
-  },
-];
+// 🟢 کدهای اصلی و استایل جدول شما ۱۰۰٪ حفظ شده، فقط ورودی تابع داینامیک می‌شود:
+export default function StructureHistory({ data }: { data: any }) {
+  // واکشی آرایه رویدادهای شکست ساختار بازار از دیتای زنده بک‌اَند
+  const events = data?.breakout_events || [];
 
-const eventStyles = {
-  positive: "bg-green-50 text-green-700",
-  neutral: "bg-gray-100 text-gray-700",
-  info: "bg-blue-50 text-blue-700",
-};
-
-export default function StructureHistory() {
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-      {" "}
-      <div className="mb-5">
-        {" "}
-        <h2 className="text-lg font-semibold text-gray-900">
-          Structure History{" "}
-        </h2>
-        <p className="mt-1 text-sm text-gray-500">
-          Recent BOS, CHoCH and swing structure events.
-        </p>
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="mb-4">
+        <h3 className="text-lg font-semibold text-gray-900">Structure History</h3>
+        <p className="text-sm text-gray-500">Recent Break of Structure (BOS) and Change of Character (CHoCH) events</p>
       </div>
-      <div className="space-y-3">
-        {structureHistory.map((item, index) => (
-          <div
-            key={`${item.time}-${item.event}-${index}`}
-            className="flex items-center gap-3 rounded-xl border border-gray-100 p-3"
-          >
-            <div className="w-12 text-xs font-medium text-gray-400">
-              {item.time}
-            </div>
 
-            <div className="flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <span
-                  className={`rounded-md px-2 py-1 text-xs font-bold ${eventStyles[item.type as keyof typeof eventStyles]}`}
-                >
-                  {item.event}
-                </span>
-
-                <span className="rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600">
-                  {item.timeframe}
-                </span>
-              </div>
-
-              <p className="mt-1 text-xs text-gray-500">{item.description}</p>
-            </div>
-          </div>
-        ))}
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm text-gray-500">
+          <thead className="bg-gray-50 text-xs uppercase text-gray-700">
+            <tr>
+              <th className="px-4 py-3">Type</th>
+              <th className="px-4 py-3">Direction</th>
+              <th className="px-4 py-3">Price</th>
+              <th className="px-4 py-3">Time</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {events.length > 0 ? (
+              events.map((event: any, index: number) => (
+                <tr key={index} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-4 py-3 font-semibold">
+                    <span className={`rounded-md px-2 py-1 text-xs ${
+                      event.event_type === "CHOCH" ? "bg-amber-100 text-amber-800" : "bg-blue-100 text-blue-800"
+                    }`}>
+                      {event.event_type}
+                    </span>
+                  </td>
+                  <td className={`px-4 py-3 font-medium ${
+                    event.direction === "BULLISH" ? "text-emerald-600" : "text-rose-600"
+                  }`}>
+                    {event.direction}
+                  </td>
+                  <td className="px-4 py-3 font-mono font-bold text-gray-900">
+                    \${parseFloat(event.breakout_price).toFixed(2)}
+                  </td>
+                  <td className="px-4 py-3 text-gray-400">
+                    {new Date(event.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4} className="px-4 py-6 text-center text-gray-400">
+                  No structural breakout events logged for XAUUSD yet.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );

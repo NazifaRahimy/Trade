@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import api from "@/src/lib/axios";
 import OverviewHeader from "@/src/components/copy-trading/overview/OverviewHeader";
 import OverviewStats from "@/src/components/copy-trading/overview/OverviewStats";
 import PortfolioGrowth from "@/src/components/copy-trading/overview/PortfolioGrowth";
@@ -54,33 +54,19 @@ export default function CopyTradingPage() {
   useEffect(() => {
     const fetchOverview = async () => {
       try {
-        const token = localStorage.getItem("access_token");
+    const response = await api.get("/api/copy-trading/overview/");
 
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/copy-trading/overview/`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+    const result: CopyTradingData = response.data;
 
-        if (!response.ok) {
-          throw new Error("Failed to load copy trading overview");
-        }
+      setData(result);
+            } catch (err) {
+              console.error("Copy Trading Overview Error:", err);
+              setError(true);
+            }
+          };
 
-        const result: CopyTradingData = await response.json();
-
-        setData(result);
-      } catch (err) {
-        console.error("Copy Trading Overview Error:", err);
-        setError(true);
-      }
-    };
-
-    fetchOverview();
-  }, []);
+          fetchOverview();
+        }, []);
 
   if (error) {
     return (

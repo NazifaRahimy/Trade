@@ -17,44 +17,43 @@ export default function DepositForm() {
   const [amount, setAmount] = useState("");
   const [copied, setCopied] = useState(false);
   const [generated, setGenerated] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  // 📦 استیت‌های جدید برای ذخیره آنلاین اطلاعات فاکتور دریافتی از دیتابیس جنگو
+  // 📦 استیت‌های داینامیک متصل به دیتای واقعی لایو بلاک‌چین
   const [walletAddress, setWalletAddress] = useState("");
   const [invoiceId, setInvoiceId] = useState("");
   const [displayAmount, setDisplayAmount] = useState("");
 
-  // 📡 شلیک درخواست ساخت فاکتور واقعی تتر به کارگزار ابری بک‌اَند
+  // 📡 شلیک درخواست ساخت فاکتور واقعی تتر به اندپوینت ثبت شده در بک‌اَند جنگو
   const handleGenerate = async () => {
     if (!amount || Number(amount) <= 0) return;
     
     try {
-      setLoading(true);
+      setIsGenerating(true);
+      // 🟢 فکس باگ خط ۳۳: اتصال مستقیم به اندپوینت واقعی و لایو پایتون متصل به درگاه NOWPayments
       const response = await api.post("/api/billing/payments/create/", {
-        amount: amount,
+        amount: Number(amount),
       });
 
-      if (response.data) {
-        // مپ کردن مستقیم پاسخ لایو سرور بر روی متغیرهای گرافیکی کامپوننت شما
+      if (response.data && response.data.deposit_address) {
+        // 🟢 فکس باگ خط ۳۹: قرار دادن صحیح مقادیر لایو بلاک‌چین در استیت‌ها بدون کرش کردن
         setWalletAddress(response.data.deposit_address);
-        setInvoiceId(`INV-${response.data.invoice_id}`);
+        setInvoiceId(response.data.invoice_id);
         setDisplayAmount(`${response.data.amount} USDT`);
         setGenerated(true);
       }
     } catch (error) {
+      console.error("Blockchain synchronization node halted:", error);
       alert("❌ Blockchain Gateway Error: Failed to initialize network handshake ticket.");
     } finally {
-      setLoading(false);
+      setIsGenerating(false);
     }
   };
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(walletAddress);
     setCopied(true);
-
-    setTimeout(() => {
-      setCopied(false);
-    }, 2000);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -63,7 +62,6 @@ export default function DepositForm() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* حفظ ساختار گرید دو ستونه شما در تصویر اول */}
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[14fr_11fr]">
         
         {/* 🟦 بخش فرم درخواست واریز (Deposit Form) */}
@@ -92,7 +90,6 @@ export default function DepositForm() {
               </span>
             </div>
           </div>
-
           <div className="mt-6">
             <label className="block text-sm font-medium text-slate-700">
               Network
@@ -102,20 +99,19 @@ export default function DepositForm() {
               <p className="mt-1 text-xs text-slate-500">TRON Network</p>
             </div>
           </div>
-
           <div className="mt-6">
             <button
               onClick={handleGenerate}
-              disabled={loading || !amount || Number(amount) <= 0}
+              disabled={isGenerating || !amount || Number(amount) <= 0}
               className="w-full rounded-xl bg-blue-600 py-3.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-200 disabled:opacity-80 flex items-center justify-center gap-2"
             >
-              {loading ? <FiLoader className="animate-spin" size={16} /> : null}
-              <span>{loading ? "Generating Securing Ticket..." : "Generate Payment"}</span>
+              {isGenerating ? <FiLoader className="animate-spin" size={16} /> : null}
+              <span>{isGenerating ? "Generating Secure Ticket..." : "Generate Payment"}</span>
             </button>
           </div>
         </div>
 
-        {/* 🟥 بخش فاکتور و آدرس ولت (Payment Details) - حفظ کامل منطق شرطی تصویر دوم */}
+        {/* 🟥 بخش فاکتور و آدرس ولت (Payment Details) */}
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
@@ -126,10 +122,8 @@ export default function DepositForm() {
               <p className="text-xs text-slate-500">Secure cryptocurrency payment.</p>
             </div>
           </div>
-
           <div className="mt-6">
             {!generated ? (
-              // باکس حالت انتظار قبل از کلیک (مشابه خط ۸۸ تصویر دوم شما)
               <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center">
                 <FiClipboard className="mx-auto mb-3 text-slate-400" size={24} />
                 <p className="text-sm font-medium text-slate-700">No Active Invoice</p>
@@ -138,14 +132,13 @@ export default function DepositForm() {
                 </p>
               </div>
             ) : (
-              // لایوت رندر فاکتور کاملاً داینامیک شده به محض پاسخ موفق سرور (خط ۹۵ تصویر دوم شما)
               <div className="space-y-5">
                 <div>
                   <p className="mb-2 text-xs uppercase tracking-wider text-slate-500 font-semibold">
                     Wallet Address
                   </p>
                   <div className="rounded-xl border border-slate-200 bg-slate-100 p-4">
-                    <p className="break-all text-xs font-mono leading-5 text-slate-700">
+                    <p className="break-all text-xs font-mono leading-5 text-slate-700 select-all">
                       {walletAddress}
                     </p>
                     <button
@@ -158,7 +151,6 @@ export default function DepositForm() {
                     </button>
                   </div>
                 </div>
-
                 <div className="grid grid-cols-2 gap-3">
                   <div className="rounded-xl bg-slate-50 p-4">
                     <p className="text-xs text-slate-500 font-medium">Amount</p>
@@ -166,7 +158,6 @@ export default function DepositForm() {
                       {displayAmount}
                     </p>
                   </div>
-
                   <div className="rounded-xl bg-slate-50 p-4">
                     <p className="text-xs text-slate-500 font-medium">Invoice ID</p>
                     <p className="mt-1 truncate text-xs font-mono font-bold text-slate-900">
@@ -174,16 +165,15 @@ export default function DepositForm() {
                     </p>
                   </div>
                 </div>
-
                 <div className="rounded-xl border border-orange-200 bg-orange-50/50 p-4 text-xs font-medium text-orange-700 leading-normal">
-                  Send only USDT using the TRCO20 network. Sending funds through another network may result in loss of funds.
+                  Send only USDT using the TRC20 network. Sending funds through another network may result in loss of funds.
                 </div>
               </div>
             )}
           </div>
         </div>
-
       </div>
+      
     </motion.div>
   );
 }

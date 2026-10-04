@@ -19,7 +19,8 @@ export default function DiscountPremiumLayout({
 
   useEffect(() => {
     const checkAuth = () => {
-      const token = localStorage.getItem("auth-token");
+    const token = localStorage.getItem("access_token");
+     
 
       if (!token) {
         router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);

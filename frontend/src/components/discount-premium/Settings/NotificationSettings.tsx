@@ -1,7 +1,6 @@
 "use client";
 
 import {useState} from "react";
-
 const notifications = [
   {
     id: "newSetup",
@@ -24,7 +23,6 @@ const notifications = [
     description: "Notify when the stop loss level is reached.",
   },
 ];
-
 export default function NotificationSettings() {
   const [enabled, setEnabled] = useState<Record<string, boolean>>({
     newSetup: true,
@@ -32,24 +30,20 @@ export default function NotificationSettings() {
     tp: true,
     sl: true,
   });
-
   const toggle = (id: string) => {
     setEnabled((current) => ({
       ...current,
       [id]: !current[id],
     }));
   };
-
   return (
     <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
       <div className="border-b border-gray-100 pb-4">
         <h2 className="text-lg font-semibold text-gray-900">Notifications</h2>
-
         <p className="mt-1 text-sm text-gray-500">
           Choose which trading events should trigger notifications.
         </p>
       </div>
-
       <div className="mt-2 divide-y divide-gray-100">
         {notifications.map((notification) => (
           <div
@@ -60,7 +54,6 @@ export default function NotificationSettings() {
               <h3 className="text-sm font-semibold text-gray-900">
                 {notification.title}
               </h3>
-
               <p className="mt-1 text-sm text-gray-500">
                 {notification.description}
               </p>
