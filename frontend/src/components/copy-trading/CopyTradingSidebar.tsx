@@ -116,11 +116,7 @@ export default function CopyTradingSidebar({
       href: "/copy-trading/copy-settings",
       icon: FiSettings,
     },
-    {
-      name: "Billing",
-      href: "/copy-trading/billing",
-      icon: FiCreditCard,
-    },
+
     {
       name: "History",
       href: "/copy-trading/history",
@@ -179,7 +175,7 @@ export default function CopyTradingSidebar({
         </div>
 
         {/* Main Menu */}
-        <div className="flex-1 overflow-y-auto px-4 pt-5">
+        <div className="flex-1 overflow-y-auto px-4 pt-6">
           <Link
             href="/"
             onClick={onClose}

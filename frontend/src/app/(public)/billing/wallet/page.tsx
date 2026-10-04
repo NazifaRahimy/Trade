@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {FiArrowLeft} from "react-icons/fi";
-import DepositForm from "@/src/components/copy-trading/billing/DepositForm";
+import DepositForm from "@/src/components/billing/DepositForm";
 
 export default function WalletPage() {
   return (

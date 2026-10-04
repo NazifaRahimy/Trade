@@ -34,6 +34,10 @@ const navItems = [
     name: "Subscription",
     href: "/subscription",
   },
+  {
+    name: "Billing",
+    href: "/billing",
+  },
 ];
 
 export default function Header() {

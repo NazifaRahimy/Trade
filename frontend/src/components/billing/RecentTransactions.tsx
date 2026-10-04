@@ -40,7 +40,7 @@ export default function RecentTransactions({
 
         {/* لینک به صفحه آرشیو کامل تراکنش‌ها */}
         <Link
-          href="/copy-trading/billing/transactions"
+          href="/billing/transactions"
           className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 transition hover:text-blue-700"
         >
           View all transactions
