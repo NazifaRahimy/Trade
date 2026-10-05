@@ -1,8 +1,8 @@
 "use client";
-
-import { useEffect, useState, FormEvent } from "react";
-import { motion } from "framer-motion";
-import { FiSave, FiLoader, FiCheckCircle } from "react-icons/fi";
+import {useTranslation} from "react-i18next";
+import {useEffect, useState, FormEvent} from "react";
+import {motion} from "framer-motion";
+import {FiSave, FiLoader, FiCheckCircle} from "react-icons/fi";
 // 🚀 اتصال به کلاینت متمرکز شبکه پلتفرم شما
 import api from "@/src/lib/axios";
 
@@ -30,7 +30,9 @@ function ToggleRow({
         onClick={onChange}
         className={[
           "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:ring-offset-2",
-          enabled ? "border-blue-500 bg-blue-500" : "border-slate-300 bg-slate-200",
+          enabled
+            ? "border-blue-500 bg-blue-500"
+            : "border-slate-300 bg-slate-200",
         ].join(" ")}
       >
         <span
@@ -41,8 +43,10 @@ function ToggleRow({
         />
       </button>
     </div>
-  );}
+  );
+}
 export default function CopySettingsPanel() {
+  const {t} = useTranslation();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -75,7 +79,8 @@ export default function CopySettingsPanel() {
       console.error("Failed to fetch cloud copy configuration:", error);
     } finally {
       setLoading(false);
-    }};
+    }
+  };
   useEffect(() => {
     loadCloudSettings();
   }, []);
@@ -94,16 +99,19 @@ export default function CopySettingsPanel() {
         copy_tp: copyTakeProfit,
         is_paused: pauseCopying,
       };
-      const response = await api.post("/api/copy-trading/copy-settings/", payload);
+      const response = await api.post(
+        "/api/copy-trading/copy-settings/",
+        payload,
+      );
       if (response.data && response.data.status === "success") {
-        setSuccessMsg("Strategy parameters successfully deployed to cloud network.");
+        setSuccessMsg(t("copyTradingCopySettings.strategyParametersDeployed"));
         setTimeout(() => setSuccessMsg(""), 4000);
         // ری‌لود کردن اطلاعات جهت آپدیت شدن استیت‌ها
         if (typeof loadCloudSettings === "function") loadCloudSettings();
       }
     } catch (error) {
       console.error("Cloud Sync Error:", error);
-      alert("❌ Cloud Sync Error: Failed to commit modifications.");
+      alert(t("copyTradingCopySettings.cloudSyncError"));
     } finally {
       setSaving(false);
     }
@@ -114,57 +122,78 @@ export default function CopySettingsPanel() {
       setSuccessMsg("");
       const targetState = !pauseCopying;
       await api.post("/api/copy-trading/copy-settings/", {
-        is_paused: targetState
+        is_paused: targetState,
       });
       setPauseCopying(targetState);
-      setSuccessMsg(targetState ? "Copy trading paused successfully." : "Copy trading successfully resumed.");
+      setSuccessMsg(
+        targetState
+          ? "Copy trading paused successfully."
+          : "Copy trading successfully resumed.",
+      );
       setTimeout(() => setSuccessMsg(""), 4000);
     } catch (error: any) {
       if (error.response?.status === 400) {
-        alert("❌ شما هنوز هیچ مستر تریدری را کپی نکرده‌اید! ابتدا یک تریدر را فعال کنید.");
+        alert(
+          "❌ شما هنوز هیچ مستر تریدری را کپی نکرده‌اید! ابتدا یک تریدر را فعال کنید.",
+        );
       } else {
         alert("❌ Failed to change copy trading lifecycle state.");
       }
     } finally {
       setPausing(false);
-    }};
+    }
+  };
   if (loading) {
     return (
       <div className="flex h-96 items-center justify-center gap-2 text-sm text-slate-400 italic bg-white rounded-2xl border border-slate-100">
         <FiLoader className="animate-spin text-blue-600" size={22} />
-        <span>Synchronizing allocation protocols...</span>
+        <span>
+          {t("copyTradingCopySettings.synchronizingAllocationProtocols")}
+        </span>
       </div>
-    );}
+    );
+  }
   return (
     <motion.div
       initial={{opacity: 0, y: 15}}
       animate={{opacity: 1, y: 0}}
       transition={{duration: 0.4}}
-      className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+    >
       <div>
-        <h2 className="text-lg font-bold text-slate-900">Copy Settings</h2>
+        <h2 className="text-lg font-bold text-slate-900">
+          {" "}
+          {t("copyTradingCopySettings.configureCopySettingsTitle")}
+        </h2>
         <p className="mt-1 text-sm text-slate-500">
-          Configure how trades from Amiri Pro Trader are copied to your account.
+          {t("copyTradingCopySettings.configureCopySettingsDescription")}
         </p>
       </div>
       <div className="mt-6 grid gap-5 md:grid-cols-2">
         {/* Copy Mode */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">
-            Copy Mode
+            {t("copyTradingCopySettings.copyMode")}
           </label>
           <select
             value={copyMode}
             onChange={(e) => setCopyMode(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
-            <option value="Percentage">Percentage</option>
-            <option value="Fixed Lot">Fixed Lot</option>
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          >
+            <option value="Percentage">
+              {" "}
+              {t("copyTradingCopySettings.percentage")}
+            </option>
+            <option value="Fixed Lot">
+              {" "}
+              {t("copyTradingCopySettings.fixedLot")}
+            </option>
           </select>
         </div>
         {/* Copy Ratio */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">
-            Copy Ratio / Multiplier
+            {t("copyTradingCopySettings.copyRatioMultiplier")}
           </label>
           <div className="relative">
             <input
@@ -183,7 +212,7 @@ export default function CopySettingsPanel() {
         {/* Maximum Drawdown */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">
-            Maximum Drawdown
+            {t("copyTradingCopySettings.maximumDrawdown")}
           </label>
           <div className="relative">
             <input
@@ -192,7 +221,8 @@ export default function CopySettingsPanel() {
               max="100"
               value={maxDrawdown}
               onChange={(e) => setMaxDrawdown(Number(e.target.value))}
-              className="w-full rounded-xl border border-slate-200 px-4 py-3 pr-12 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"/>
+              className="w-full rounded-xl border border-slate-200 px-4 py-3 pr-12 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-slate-400">
               %
             </span>
@@ -201,7 +231,7 @@ export default function CopySettingsPanel() {
         {/* Maximum Daily Loss */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">
-            Maximum Daily Loss
+            {t("copyTradingCopySettings.maximumDailyLoss")}
           </label>
           <div className="relative">
             <input
@@ -210,7 +240,8 @@ export default function CopySettingsPanel() {
               max="100"
               value={maxDailyLoss}
               onChange={(e) => setMaxDailyLoss(Number(e.target.value))}
-              className="w-full rounded-xl border border-slate-200 px-4 py-3 pr-12 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"/>
+              className="w-full rounded-xl border border-slate-200 px-4 py-3 pr-12 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-slate-400">
               %
             </span>
@@ -219,7 +250,7 @@ export default function CopySettingsPanel() {
         {/* Maximum Lot Size */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">
-            Maximum Lot Size
+            {t("copyTradingCopySettings.maximumLotSize")}
           </label>
           <input
             type="number"
@@ -233,7 +264,7 @@ export default function CopySettingsPanel() {
         {/* Maximum Open Positions */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">
-            Maximum Open Positions
+            {t("copyTradingCopySettings.maximumOpenPositions")}
           </label>
           <input
             type="number"
@@ -241,58 +272,81 @@ export default function CopySettingsPanel() {
             max="50"
             value={maxOpenPositions}
             onChange={(e) => setMaxOpenPositions(Number(e.target.value))}
-            className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"/>
+            className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          />
         </div>
       </div>
       {/* Trade Controls */}
       <div className="mt-8 border-t border-slate-100 pt-6">
-        <h3 className="text-base font-bold text-slate-900">Trade Controls</h3>
+        <h3 className="text-base font-bold text-slate-900">
+          {" "}
+          {t("copyTradingCopySettings.tradeControls")}
+        </h3>
         <p className="mt-1 text-sm text-slate-500">
-          Choose which parts of the professional trader's trades should be
-          copied.
+          {t("copyTradingCopySettings.tradeControlsDescription")}
         </p>
         <div className="mt-5 space-y-4">
           <ToggleRow
-            label="Copy New Trades"
-            description="Automatically copy new trades opened by the trader."
+            label={t("copyTradingCopySettings.copyNewTrades")}
+            description={t("copyTradingCopySettings.copyNewTradesDescription")}
             enabled={copyNewTrades}
-            onChange={() => setCopyNewTrades(!copyNewTrades)} />
+            onChange={() => setCopyNewTrades(!copyNewTrades)}
+          />
           <ToggleRow
-            label="Copy Stop Loss"
-            description="Apply the trader's stop loss to copied trades."
+            label={t("copyTradingCopySettings.copyStopLoss")}
+            description={t("copyTradingCopySettings.copyStopLossDescription")}
             enabled={copyStopLoss}
-            onChange={() => setCopyStopLoss(!copyStopLoss)} />
+            onChange={() => setCopyStopLoss(!copyStopLoss)}
+          />
           <ToggleRow
-            label="Copy Take Profit"
-            description="Apply the trader's take profit to copied trades."
+            label={t("copyTradingCopySettings.copyTakeProfit")}
+            description={t("copyTradingCopySettings.copyTakeProfitDescription")}
             enabled={copyTakeProfit}
-            onChange={() => setCopyTakeProfit(!copyTakeProfit)} />
+            onChange={() => setCopyTakeProfit(!copyTakeProfit)}
+          />
           <ToggleRow
-            label="Pause Copying"
-            description="Temporarily stop copying new trades without disconnecting the account."
+            label={t("copyTradingCopySettings.pauseCopying")}
+            description={t("copyTradingCopySettings.pauseCopyingDescription")}
             enabled={pauseCopying}
-            onChange={() => setPauseCopying(!pauseCopying)} />
+            onChange={() => setPauseCopying(!pauseCopying)}
+          />
         </div>
       </div>
       {/* Action Buttons */}
-              <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:justify-between sm:items-center">
-          <button
-            type="button"
-            onClick={handleTogglePause}
-            disabled={saving || pausing}
-            className="w-full flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto">
-            {pausing ? <FiLoader className="animate-spin" size={16} /> : null}
-            <span>{pausing ? "Pausing..." : pauseCopying ? "Resume Copying" : "Stop Copying"}</span>
-          </button>
+      <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:justify-between sm:items-center">
         <button
-          type="button" 
-          onClick={(e) => handleSubmit(e)}  // 👈 شلیک مستقیم تابع با کلیک
+          type="button"
+          onClick={handleTogglePause}
           disabled={saving || pausing}
-
-          className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto">
-          {saving ? <FiLoader className="animate-spin" size={16} /> : <FiSave size={16} />}
-          <span>{saving ? "Deploying..." : "Save Settings"}</span>
+          className="w-full flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+        >
+          {pausing ? <FiLoader className="animate-spin" size={16} /> : null}
+          <span>
+            {pausing
+              ? t("copyTradingCopySettings.pausing")
+              : pauseCopying
+                ? t("copyTradingCopySettings.resumeCopying")
+                : t("copyTradingCopySettings.stopCopying")}
+          </span>
         </button>
-        </div>
+        <button
+          type="button"
+          onClick={(e) => handleSubmit(e)} // 👈 شلیک مستقیم تابع با کلیک
+          disabled={saving || pausing}
+          className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+        >
+          {saving ? (
+            <FiLoader className="animate-spin" size={16} />
+          ) : (
+            <FiSave size={16} />
+          )}
+          <span>
+            {saving
+              ? t("copyTradingCopySettings.deploying")
+              : t("copyTradingCopySettings.saveSettings")}
+          </span>
+        </button>
+      </div>
     </motion.div>
-  );}
+  );
+}

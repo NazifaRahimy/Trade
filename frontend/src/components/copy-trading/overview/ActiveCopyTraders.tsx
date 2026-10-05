@@ -1,7 +1,12 @@
 "use client";
-
-import { motion } from "framer-motion";
-import { FiActivity, FiArrowUpRight, FiTrendingUp } from "react-icons/fi";
+import {useTranslation} from "react-i18next";
+import {motion} from "framer-motion";
+import {
+  FiActivity,
+  FiArrowDownLeft,
+  FiArrowUpRight,
+  FiTrendingUp,
+} from "react-icons/fi";
 import Link from "next/link";
 
 type TraderItem = {
@@ -21,17 +26,24 @@ type ActiveCopyTradersProps = {
   tradersList: TraderItem[] | null;
 };
 
-export default function ActiveCopyTraders({ tradersList }: ActiveCopyTradersProps) {
+export default function ActiveCopyTraders({
+  tradersList,
+}: ActiveCopyTradersProps) {
+  const {t} = useTranslation();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{opacity: 0, y: 15}}
+      animate={{opacity: 1, y: 0}}
       className="w-full overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"
     >
-      <h2 className="text-sm font-text text-slate-500 mb-4">Active Copy Traders</h2>
+      <h2 className="mb-4 text-sm font-text text-slate-500">
+        {t("copyTrading.activeCopyTraders")}
+      </h2>
 
       {!tradersList || tradersList.length === 0 ? (
-        <div className="p-6 text-center text-slate-400 italic">No active master traders are being copied yet.</div>
+        <div className="p-6 text-center text-slate-400 italic">
+          {t("copyTrading.noActiveCopyTraders")}
+        </div>
       ) : (
         tradersList.map((trader) => (
           <div key={trader.id} className="space-y-4">
@@ -42,22 +54,32 @@ export default function ActiveCopyTraders({ tradersList }: ActiveCopyTradersProp
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-lg font-bold text-slate-900">{trader.name}</span>
+                    <span className="text-lg font-bold text-slate-900">
+                      {trader.name}
+                    </span>
                     <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 capitalize">
                       {trader.status}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm text-slate-500 font-medium">{trader.pair}</p>
+                  <p className="mt-1 text-sm text-slate-500 font-medium">
+                    {trader.pair}
+                  </p>
                 </div>
               </div>
 
               {/* دکمه‌های کنترل لایو شما در تصویر */}
               <div className="flex items-center gap-3">
-                <Link href="/copy-trading/performance" className="flex items-center justify-center gap-2 rounded-xl bg-slate-100 px-4 py-2.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-200">
-                  View Performance
+                <Link
+                  href="/copy-trading/performance"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-slate-100 px-4 py-2.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-200"
+                >
+                  {t("copyTrading.viewPerformance")}
                 </Link>
-                <Link href="/copy-trading/copy-settings" className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-blue-700">
-                  Copy Settings
+                <Link
+                  href="/copy-trading/copy-settings"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-blue-700"
+                >
+                  {t("copyTrading.copySettings")}
                 </Link>
               </div>
             </div>
@@ -65,20 +87,38 @@ export default function ActiveCopyTraders({ tradersList }: ActiveCopyTradersProp
             {/* گرید آماری تریدر (حفظ کاملا کلاس‌های تصویر شما) */}
             <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 mt-4">
               <div>
-                <span className="text-sm text-slate-400">Investment</span>
-                <p className="text-base font-semibold text-slate-900 mt-1">{trader.investment}</p>
+                <span className="text-sm text-slate-400">
+                  {" "}
+                  {t("copyTrading.investment")}
+                </span>
+                <p className="text-base font-semibold text-slate-900 mt-1">
+                  {trader.investment}
+                </p>
               </div>
               <div>
-                <span className="text-sm text-slate-400">Profit</span>
-                <p className="text-base font-semibold text-emerald-600 mt-1">{trader.profit}</p>
+                <span className="text-sm text-slate-400">
+                  {t("copyTrading.profit")}
+                </span>
+                <p className="text-base font-semibold text-emerald-600 mt-1">
+                  {trader.profit}
+                </p>
               </div>
               <div>
-                <span className="text-sm text-slate-400">Return</span>
-                <p className="text-base font-semibold text-emerald-600 mt-1">{trader.return_pct}</p>
+                <span className="text-sm text-slate-400">
+                  {" "}
+                  {t("copyTrading.return")}
+                </span>
+                <p className="text-base font-semibold text-emerald-600 mt-1">
+                  {trader.return_pct}
+                </p>
               </div>
               <div>
-                <span className="text-sm text-slate-400">Win Rate</span>
-                <p className="text-base font-semibold text-slate-900 mt-1">{trader.win_rate}</p>
+                <span className="text-sm text-slate-400">
+                  {t("copyTrading.winRate")}
+                </span>
+                <p className="text-base font-semibold text-slate-900 mt-1">
+                  {trader.win_rate}
+                </p>
               </div>
             </div>
 
@@ -89,8 +129,12 @@ export default function ActiveCopyTraders({ tradersList }: ActiveCopyTradersProp
                   <FiTrendingUp size={18} />
                 </div>
                 <div>
-                  <span className="text-xs text-slate-400 block">Copy Status</span>
-                  <span className="text-sm font-semibold text-slate-900">Copying Active</span>
+                  <span className="text-xs text-slate-400 block">
+                    {t("copyTrading.copyStatus")}
+                  </span>
+                  <span className="text-sm font-semibold text-slate-900">
+                    {t("copyTrading.copyingActive")}
+                  </span>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -98,8 +142,12 @@ export default function ActiveCopyTraders({ tradersList }: ActiveCopyTradersProp
                   <FiActivity size={18} />
                 </div>
                 <div>
-                  <span className="text-xs text-slate-400 block">Active Positions</span>
-                  <span className="text-sm font-semibold text-slate-900">{trader.active_positions} Positions</span>
+                  <span className="text-xs text-slate-400 block">
+                    {t("copyTrading.activePositions")}
+                  </span>
+                  <span className="text-sm font-semibold text-slate-900">
+                    {trader.active_positions} {t("copyTrading.positions")}
+                  </span>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -107,8 +155,12 @@ export default function ActiveCopyTraders({ tradersList }: ActiveCopyTradersProp
                   <FiArrowUpRight size={18} />
                 </div>
                 <div>
-                  <span className="text-xs text-slate-400 block">Copy Ratio</span>
-                  <span className="text-sm font-semibold text-slate-900">{trader.copy_ratio}</span>
+                  <span className="text-xs text-slate-400 block">
+                    {t("copyTrading.copyRatio")}
+                  </span>
+                  <span className="text-sm font-semibold text-slate-900">
+                    {trader.copy_ratio}
+                  </span>
                 </div>
               </div>
             </div>

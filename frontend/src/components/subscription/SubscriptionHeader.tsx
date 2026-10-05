@@ -1,9 +1,10 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {FiCreditCard} from "react-icons/fi";
 
 export default function SubscriptionHeader() {
+  const {t} = useTranslation();
   return (
     <motion.div
       initial={{opacity: 0, y: -15}}
@@ -16,15 +17,18 @@ export default function SubscriptionHeader() {
           <FiCreditCard size={19} />
         </div>
 
-        <span className="text-sm font-medium text-blue-600">Subscription</span>
+        <span className="text-sm font-medium text-blue-600">
+          {" "}
+          {t("subscription.subscription")}
+        </span>
       </div>
 
       <h1 className="text-2xl font-semibold text-slate-900 md:text-3xl">
-        Subscription
+        {t("subscription.subscription")}
       </h1>
 
       <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-        Manage your subscription and keep your trading account active.
+        {t("subscription.manageSubscription")}
       </p>
     </motion.div>
   );

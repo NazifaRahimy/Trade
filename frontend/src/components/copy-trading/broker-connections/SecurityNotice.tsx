@@ -1,9 +1,11 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {FiLock, FiShield} from "react-icons/fi";
 
 export default function SecurityNotice() {
+  const {t} = useTranslation();
+
   return (
     <motion.div
       initial={{opacity: 0, y: 15}}
@@ -19,12 +21,11 @@ export default function SecurityNotice() {
         <div>
           <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
             <FiLock className="text-blue-600" size={14} />
-            Your credentials are secure
+            {t("copyTradingBrokerConnections.credentialsSecure")}
           </h3>
 
           <p className="mt-2 text-xs leading-5 text-slate-600">
-            Your broker credentials are protected and used only for establishing
-            a connection with your trading account.
+            {t("copyTradingBrokerConnections.securityDescription")}
           </p>
         </div>
       </div>

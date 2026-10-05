@@ -1,9 +1,11 @@
 "use client";
+import {useTranslation} from "react-i18next";
 
 import {motion} from "framer-motion";
 import {FiTrendingUp} from "react-icons/fi";
 
 export default function PerformanceHeader() {
+  const {t} = useTranslation();
   return (
     <motion.div
       initial={{opacity: 0, y: 15}}
@@ -18,25 +20,35 @@ export default function PerformanceHeader() {
           </div>
 
           <span className="text-sm font-medium text-blue-600">
-            Copy Trading
+            {t("copyTradingPerformance.performance")}
           </span>
         </div>
 
         <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">
-          Performance
+          {t("copyTradingPerformance.copyTradingPerformanceTitle")}
         </h1>
 
         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-          Track the performance and profitability of your copied trades over
-          time.
+          {t("copyTradingPerformance.copyTradingPerformanceDescription")}
         </p>
       </div>
 
       <select className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 outline-none transition focus:border-blue-500">
-        <option>Last 30 Days</option>
-        <option>Last 3 Months</option>
-        <option>Last 6 Months</option>
-        <option>All Time</option>
+        <option>
+          {t("copyTradingPerformance.copyTradingPerformanceLast30Days")}
+        </option>
+
+        <option>
+          {t("copyTradingPerformance.copyTradingPerformanceLast3Months")}
+        </option>
+
+        <option>
+          {t("copyTradingPerformance.copyTradingPerformanceLast6Months")}
+        </option>
+
+        <option>
+          {t("copyTradingPerformance.copyTradingPerformanceAllTime")}
+        </option>
       </select>
     </motion.div>
   );

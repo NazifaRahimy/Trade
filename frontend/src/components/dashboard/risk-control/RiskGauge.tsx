@@ -1,44 +1,45 @@
 "use client";
-
-import { motion } from "framer-motion";
+import {useTranslation} from "react-i18next";
+import {motion} from "framer-motion";
 
 type RiskGaugeProps = {
   currentRisk: number;
 };
 
-export default function RiskGauge({ currentRisk }: RiskGaugeProps) {
+export default function RiskGauge({currentRisk}: RiskGaugeProps) {
   // فرمول محاسبه عقربه داینامیک دایره‌ای با SVG
   const radius = 70;
   const circumference = 2 * Math.PI * radius;
   const safeRisk = Math.min(Math.max(currentRisk, 0), 100);
   const strokeDashoffset = circumference - (safeRisk / 100) * circumference;
+  const {t} = useTranslation();
 
-  let riskStatus = "Low Risk";
+  let riskStatus = t("telegramBotDashboard.lowRisk");
   let statusColor = "text-emerald-500";
-  let gaugeColor = "#10b981"; 
-  let bgCircleColor = "#ecfdf5"; 
+  let gaugeColor = "#10b981";
+  let bgCircleColor = "#ecfdf5";
 
   if (safeRisk > 5) {
-    riskStatus = "High Risk 🔥";
+    riskStatus = t("telegramBotDashboard.highRisk");
     statusColor = "text-rose-600";
-    gaugeColor = "#e11d48"; 
-    bgCircleColor = "#fff1f2"; 
+    gaugeColor = "#e11d48";
+    bgCircleColor = "#fff1f2";
   } else if (safeRisk > 2.5) {
-    riskStatus = "Moderate Risk 📊";
+    riskStatus = t("telegramBotDashboard.highRisk");
     statusColor = "text-amber-500";
-    gaugeColor = "#f59e0b"; 
-    bgCircleColor = "#fffbeb"; 
+    gaugeColor = "#f59e0b";
+    bgCircleColor = "#fffbeb";
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
+      initial={{opacity: 0, y: 30}}
+      animate={{opacity: 1, y: 0}}
+      transition={{duration: 0.4}}
       className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm w-full"
     >
       <h3 className="mb-6 text-xl font-semibold text-slate-900">
-        Current Risk Level
+        {t("telegramBotDashboard.currentRiskLevel")}
       </h3>
 
       <div className="flex justify-center">
@@ -61,9 +62,9 @@ export default function RiskGauge({ currentRisk }: RiskGaugeProps) {
               strokeWidth="12"
               fill="transparent"
               strokeDasharray={circumference}
-              initial={{ strokeDashoffset: circumference }}
-              animate={{ strokeDashoffset: strokeDashoffset }}
-              transition={{ duration: 0.8, ease: "easeInOut" }}
+              initial={{strokeDashoffset: circumference}}
+              animate={{strokeDashoffset: strokeDashoffset}}
+              transition={{duration: 0.8, ease: "easeInOut"}}
               strokeLinecap="round"
             />
           </svg>

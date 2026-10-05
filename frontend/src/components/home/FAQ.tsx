@@ -1,43 +1,38 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {useState} from "react";
 import {FiChevronDown} from "react-icons/fi";
 import {motion, AnimatePresence} from "framer-motion";
 
 const faqs = [
   {
-    question: "What is Copy Trading?",
-    answer:
-      "Copy trading is a system that can allow a user's trading account to automatically follow selected trading activity, depending on the platform and service configuration.",
+    question: "home.whatIsCopyTrading",
+    answer: "home.whatIsCopyTradingAnswer",
   },
   {
-    question: "Is my money transferred to Amiri?",
-    answer:
-      "No. Your funds should remain in your own broker or exchange account. Always review the permissions, security model and terms of the platform before connecting an account.",
+    question: "home.isMyMoneyTransferred",
+    answer: "home.isMyMoneyTransferredAnswer",
   },
   {
-    question: "How much capital do I need?",
-    answer:
-      "The required amount depends on the broker, exchange and selected service. There is no guaranteed profit in financial markets, and users should only consider risks they understand.",
+    question: "home.howMuchCapital",
+    answer: "home.howMuchCapitalAnswer",
   },
   {
-    question: "Which markets are supported?",
-    answer:
-      "The platform is designed around educational content and services related to Forex and Cryptocurrency markets.",
+    question: "home.whichMarketsSupported",
+    answer: "home.whichMarketsSupportedAnswer",
   },
   {
-    question: "Do I need technical knowledge?",
-    answer:
-      "The connection process is designed to be straightforward, and support can guide users through the available setup process.",
+    question: "home.doINeedTechnicalKnowledge",
+    answer: "home.doINeedTechnicalKnowledgeAnswer",
   },
   {
-    question: "Is profit guaranteed?",
-    answer:
-      "No. Financial markets involve risk and no trading strategy can guarantee a fixed profit.",
+    question: "home.isProfitGuaranteed",
+    answer: "home.isProfitGuaranteedAnswer",
   },
 ];
 
 export default function FAQ() {
+  const {t} = useTranslation();
   const [active, setActive] = useState<number | null>(0);
 
   return (
@@ -46,16 +41,16 @@ export default function FAQ() {
         {/* FAQ Header */}
         <div className="text-center">
           <p className="text-xs font-bold uppercase tracking-wider text-blue-600">
-            FAQ
+            {t("home.faq")}
           </p>
 
           <h2 className="mt- text-xl lg:text-3xl font-black text-slate-900">
-            Frequently Asked <span className="text-blue-600">Questions</span>
+            {t("home.frequentlyAsked")}{" "}
+            <span className="text-blue-600">{t("home.questions")}</span>
           </h2>
 
           <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-slate-500">
-            Find answers to common questions about the academy, trading
-            education and available services.
+            {t("home.faqDescription")}
           </p>
         </div>
 
@@ -75,7 +70,7 @@ export default function FAQ() {
                   className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
                 >
                   <span className="text-sm font-bold text-slate-800">
-                    {faq.question}
+                    {t(faq.question)}
                   </span>
 
                   <FiChevronDown
@@ -93,7 +88,7 @@ export default function FAQ() {
                       exit={{height: 0, opacity: 0}}
                     >
                       <p className="px-5 pb-5 text-sm leading-6 text-slate-500">
-                        {faq.answer}
+                        {t(faq.answer)}
                       </p>
                     </motion.div>
                   )}

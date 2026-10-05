@@ -1,12 +1,13 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { FiLink, FiCheck, FiX, FiLoader } from "react-icons/fi";
-import { useRouter } from "next/navigation"; // 🚀 ابزار ناوبری بومی نکست برای دکمه
-import { getDashboardStats } from "../../lib/api"; // 🚀 ایمپورت تابع تجاری پلتفرم شما
+import {useTranslation} from "react-i18next";
+import {useEffect, useState} from "react";
+import {motion} from "framer-motion";
+import {FiLink, FiCheck, FiX, FiLoader} from "react-icons/fi";
+import {useRouter} from "next/navigation"; // 🚀 ابزار ناوبری بومی نکست برای دکمه
+import {getDashboardStats} from "../../lib/api"; // 🚀 ایمپورت تابع تجاری پلتفرم شما
 
 export default function BrokerConnection() {
+  const {t} = useTranslation();
   const router = useRouter();
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
@@ -25,7 +26,8 @@ export default function BrokerConnection() {
       } catch (error) {
         console.error("Failed to fetch broker connection brief status:", error);
         setIsConnected(false);
-      } {
+      }
+      {
         setLoading(false);
       }
     };
@@ -41,28 +43,38 @@ export default function BrokerConnection() {
     return (
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm h-[210px] flex items-center justify-center gap-2">
         <FiLoader className="animate-spin text-blue-600" size={18} />
-        <span className="text-xs text-slate-400 italic">Checking gateway link...</span>
+        <span className="text-xs text-slate-400 italic">
+          {t("telegramBotDashboard.checking")}
+        </span>
       </div>
     );
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{opacity: 0, y: 20}}
+      animate={{opacity: 1, y: 0}}
       className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
     >
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-slate-500">Broker Connection</p>
-          <h3 className="mt-1 font-bold text-slate-900">Trading Account</h3>
+          <p className="text-sm font-medium text-slate-500">
+            {t("telegramBotDashboard.brokerConnectionTitle")}
+          </p>
+          <h3 className="mt-1 font-bold text-slate-900">
+            {t("telegramBotDashboard.tradingAccount")}
+          </h3>
         </div>
 
         {/* Link Icon */}
-        <div className={`flex h-10 w-10 items-center justify-center rounded-xl transition-colors ${
-          isConnected ? "bg-blue-50 text-blue-600" : "bg-slate-100 text-slate-400"
-        }`}>
+        <div
+          className={`flex h-10 w-10 items-center justify-center rounded-xl transition-colors ${
+            isConnected
+              ? "bg-blue-50 text-blue-600"
+              : "bg-slate-100 text-slate-400"
+          }`}
+        >
           <FiLink />
         </div>
       </div>
@@ -74,8 +86,13 @@ export default function BrokerConnection() {
             <FiCheck className="text-emerald-600" size={18} />
           </div>
           <div>
-            <p className="text-sm font-semibold text-slate-900">Connected</p>
-            <p className="text-xs text-emerald-600 font-medium">Cloud execution is active</p>
+            <p className="text-sm font-semibold text-slate-900">
+              {" "}
+              {t("telegramBotDashboard.connected")}
+            </p>
+            <p className="text-xs text-emerald-600 font-medium">
+              {t("telegramBotDashboard.cloudExecutionActive")}
+            </p>
           </div>
         </div>
       ) : (
@@ -84,8 +101,13 @@ export default function BrokerConnection() {
             <FiX className="text-rose-600" size={18} />
           </div>
           <div>
-            <p className="text-sm font-semibold text-slate-900">Disconnected</p>
-            <p className="text-xs text-rose-500 font-medium">Copy-trade routing is paused</p>
+            <p className="text-sm font-semibold text-slate-900">
+              {" "}
+              {t("telegramBotDashboard.disconnected")}
+            </p>
+            <p className="text-xs text-rose-500 font-medium">
+              {t("telegramBotDashboard.copyTradePaused")}
+            </p>
           </div>
         </div>
       )}
@@ -96,7 +118,7 @@ export default function BrokerConnection() {
         onClick={handleManageRedirect}
         className="mt-4 w-full rounded-xl border border-slate-200 bg-white py-3 text-sm font-semibold text-slate-600 transition hover:border-blue-500 hover:text-blue-600 active:scale-[0.99]"
       >
-        Manage Connection
+        {t("telegramBotDashboard.manageConnection")}
       </button>
     </motion.div>
   );

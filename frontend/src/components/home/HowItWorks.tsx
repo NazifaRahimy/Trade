@@ -1,5 +1,5 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {FiUserPlus, FiLink, FiPieChart, FiTrendingUp} from "react-icons/fi";
 
@@ -7,42 +7,43 @@ const steps = [
   {
     number: "01",
     icon: FiUserPlus,
-    title: "Create an Account",
-    description: "Sign up and create your personal account.",
+    title: "home.createAnAccount",
+    description: "home.createAccountDescription",
   },
   {
     number: "02",
     icon: FiLink,
-    title: "Connect Your Broker",
-    description: "Connect your broker or exchange account securely.",
+    title: "home.connectYourBroker",
+    description: "home.connectBrokerDescription",
   },
   {
     number: "03",
     icon: FiPieChart,
-    title: "Choose a Plan",
-    description: "Select the subscription or service that suits you.",
+    title: "home.chooseAPlan",
+    description: "home.choosePlanDescription",
   },
   {
     number: "04",
     icon: FiTrendingUp,
-    title: "Start Learning",
-    description: "Explore market strategies and follow your selected service.",
+    title: "home.startLearning",
+    description: "home.startLearningDescription",
   },
 ];
 
 export default function HowItWorks() {
+  const {t} = useTranslation();
   return (
     <section className="bg-white py-20">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         {/* Heading */}
         <div className="text-center">
           <p className="text-xs font-bold uppercase tracking-wider text-blue-600">
-            How Copy Trading Works
+            {t("home.howCopyTradingWorks")}
           </p>
 
           <h2 className="mt-3 text-3xl font-black text-slate-900">
-            Simple Steps to Start{" "}
-            <span className="text-blue-600">Learning</span>
+            {t("home.simpleStepsToStart")}{" "}
+            <span className="text-blue-600">{t("home.learning")}</span>
           </h2>
         </div>
         {/* Cards */}
@@ -82,11 +83,11 @@ export default function HowItWorks() {
                   </div>
 
                   <h3 className="mt-5 font-bold text-slate-900">
-                    {step.title}
+                    {t(step.title)}
                   </h3>
 
                   <p className="mt-2 text-xs leading-5 text-slate-500">
-                    {step.description}
+                    {t(step.description)}
                   </p>
                 </div>
                 {index !== steps.length - 1 && (

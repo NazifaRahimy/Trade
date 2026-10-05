@@ -1,17 +1,36 @@
 import type {Metadata} from "next";
+import {cookies} from "next/headers";
+
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import "../../app/globals.css";
-import {html} from "motion/react-m";
-export const metadata: Metadata = {
-  title: {
-    default: "Trade-platform | Home",
-    template: "Trade-platform | %s",
+
+const metadata = {
+  fa: {
+    title: "خانه",
+    description:
+      "Trade-platform، پلتفرمی برای ارائه خدمات معاملاتی و مدیریت معاملات.",
   },
-  description: "Trade-platform",
+
+  en: {
+    title: "Home",
+    description:
+      "Trade-platform, a platform for trading services and trade management.",
+  },
 };
 
-export default function RootLayout({
+export async function generateMetadata(): Promise<Metadata> {
+  const cookieStore = await cookies();
+
+  const language = cookieStore.get("language")?.value === "en" ? "en" : "fa";
+
+  return {
+    title: metadata[language].title,
+    description: metadata[language].description,
+  };
+}
+
+export default function PublicLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

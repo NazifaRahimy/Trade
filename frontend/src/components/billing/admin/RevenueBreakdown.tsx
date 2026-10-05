@@ -1,15 +1,15 @@
 "use client";
-
-import { motion } from "framer-motion";
-import { FiArrowUpRight, FiDollarSign } from "react-icons/fi";
+import {useTranslation} from "react-i18next";
+import {motion} from "framer-motion";
+import {FiArrowUpRight, FiDollarSign} from "react-icons/fi";
 
 // 🚀 ۱. تعریف ساختار دقیق دیتای لایو دریافتی از اندپوینت ادمین بک‌اَند
 type RevenueItem = {
   id: number;
   master_trader: string;
   follower: string;
-  collected_fee: string;    // کل کارمزد ۲۰٪ کسر شده
-  platform_share: string;   // سهم ۵٪ خالص سایت شما
+  collected_fee: string; // کل کارمزد ۲۰٪ کسر شده
+  platform_share: string; // سهم ۵٪ خالص سایت شما
   date: string;
 };
 
@@ -17,12 +17,13 @@ type RevenueBreakdownProps = {
   revenueList: RevenueItem[];
 };
 
-export default function RevenueBreakdown({ revenueList }: RevenueBreakdownProps) {
+export default function RevenueBreakdown({revenueList}: RevenueBreakdownProps) {
+  const {t} = useTranslation();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      initial={{opacity: 0, y: 20}}
+      animate={{opacity: 1, y: 0}}
+      transition={{duration: 0.5}}
       className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
     >
       <div className="border-b border-slate-200 px-6 py-5">
@@ -31,8 +32,13 @@ export default function RevenueBreakdown({ revenueList }: RevenueBreakdownProps)
             <FiDollarSign size={21} />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-slate-900">Revenue Breakdown</h2>
-            <p className="mt-1 text-sm text-slate-500">Platform revenue and master trader payouts.</p>
+            <h2 className="text-lg font-semibold text-slate-900">
+              {t("adminFinance.revenueBreakdown")}
+            </h2>
+
+            <p className="mt-1 text-sm text-slate-500">
+              {t("adminFinance.revenueBreakdownDescription")}
+            </p>
           </div>
         </div>
       </div>
@@ -41,18 +47,27 @@ export default function RevenueBreakdown({ revenueList }: RevenueBreakdownProps)
         <table className="w-full min-w-[700px] text-left">
           <thead>
             <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wider text-slate-500 bg-slate-50">
-              <th className="px-5 py-4 pl-6">Service / Details</th>
-              <th className="px-5 py-4">Gross Revenue (20%)</th>
-              <th className="px-5 py-4">Trader Payout (15%)</th>
-              <th className="px-5 py-4 pr-6">Net Revenue (5%)</th>
+              <th className="px-5 py-4 pl-6">
+                {" "}
+                {t("adminFinance.serviceDetails")}
+              </th>
+              <th className="px-5 py-4"> {t("adminFinance.grossRevenue")}</th>
+              <th className="px-5 py-4"> {t("adminFinance.traderPayout")}</th>
+              <th className="px-5 py-4 pr-6">
+                {" "}
+                {t("adminFinance.netRevenue")}
+              </th>
             </tr>
           </thead>
           <tbody className="text-sm divide-y divide-slate-100">
             {/* 🛡️ گارد امنیتی در صورت خالی بودن دیتابیس درآمدهای ادمین */}
             {!revenueList || revenueList.length === 0 ? (
               <tr>
-                <td colSpan={4} className="p-6 text-center text-slate-400 italic">
-                  No revenue settlement logs recorded in the unified network ledger yet.
+                <td
+                  colSpan={4}
+                  className="p-6 text-center text-slate-400 italic"
+                >
+                  {t("adminFinance.noRevenue")}
                 </td>
               </tr>
             ) : (
@@ -69,10 +84,11 @@ export default function RevenueBreakdown({ revenueList }: RevenueBreakdownProps)
                       </div>
                       <div>
                         <span className="text-sm font-medium text-slate-900 block">
-                          Master: {item.master_trader}
+                          {t("adminFinance.master")}: {item.master_trader}
                         </span>
                         <span className="text-[11px] text-slate-400 block mt-0.5">
-                          Follower: {item.follower} • {item.date}
+                          {t("adminFinance.follower")}: {item.follower} •{" "}
+                          {item.date}
                         </span>
                       </div>
                     </div>
@@ -84,8 +100,9 @@ export default function RevenueBreakdown({ revenueList }: RevenueBreakdownProps)
 
                   <td className="px-5 py-5 text-orange-600 font-medium">
                     {/* محاسبه سهم تریدر مستر (۱۵٪ از کل سود که معادل ۷۵٪ از کل کارمزد کسر شده است) */}
-                    {item.collected_fee && !isNaN(parseFloat(item.collected_fee.replace('\$', '')))
-                      ? `$${(parseFloat(item.collected_fee.replace('$', '')) * 0.75).toFixed(2)}`
+                    {item.collected_fee &&
+                    !isNaN(parseFloat(item.collected_fee.replace("\$", "")))
+                      ? `$${(parseFloat(item.collected_fee.replace("$", "")) * 0.75).toFixed(2)}`
                       : "\$0.00"}
                   </td>
 

@@ -1,6 +1,7 @@
 "use client";
 
 
+
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -10,6 +11,7 @@ import {
   FiArrowUp,
   FiArrowDown,
 } from "react-icons/fi";
+import {useTranslation} from "react-i18next";
 import api from "../../../lib/axios"; // ایمپورت هسته شبکه جهت ارسال فیلترها به آدرس پوشه آمار داشبورد stats
 import TradeFilters from "./TradeFilters";
 import TradeStats from "./TradeStats";
@@ -29,6 +31,7 @@ type Trade = {
 
 
 export default function TradeTable() {
+  const {t} = useTranslation();
   const [trades, setTrades] = useState<any[]>([]);
   const [summary, setSummary] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -94,16 +97,19 @@ return (
         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-base font-semibold text-slate-900">
-              Recent Trades
+              {t("telegramBotTradeHistory.recentTrades")}
             </h2>
 
             <p className="mt-1 text-xs text-slate-500">
-              Showing your latest trading activity
+              {t("telegramBotTradeHistory.latestActivity")}
             </p>
           </div>
 
           <span className="text-xs text-slate-500">
-            {summary?.total_trades ?? 0} trades total
+            {" "}
+            {t("telegramBotTradeHistory.totalTrades", {
+              count: summary?.total_trades ?? trades.length,
+            })}
           </span>
         </div>
       </div>
@@ -114,35 +120,35 @@ return (
           <thead>
             <tr className="border-y border-slate-200 bg-slate-50 text-left">
               <th className="px-5 py-3 text-xs font-medium text-slate-500">
-                Pair
+                {t("telegramBotTradeHistory.pair")}
               </th>
 
               <th className="px-4 py-3 text-xs font-medium text-slate-500">
-                Type
+                {t("telegramBotTradeHistory.type")}
               </th>
 
               <th className="px-4 py-3 text-xs font-medium text-slate-500">
-                Volume
+                {t("telegramBotTradeHistory.volume")}
               </th>
 
               <th className="px-4 py-3 text-xs font-medium text-slate-500">
-                Open Price
+                {t("telegramBotTradeHistory.openPrice")}
               </th>
 
               <th className="px-4 py-3 text-xs font-medium text-slate-500">
-                Close Price
+                {t("telegramBotTradeHistory.closePrice")}
               </th>
 
               <th className="px-4 py-3 text-xs font-medium text-slate-500">
-                Profit / Loss
+                {t("telegramBotTradeHistory.profitLoss")}
               </th>
 
               <th className="px-4 py-3 text-xs font-medium text-slate-500">
-                Status
+                {t("telegramBotTradeHistory.status")}
               </th>
 
               <th className="px-5 py-3 text-right text-xs font-medium text-slate-500">
-                Time
+                {t("telegramBotTradeHistory.time")}
               </th>
             </tr>
           </thead>
@@ -233,9 +239,16 @@ return (
 
       {/* Pagination */}
       <div className="flex flex-col gap-3 border-t border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between">
+<<<<<<< HEAD
       <p className="text-xs text-slate-500">
         Showing 1–{trades.length} of {summary?.total_trades ?? 0} trades
       </p>
+=======
+        <p className="text-xs text-slate-500">
+          {t("telegramBotTradeHistory.showing")}
+        </p>
+
+>>>>>>> feature/add-i18n-support
         <div className="flex items-center gap-2">
           <button
             type="button"

@@ -3,8 +3,8 @@
 import {motion} from "framer-motion";
 import {FiArrowDownLeft, FiArrowUpRight} from "react-icons/fi";
 import Link from "next/link";
+import {useTranslation} from "react-i18next";
 
-// 🚀 ۱. تعریف ساختار پرپس برای دریافت تراکنش‌های زنده از فایل مادر (صفحه بیلیینگ)
 type TransactionItem = {
   id: number;
   type: string;
@@ -21,6 +21,7 @@ type RecentTransactionsProps = {
 export default function RecentTransactions({
   transactions,
 }: RecentTransactionsProps) {
+  const {t} = useTranslation();
   return (
     <motion.div
       initial={{opacity: 0, y: 20}}
@@ -31,19 +32,18 @@ export default function RecentTransactions({
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 p-5 sm:p-6 sm:flex-row flex-col items-start">
         <div>
           <h2 className="text-lg font-bold text-slate-900">
-            Recent Transactions
+            {t("billing.recentTransactions")}
           </h2>
           <p className="mt-1 text-xs text-slate-500">
-            Your latest financial activity.
+            {t("billing.latestFinancialActivity")}
           </p>
         </div>
 
-        {/* لینک به صفحه آرشیو کامل تراکنش‌ها */}
         <Link
           href="/billing/transactions"
           className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 transition hover:text-blue-700"
         >
-          View all transactions
+          {t("billing.viewAllTransactions")}
           <FiArrowUpRight size={16} />
         </Link>
       </div>
@@ -52,27 +52,25 @@ export default function RecentTransactions({
         <table className="w-full min-w-[700px] text-left">
           <thead>
             <tr className="border-b border-slate-100 text-xs font-semibold uppercase tracking-wider text-slate-500">
-              <th className="p-4 pl-6">Transaction</th>
-              <th className="p-4">Service</th>
-              <th className="p-4">Date</th>
-              <th className="p-4">Amount</th>
-              <th className="p-4 pr-6">Status</th>
+              <th className="p-4 pl-6">{t("billing.transaction")}</th>
+              <th className="p-4">{t("billing.service")}</th>
+              <th className="p-4">{t("billing.date")}</th>
+              <th className="p-4">{t("billing.amount")}</th>
+              <th className="p-4 pr-6">{t("billing.status")}</th>
             </tr>
           </thead>
 
           <tbody className="text-xs divide-y divide-slate-50">
-            {/* 🛡️ گارد امنیتی: در صورتی که کاربر هنوز تراکنشی نداشته باشد */}
             {!transactions || transactions.length === 0 ? (
               <tr>
                 <td
                   colSpan={5}
                   className="p-6 text-center text-slate-400 italic"
                 >
-                  No financial activity recorded in your database yet.
+                  {t("billing.noFinancialActivity")}
                 </td>
               </tr>
             ) : (
-              // 🚀 رندر ۱۰۰٪ داینامیک بر اساس آرایه دریافتی از دیتابیس جنگو
               transactions.map((transaction) => {
                 const isDeposit = transaction.type === "deposit";
 
@@ -104,7 +102,7 @@ export default function RecentTransactions({
 
                     <td className="p-4 text-slate-500">
                       ID: #{transaction.id} -{" "}
-                      {transaction.description || "System Ledger"}
+                      {transaction.description || t("billing.systemLedger")}
                     </td>
 
                     <td className="p-4 text-slate-400">{transaction.date}</td>
@@ -127,7 +125,11 @@ export default function RecentTransactions({
                               : "bg-amber-50 text-amber-700"
                         }`}
                       >
-                        {transaction.status}
+                        {transaction.status === "completed"
+                          ? t("billing.completed")
+                          : transaction.status === "failed"
+                            ? t("billing.failed")
+                            : t("billing.pending")}
                       </span>
                     </td>
                   </tr>

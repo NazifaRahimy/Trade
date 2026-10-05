@@ -1,32 +1,33 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {FiAward, FiShield, FiTrendingUp, FiUsers} from "react-icons/fi";
 import logo from "../../assets/images/aboutPhoto.png";
+
 const benefits = [
   {
     icon: FiAward,
-    title: "7+ Years",
-    text: "Trading Experience",
+    title: "home.sevenPlusYears",
+    text: "home.tradingExperience",
   },
   {
     icon: FiTrendingUp,
-    title: "Forex & Crypto",
-    text: "Specialist",
+    title: "home.forexCrypto",
+    text: "home.specialist",
   },
   {
     icon: FiUsers,
-    title: "Trusted Brokers",
-    text: "Partnerships",
+    title: "home.trustedBrokers",
+    text: "home.partnerships",
   },
   {
     icon: FiShield,
-    title: "Risk Management",
-    text: "Focused",
+    title: "home.riskManagement",
+    text: "home.focused",
   },
 ];
-
 export default function AboutAcademy() {
+  const {t} = useTranslation();
   return (
     <section className="bg-white py-20">
       <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 lg:grid-cols-2 lg:px-8">
@@ -37,24 +38,21 @@ export default function AboutAcademy() {
           viewport={{once: true}}
         >
           <p className="text-xs font-bold uppercase tracking-wider text-blue-600">
-            About Amiri Finance Academy
+            {t("home.aboutAmiriFinanceAcademy")}
           </p>
 
           <h2 className="mt-3 text-3xl font-black leading-tight text-slate-900 sm:text-4xl">
-            Turning Market Experience
+            {t("home.turningMarketExperience")}
             <br />
-            <span className="text-blue-600">Into Your Success</span>
+            <span className="text-blue-600">{t("home.intoYourSuccess")}</span>
           </h2>
 
           <p className="mt-6 leading-7 text-slate-600">
-            Amiri Finance Academy is led by Mr. Ebrahim Amiri, a professional
-            trader and market analyst with more than 7 years of hands-on
-            experience in Forex and Cryptocurrency markets.
+            {t("home.aboutDescription")}
           </p>
 
           <p className="mt-4 leading-7 text-slate-600">
-            Our mission is simple: shorten your trading journey by providing
-            proven strategies, advanced tools and structured learning resources.
+            {t("home.aboutMission")}
           </p>
 
           <div className="mt-8 grid gap-5 sm:grid-cols-2">
@@ -68,9 +66,14 @@ export default function AboutAcademy() {
                   </div>
 
                   <div>
-                    <h3 className="font-bold text-slate-900">{item.title}</h3>
+                    <h3 className="font-bold text-slate-900">
+                      {" "}
+                      {t(item.title)}
+                    </h3>
 
-                    <p className="mt-1 text-xs text-slate-500">{item.text}</p>
+                    <p className="mt-1 text-xs text-slate-500">
+                      {t(item.text)}
+                    </p>
                   </div>
                 </div>
               );
@@ -87,7 +90,7 @@ export default function AboutAcademy() {
           <div className="relative h-[400px] overflow-hidden rounded-2xl shadow-2xl">
             <img
               src={logo.src}
-              alt="About Academy"
+              alt={t("home.aboutAcademyImageAlt")}
               className="h-full w-full object-cover"
             />
           </div>
@@ -99,8 +102,11 @@ export default function AboutAcademy() {
               </div>
 
               <div>
-                <p className="font-bold text-slate-900">Years</p>
-                <p className="text-xs text-slate-500">Experience</p>
+                <p className="font-bold text-slate-900"> {t("home.years")}</p>
+                <p className="text-xs text-slate-500">
+                  {" "}
+                  {t("home.experience")}
+                </p>
               </div>
             </div>
           </div>

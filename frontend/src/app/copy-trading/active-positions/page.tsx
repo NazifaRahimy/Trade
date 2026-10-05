@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import api from "@/src/lib/axios";
+import {useTranslation} from "react-i18next";
 
 import PositionsHeader from "@/src/components/copy-trading/active-positions/PositionsHeader";
 import PositionsStats from "@/src/components/copy-trading/active-positions/PositionsStats";
@@ -9,6 +10,7 @@ import ActivePositionsTable from "@/src/components/copy-trading/active-positions
 import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
 
 export default function ActivePositionsPage() {
+  const {t} = useTranslation();
   const [positions, setPositions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,9 +24,7 @@ export default function ActivePositionsPage() {
         return;
       }
 
-      const response = await api.get(
-        "/api/copy-trading/active-positions/"
-      );
+      const response = await api.get("/api/copy-trading/active-positions/");
 
       console.log("Active positions response:", response.data);
 
@@ -36,21 +36,12 @@ export default function ActivePositionsPage() {
         setPositions([]);
       }
     } catch (error: any) {
-      console.error(
-        "Error loading active positions:",
-        error
-      );
+      console.error("Error loading active positions:", error);
 
       if (error?.response) {
-        console.error(
-          "STATUS:",
-          error.response.status
-        );
+        console.error("STATUS:", error.response.status);
 
-        console.error(
-          "DATA:",
-          error.response.data
-        );
+        console.error("DATA:", error.response.data);
       }
 
       setPositions([]);
@@ -70,6 +61,17 @@ export default function ActivePositionsPage() {
       clearInterval(interval);
     };
   }, []);
+  if (loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center gap-2 text-sm text-slate-400 italic bg-white">
+        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600" />
+        <span>
+          {" "}
+          {t("copyTradingActivePositions.copyTradingActivePositionsLoading")}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <ProtectedRoute>
@@ -77,9 +79,7 @@ export default function ActivePositionsPage() {
         <div className="flex h-screen w-full items-center justify-center gap-2 bg-white text-sm italic text-slate-400">
           <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-blue-600" />
 
-          <span>
-            Loading active positions...
-          </span>
+          <span>Loading active positions...</span>
         </div>
       ) : (
         <div className="mx-auto min-h-screen w-full max-w-[1700px] space-y-6 bg-slate-50/50 p-4 lg:p-6">

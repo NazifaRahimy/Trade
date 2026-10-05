@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import api from "@/src/lib/axios";
 import OverviewHeader from "@/src/components/copy-trading/overview/OverviewHeader";
 import OverviewStats from "@/src/components/copy-trading/overview/OverviewStats";
@@ -54,19 +53,19 @@ export default function CopyTradingPage() {
   useEffect(() => {
     const fetchOverview = async () => {
       try {
-    const response = await api.get("/api/copy-trading/overview/");
+        const response = await api.get("/api/copy-trading/overview/");
 
-    const result: CopyTradingData = response.data;
+        const result: CopyTradingData = response.data;
 
-      setData(result);
-            } catch (err) {
-              console.error("Copy Trading Overview Error:", err);
-              setError(true);
-            }
-          };
+        setData(result);
+      } catch (err) {
+        console.error("Copy Trading Overview Error:", err);
+        setError(true);
+      }
+    };
 
-          fetchOverview();
-        }, []);
+    fetchOverview();
+  }, []);
 
   if (error) {
     return (

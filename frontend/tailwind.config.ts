@@ -6,7 +6,12 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        estedad: ["Estedad", "sans-serif"],
+        yekan: ["IranYekan", "sans-serif"],
+      },
+    },
   },
   plugins: [],
 };

@@ -1,9 +1,13 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import Link from "next/link";
 import {FiChevronRight, FiHome} from "react-icons/fi";
 
 export default function LoginBreadcrumb() {
+  const {t, i18n} = useTranslation();
+
+  const isPersian = i18n.language.startsWith("fa");
+
   return (
     <section className="bg-transparent py-8">
       <div className="container mx-auto px-4">
@@ -14,22 +18,26 @@ export default function LoginBreadcrumb() {
             className="flex items-center gap-1.5 text-slate-500 transition-colors hover:text-blue-600"
           >
             <FiHome className="text-sm" />
-            <span>Home</span>
+            <span>{t("navBar.home")}</span>
           </Link>
 
-          <FiChevronRight className="text-slate-400" />
+          <FiChevronRight
+            className={
+              isPersian ? "rotate-180 text-slate-400" : "text-slate-400"
+            }
+          />
 
-          <span className="font-medium text-blue-600">Login</span>
+          <span className="font-medium text-blue-600"> {t("auth.login")}</span>
         </div>
 
         {/* Page Title */}
         <div className="text-center">
           <h1 className="mb-3 text-2xl font-bold text-slate-900 md:text-3xl">
-            Sign in to your account
+            {t("auth.signInToAccount")}
           </h1>
 
           <p className="text-sm text-slate-800 md:text-base">
-            Sign in to access your account.
+            {t("auth.signInToAccess")}
           </p>
         </div>
       </div>

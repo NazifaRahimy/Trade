@@ -2,6 +2,7 @@
 import {useEffect, useState} from "react";
 import {FiLoader} from "react-icons/fi"; // 🟢 اصلاح پکیج آیکون‌های بومی شما
 import api from "@/src/lib/axios"; // 🟢 تراز شدن آدرس اکسوس با بقیه فایل‌ها
+import {useTranslation} from "react-i18next";
 
 // 🚀 حفظ دقیق آدرس‌های ایمپورت بومی شما در تصویر سوم
 import BillingHeader from "@/src/components/billing/BillingHeader";
@@ -9,11 +10,15 @@ import BillingStats from "@/src/components/billing/BillingStats";
 import RecentTransactions from "@/src/components/billing/RecentTransactions";
 import TelegramBotCard from "@/src/components/billing/TelegramBotCard"; // ایمپورت دکمه جدید ربات
 import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
-import PremiumBotCard from "@/src/components/copy-trading/billing/PremiumBotCard";
+// import PremiumBotCard from "@/src/components/copy-trading/billing/PremiumBotCard";
 export default function BillingPage() {
   const [billingData, setBillingData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+
   const [invoiceData, setInvoiceData] = useState<any>(null);
+
+  const {t} = useTranslation();
+
   // 📡 فچ لایو اطلاعات مانده حساب و تراکنش‌ها از اندپوینت دیتابیس جنگو
   const fetchBillingOverview = async () => {
     try {
@@ -30,23 +35,25 @@ export default function BillingPage() {
   useEffect(() => {
     fetchBillingOverview();
   }, []);
-    // 📡 تابع داینامیک شده برای ارسال درخواست به اندپوینت واقعی و لایو پایتون
-    const handleGenerateCryptoInvoice = async (depositAmount: number) => {
-      try {
-        // 🟢 اصلاح باگ خط ۳۵: تراز کردن دقیق آدرس با ساختار فایل urls.py بک‌اَند شما
-        const response = await api.post("/api/billing/payments/create/", {
-          amount: depositAmount,
-        });
-        // 🟢 تراز کردن با متغیر deposit_address که NOWPayments صادر می‌کند
-        if (response.data && response.data.deposit_address) {
-          setInvoiceData(response.data);
-          alert(`✅ فاکتور با موفقیت صادر شد.`);
-        }
-      } catch (error: any) {
-        console.error("Blockchain network link occupied:", error);
-        alert(`❌ Blockchain Gateway Error: Failed to initialize network handshake ticket.`);
+  // 📡 تابع داینامیک شده برای ارسال درخواست به اندپوینت واقعی و لایو پایتون
+  const handleGenerateCryptoInvoice = async (depositAmount: number) => {
+    try {
+      // 🟢 اصلاح باگ خط ۳۵: تراز کردن دقیق آدرس با ساختار فایل urls.py بک‌اَند شما
+      const response = await api.post("/api/billing/payments/create/", {
+        amount: depositAmount,
+      });
+      // 🟢 تراز کردن با متغیر deposit_address که NOWPayments صادر می‌کند
+      if (response.data && response.data.deposit_address) {
+        setInvoiceData(response.data);
+        alert(`✅ فاکتور با موفقیت صادر شد.`);
       }
-    };
+    } catch (error: any) {
+      console.error("Blockchain network link occupied:", error);
+      alert(
+        `❌ Blockchain Gateway Error: Failed to initialize network handshake ticket.`,
+      );
+    }
+  };
   if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center gap-2 text-sm text-slate-400 italic bg-white">
@@ -77,8 +84,10 @@ export default function BillingPage() {
             <RecentTransactions
               transactions={billingData?.transactions || []}
             />
-             <PremiumBotCard wallet={billingData?.wallet} onRefresh={fetchBillingOverview} />
-
+            <PremiumBotCard
+              wallet={billingData?.wallet}
+              onRefresh={fetchBillingOverview}
+            />
           </div>
         </div>
       </main>

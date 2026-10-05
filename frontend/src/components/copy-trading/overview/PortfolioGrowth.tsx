@@ -1,21 +1,24 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 export default function PortfolioGrowth() {
+  const {t} = useTranslation();
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-slate-500">Copy Trading Performance</p>
+          <p className="text-sm text-slate-500">
+            {t("copyTrading.copyTradingPerformance")}
+          </p>
 
           <h2 className="mt-1 text-xl font-bold text-slate-950">
-            Portfolio Growth
+            {t("copyTrading.portfolioGrowth")}
           </h2>
         </div>
 
         <select className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 outline-none focus:border-blue-500">
-          <option>Last 30 Days</option>
-          <option>Last 3 Months</option>
-          <option>Last 6 Months</option>
+          <option value="30">{t("copyTrading.last30Days")}</option>
+          <option value="3m">{t("copyTrading.last3Months")}</option>
+          <option value="6m">{t("copyTrading.last6Months")}</option>
         </select>
       </div>
 

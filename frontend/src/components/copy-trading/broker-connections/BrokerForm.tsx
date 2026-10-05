@@ -1,23 +1,36 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { FiEye, FiEyeOff, FiLock, FiServer, FiUser, FiWifi, FiTag, FiLoader, FiCheck } from "react-icons/fi";
-import api from "@/src/lib/axios"; 
+import {FormEvent, useEffect, useState} from "react";
+import {motion} from "framer-motion";
+import {
+  FiEye,
+  FiEyeOff,
+  FiLock,
+  FiServer,
+  FiUser,
+  FiWifi,
+  FiTag,
+  FiLoader,
+  FiCheck,
+} from "react-icons/fi";
+import api from "@/src/lib/axios";
+import {useTranslation} from "react-i18next";
 
 export default function BrokerForm() {
+  const {t, i18n} = useTranslation();
+  const isPersain = i18n.language.startsWith("fa");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dbBrokers, setDbBrokers] = useState<string[]>([]);
 
   const [formData, setFormData] = useState({
-    broker: "", 
+    broker: "",
     accountType: "live",
     accountId: "",
     server: "",
     symbol: "XAUUSD",
     password: "",
-    apiKey: ""
+    apiKey: "",
   });
 
   // 📡 ۱. فچ کردن آنلاین لیست بروکرهای ثبت شده در بک‌اَند
@@ -28,7 +41,10 @@ export default function BrokerForm() {
         if (response.data && response.data.supported_brokers) {
           setDbBrokers(response.data.supported_brokers);
           if (response.data.supported_brokers.length > 0) {
-            setFormData(prev => ({ ...prev, broker: response.data.supported_brokers[0] }));
+            setFormData((prev) => ({
+              ...prev,
+              broker: response.data.supported_brokers[0],
+            }));
           }
         }
       } catch (error) {
@@ -38,8 +54,10 @@ export default function BrokerForm() {
     loadSupportedBrokers();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    setFormData({...formData, [e.target.name]: e.target.value});
   };
 
   // 📡 ۲. ارسال مشخصات حساب متاتریدر ۵ به سرور جنگو
@@ -47,7 +65,7 @@ export default function BrokerForm() {
     event.preventDefault();
 
     if (!formData.accountId || !formData.password || !formData.server) {
-      alert("⚠️ Configuration Error: Please fill in Account ID, Server, and Password fields.");
+      alert(`⚠️ ${t("copyTradingBrokerConnections.configurationError")}`);
       return;
     }
 
@@ -58,15 +76,15 @@ export default function BrokerForm() {
         mt5_login: Number(formData.accountId),
         mt5_password: formData.password,
         mt5_server: formData.server,
-        gold_symbol: formData.symbol
+        gold_symbol: formData.symbol,
       };
 
-      await api.post('/api/user/broker/', payload);
-      alert("✅ Authentication Successful: Your MT5 terminal has been linked to the copy-trade cloud engine.");
+      await api.post("/api/user/broker/", payload);
+      alert(`✅ ${t("copyTradingBrokerConnections.authenticationSuccess")}`);
       window.location.reload(); // رفرش صفحه برای آپدیت کارت وضعیت بالا
     } catch (error: any) {
       console.error("Broker synchronization failed:", error);
-      alert("❌ Authentication Rejected: Connection failed. Verify your details.");
+      alert(`❌ ${t("copyTradingBrokerConnections.authenticationRejected")}`);
     } finally {
       setLoading(false);
     }
@@ -74,24 +92,34 @@ export default function BrokerForm() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.1 }}
+      initial={{opacity: 0, y: 20}}
+      animate={{opacity: 1, y: 0}}
+      transition={{duration: 0.5, delay: 0.1}}
       className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6"
     >
       <div className="mb-6">
-        <h2 className="text-base font-semibold text-slate-900">Broker Account</h2>
+        <h2 className="text-base font-semibold text-slate-900">
+          {t("copyTradingBrokerConnections.brokerAccount")}
+        </h2>
         <p className="mt-1 text-xs leading-5 text-slate-500">
-          Enter your broker account credentials to establish a connection.
+          {t("copyTradingBrokerConnections.brokerAccountDescription")}
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Broker Dropdown Select */}
         <div>
-          <label htmlFor="broker" className="mb-2 block text-sm font-medium text-slate-700">Broker</label>
+          <label
+            htmlFor="broker"
+            className="mb-2 block text-sm font-medium text-slate-700"
+          >
+            {t("copyTradingBrokerConnections.broker")}
+          </label>
           <div className="relative">
-            <FiWifi className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={17} />
+            <FiWifi
+              className={`absolute  ${isPersain ? "right-3" : "left-3 "}  top-1/2 -translate-y-1/2 text-slate-400`}
+              size={17}
+            />
             <select
               id="broker"
               name="broker"
@@ -100,22 +128,36 @@ export default function BrokerForm() {
               className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-10 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white"
             >
               {dbBrokers.length === 0 ? (
-                <option value="">Loading verified brokers...</option>
+                <option value="">
+                  {" "}
+                  {t("copyTradingBrokerConnections.loadingBrokers")}
+                </option>
               ) : (
                 dbBrokers.map((brokerName, index) => (
-                  <option key={index} value={brokerName.toLowerCase().replace(/\s+/g, '-')}>
+                  <option
+                    key={index}
+                    value={brokerName.toLowerCase().replace(/\s+/g, "-")}
+                  >
                     {brokerName}
                   </option>
                 ))
               )}
-              <option value="other">Other</option>
+              <option value="other">
+                {" "}
+                {t("copyTradingBrokerConnections.other")}
+              </option>
             </select>
           </div>
         </div>
 
         {/* Account Type Setup */}
         <div>
-          <label htmlFor="accountType" className="mb-2 block text-sm font-medium text-slate-700">Account Type</label>
+          <label
+            htmlFor="accountType"
+            className="mb-2 block text-sm font-medium text-slate-700"
+          >
+            {t("copyTradingBrokerConnections.accountType")}
+          </label>
           <select
             id="accountType"
             name="accountType"
@@ -123,17 +165,30 @@ export default function BrokerForm() {
             onChange={handleChange}
             className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white"
           >
-            <option value="live">Live Account</option>
-            <option value="demo">Demo Account</option>
+            <option value="live">
+              {t("copyTradingBrokerConnections.liveAccount")}
+            </option>
+
+            <option value="demo">
+              {t("copyTradingBrokerConnections.demoAccount")}
+            </option>
           </select>
         </div>
 
         {/* Account ID + Server Inputs Grid */}
         <div className="grid gap-5 md:grid-cols-2">
           <div>
-            <label htmlFor="accountId" className="mb-2 block text-sm font-medium text-slate-700">Account ID / Login</label>
+            <label
+              htmlFor="accountId"
+              className="mb-2 block text-sm font-medium text-slate-700"
+            >
+              {t("copyTradingBrokerConnections.accountId")}
+            </label>
             <div className="relative">
-              <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={17} />
+              <FiUser
+                className={`absolute  ${isPersain ? "right-3" : "left-3 "}  top-1/2 -translate-y-1/2 text-slate-400`}
+                size={17}
+              />
               <input
                 id="accountId"
                 name="accountId"
@@ -146,9 +201,17 @@ export default function BrokerForm() {
             </div>
           </div>
           <div>
-            <label htmlFor="server" className="mb-2 block text-sm font-medium text-slate-700">Server</label>
+            <label
+              htmlFor="server"
+              className="mb-2 block text-sm font-medium text-slate-700"
+            >
+              {t("copyTradingBrokerConnections.server")}
+            </label>
             <div className="relative">
-              <FiServer className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={17} />
+              <FiServer
+                className={`absolute  ${isPersain ? "right-3" : "left-3 "}  top-1/2 -translate-y-1/2 text-slate-400`}
+                size={17}
+              />
               <input
                 id="server"
                 name="server"
@@ -164,9 +227,17 @@ export default function BrokerForm() {
 
         {/* Target Symbol Customization */}
         <div>
-          <label htmlFor="symbol" className="mb-2 block text-sm font-medium text-slate-700">Symbol</label>
+          <label
+            htmlFor="symbol"
+            className="mb-2 block text-sm font-medium text-slate-700"
+          >
+            {t("copyTradingBrokerConnections.symbol")}
+          </label>
           <div className="relative">
-            <FiTag className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={17} />
+            <FiTag
+              className={`absolute  ${isPersain ? "right-3" : "left-3 "}  top-1/2 -translate-y-1/2 text-slate-400`}
+              size={17}
+            />
             <input
               id="symbol"
               name="symbol"
@@ -181,9 +252,17 @@ export default function BrokerForm() {
 
         {/* Terminal Access Password */}
         <div>
-          <label htmlFor="password" className="mb-2 block text-sm font-medium text-slate-700">Password</label>
+          <label
+            htmlFor="password"
+            className="mb-2 block text-sm font-medium text-slate-700"
+          >
+            {t("copyTradingBrokerConnections.password")}
+          </label>
           <div className="relative">
-            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={17} />
+            <FiLock
+              className={`absolute  ${isPersain ? "right-3" : "left-3 "}  top-1/2 -translate-y-1/2 text-slate-400`}
+              size={17}
+            />
             <input
               id="password"
               name="password"
@@ -196,7 +275,7 @@ export default function BrokerForm() {
             <button
               type="button"
               onClick={() => setShowPassword((value) => !value)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+              className={`absolute ${isPersain ? "left-3" : "right-3 "} top-1/2 -translate-y-1/2 text-slate-400`}
             >
               {showPassword ? <FiEyeOff size={17} /> : <FiEye size={17} />}
             </button>
@@ -209,8 +288,17 @@ export default function BrokerForm() {
           disabled={loading}
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:opacity-50"
         >
-          {loading ? <FiLoader className="animate-spin" size={17} /> : <FiCheck size={17} />}
-          <span>{loading ? "Connecting..." : "Connect Broker"}</span>
+          {loading ? (
+            <FiLoader className="animate-spin" size={17} />
+          ) : (
+            <FiCheck size={17} />
+          )}
+          <span>
+            {" "}
+            {loading
+              ? t("copyTradingBrokerConnections.connecting")
+              : t("copyTradingBrokerConnections.connectBroker")}
+          </span>
         </button>
       </form>
     </motion.div>

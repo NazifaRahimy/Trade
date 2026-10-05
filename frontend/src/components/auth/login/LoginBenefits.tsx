@@ -1,5 +1,5 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import Image from "next/image";
 import Logo from "@/src/assets/images/logo.png";
 import {motion} from "framer-motion";
@@ -7,24 +7,23 @@ import {FiBarChart2, FiBookOpen, FiShield} from "react-icons/fi";
 import photoregister from "@/src/assets/images/photoregister.png";
 
 export default function LoginBenefits() {
+  const {t, i18n} = useTranslation();
+  const isPersian = i18n.language.startsWith("fa");
   const benefits = [
     {
       icon: FiBarChart2,
-      title: "Accurate and Up-to-Date Signals",
-      description:
-        "Receive daily signals with technical analysis and practical market insights",
+      title: "loginBenefits.accurateSignals",
+      description: "loginBenefits.accurateSignalsDescription",
     },
     {
       icon: FiBookOpen,
-      title: "Specialized Educational Courses",
-      description:
-        "Access educational courses from beginner to advanced levels in Persian",
+      title: "loginBenefits.educationalCourses",
+      description: "loginBenefits.educationalCoursesDescription",
     },
     {
       icon: FiShield,
-      title: "Professional Risk Management",
-      description:
-        "Capital management and emotional control tools for consistent and sustainable trading",
+      title: "loginBenefits.riskManagement",
+      description: "loginBenefits.riskManagementDescription",
     },
   ];
 
@@ -33,7 +32,7 @@ export default function LoginBenefits() {
       initial={{opacity: 0, x: -30}}
       animate={{opacity: 1, x: 0}}
       transition={{duration: 0.5}}
-      className="flex h-full flex-col  relative justify-center rounded-t-md lg:rounded-l-none  lg:rounded-r-3xl bg-gradient-to-b from-slate-950 via-slate-900 to-blue-950 text-white "
+      className={`flex h-full flex-col  relative justify-center rounded-t-md lg:rounded-t-none ${isPersian ? "lg:rounded-tl-3xl lg:rounded-bl-3xl" : "lg:rounded-tr-3xl  lg:rounded-br-3xl"}   bg-gradient-to-b from-slate-950 via-slate-900 to-blue-950 text-white `}
     >
       {/* Logo / Brand */}
       <div className=" flex justify-center ">
@@ -48,12 +47,11 @@ export default function LoginBenefits() {
         {/* Heading */}
         <div className="mb-6">
           <h3 className="mb-4 text-xl text-center font-bold">
-            Welcome to Amiri Finance Academy
+            {t("loginBenefits.welcome")}
           </h3>
 
           <p className="text-sm leading-7 text-slate-300 text-center">
-            Sign in to your account to access professional tools, trading
-            signals, educational courses, and exclusive features.
+            {t("loginBenefits.welcomeDescription")}
           </p>
         </div>
 
@@ -78,10 +76,13 @@ export default function LoginBenefits() {
                 </div>
 
                 <div>
-                  <h4 className="mb-1 text-sm font-semibold">{item.title}</h4>
+                  <h4 className="mb-1 text-sm font-semibold">
+                    {" "}
+                    {t(item.title)}
+                  </h4>
 
                   <p className="text-xs leading-6 text-slate-400">
-                    {item.description}
+                    {t(item.description)}
                   </p>
                 </div>
               </motion.div>
@@ -91,13 +92,15 @@ export default function LoginBenefits() {
       </div>
       {/* Bottom image */}
       <div className="relative h-[105px] sm:h-[150px]  md:h-[190px] lg:h-[98px]"></div>
-      <div className="absolute bottom-0 left-0 w-full">
+      <div
+        className={`absolute bottom-0 left-0 w-full   ${isPersian ? "lg:rounded-bl-3xl" : "lg:rounded-br-3xl"}`}
+      >
         <svg>{/* candlestick + trend line */}</svg>
 
         <img
           src={photoregister.src}
           alt="coins"
-          className="absolute -bottom-5  md:bottom-0 right-0 w-full"
+          className={`absolute -bottom-5  ${isPersian ? "lg:rounded-bl-3xl" : "lg:rounded-br-3xl"}  md:bottom-0 right-0 w-full`}
         />
       </div>
     </motion.div>

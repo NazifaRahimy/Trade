@@ -1,4 +1,5 @@
 "use client";
+import {useTranslation} from "react-i18next";
 
 // 🚀 تعریف ساختار دیتای داینامیک تریدرها
 type AllocationItemType = {
@@ -15,19 +16,25 @@ type CopyAllocationProps = {
   } | null;
 };
 
-export default function CopyAllocation({ allocation }: CopyAllocationProps) {
+export default function CopyAllocation({allocation}: CopyAllocationProps) {
+  const {t} = useTranslation();
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-sm font-text text-slate-500">Copy Allocation</h2>
+      <h2 className="text-sm font-text text-slate-500">
+        {t("copyTrading.copyAllocation")}
+      </h2>
       <div className="mt-1 text-xl font-bold text-slate-950">
         {allocation?.total_allocated || "\$0.00"}
       </div>
-      
+
       {/* حفظ دقیق ساختار دایره گرافیکی شما در تصویر */}
       <div className="mt-8 flex items-center justify-center">
         <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-[conic-gradient(#2563eb_48%,#8b5cf6_70%,#10b981_86%,#f59e0b_100%)]">
           <div className="flex h-24 w-24 flex-col items-center justify-center rounded-full bg-white">
-            <span className="text-xs text-slate-500">Total</span>
+            <span className="text-xs text-slate-500">
+              {" "}
+              {t("copyTrading.total")}
+            </span>
             <span className="mt-1 text-xl font-bold text-slate-950">
               {allocation?.total_allocated || "\$0.00"}
             </span>
@@ -50,7 +57,15 @@ export default function CopyAllocation({ allocation }: CopyAllocationProps) {
   );
 }
 
-function AllocationItem({ color, name, value }: { color: string; name: string; value: string }) {
+function AllocationItem({
+  color,
+  name,
+  value,
+}: {
+  color: string;
+  name: string;
+  value: string;
+}) {
   return (
     <div className="flex items-center justify-between text-sm">
       <div className="flex items-center gap-2 text-slate-600">

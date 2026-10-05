@@ -1,9 +1,10 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {FiCalendar, FiCheckCircle, FiCreditCard} from "react-icons/fi";
 
 export default function CurrentSubscription() {
+  const {t} = useTranslation();
   return (
     <motion.div
       initial={{opacity: 0, y: 20}}
@@ -13,21 +14,23 @@ export default function CurrentSubscription() {
     >
       <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-xs text-slate-500">Current Plan</p>
+          <p className="text-xs text-slate-500">
+            {t("subscription.currentPlan")}
+          </p>
 
           <div className="mt-2 flex items-center gap-3">
             <h2 className="text-2xl font-semibold text-slate-900">
-              Pro Trader
+              {t("subscription.proTrader")}
             </h2>
 
             <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-600">
               <FiCheckCircle size={13} />
-              Active
+              {t("subscription.active")}
             </span>
           </div>
 
           <p className="mt-2 text-sm text-slate-500">
-            Full access to your trading dashboard and platform features.
+            {t("subscription.fullAccess")}
           </p>
         </div>
 
@@ -40,7 +43,7 @@ export default function CurrentSubscription() {
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
           <div className="flex items-center gap-2 text-xs text-slate-500">
             <FiCalendar size={14} />
-            Start Date
+            {t("subscription.startDate")}
           </div>
 
           <p className="mt-2 text-sm font-medium text-slate-800">
@@ -51,7 +54,7 @@ export default function CurrentSubscription() {
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
           <div className="flex items-center gap-2 text-xs text-slate-500">
             <FiCalendar size={14} />
-            Expiry Date
+            {t("subscription.expiryDate")}
           </div>
 
           <p className="mt-2 text-sm font-medium text-slate-800">

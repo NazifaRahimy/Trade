@@ -1,7 +1,7 @@
 "use client";
-
-import { motion } from "framer-motion";
-import { FiActivity, FiDollarSign, FiTrendingUp, FiUsers } from "react-icons/fi";
+import {useTranslation} from "react-i18next";
+import {motion} from "framer-motion";
+import {FiActivity, FiDollarSign, FiTrendingUp, FiUsers} from "react-icons/fi";
 
 // 🚀 ۱. تعریف دقیق ساختار دیتای زنده اندپوینت AdminFinanceOverviewAPIView بک‌اَند
 type AdminFinanceStatsProps = {
@@ -13,38 +13,40 @@ type AdminFinanceStatsProps = {
   } | null;
 };
 
-export default function AdminFinanceStats({ adminStats }: AdminFinanceStatsProps) {
-  
+export default function AdminFinanceStats({
+  adminStats,
+}: AdminFinanceStatsProps) {
+  const {t} = useTranslation();
   // 📊 ۲. مپ کردن دقیق متغیرهای لایو بک‌اَند روی آرایه و آیکون‌های بومی خودتان (حذف مقادیر ثابت)
   const stats = [
     {
-      title: "Gross Platform Revenue",
-      value: adminStats?.total_platform_revenue || "\$0.00", // جمع کل درآمد داینامیک پلتفرم
-      description: "Total platform revenue.",
+      title: "adminFinance.grossPlatformRevenue",
+      value: adminStats?.total_platform_revenue || "$0.00",
+      description: "adminFinance.totalPlatformRevenue",
       icon: FiDollarSign,
       iconBg: "bg-blue-50",
       iconColor: "text-blue-600",
     },
     {
-      title: "Telegram Bot Revenue",
-      value: adminStats?.telegram_subscription_revenue || "\$0.00", // درآمد لایو ربات تلگرام
-      description: "Revenue from Telegram Bot.",
+      title: "adminFinance.telegramBotRevenue",
+      value: adminStats?.telegram_subscription_revenue || "$0.00",
+      description: "adminFinance.telegramBotRevenueDescription",
       icon: FiActivity,
       iconBg: "bg-emerald-50",
       iconColor: "text-emerald-600",
     },
     {
-      title: "Copy Trading Revenue",
-      value: adminStats?.copy_trading_revenue || "\$0.00", // درآمد ۵ درصدی کپی‌تریدینگ
-      description: "Revenue from Copy Trading.",
+      title: "adminFinance.copyTradingRevenue",
+      value: adminStats?.copy_trading_revenue || "$0.00",
+      description: "adminFinance.copyTradingRevenueDescription",
       icon: FiTrendingUp,
       iconBg: "bg-cyan-50",
       iconColor: "text-cyan-600",
     },
     {
-      title: "Master Trader Payouts",
-      value: adminStats?.total_master_payouts || "\$0.00", // کل واریزی‌های سهم مستر تریدرها
-      description: "Paid to master traders.",
+      title: "adminFinance.masterTraderPayouts",
+      value: adminStats?.total_master_payouts || "$0.00",
+      description: "adminFinance.masterTraderPayoutsDescription",
       icon: FiUsers,
       iconBg: "bg-orange-50",
       iconColor: "text-orange-600",
@@ -59,8 +61,8 @@ export default function AdminFinanceStats({ adminStats }: AdminFinanceStatsProps
         return (
           <motion.div
             key={stat.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{opacity: 0, y: 20}}
+            animate={{opacity: 1, y: 0}}
             transition={{
               duration: 0.4,
               delay: index * 0.08,
@@ -69,7 +71,10 @@ export default function AdminFinanceStats({ adminStats }: AdminFinanceStatsProps
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500">{stat.title}</p>
+                <p className="text-sm font-medium text-slate-500">
+                  {" "}
+                  {t(stat.title)}
+                </p>
                 <h2 className="mt-2 text-2xl font-bold text-slate-900">
                   {stat.value}
                 </h2>
@@ -82,7 +87,10 @@ export default function AdminFinanceStats({ adminStats }: AdminFinanceStatsProps
               </div>
             </div>
 
-            <p className="mt-4 text-xs text-slate-500">{stat.description}</p>
+            <p className="mt-4 text-xs text-slate-500">
+              {" "}
+              {t(stat.description)}
+            </p>
           </motion.div>
         );
       })}

@@ -1,5 +1,3 @@
-"use client";
-
 // 🚀 اصلاح دقیق و اصولی آدرس‌های امپورت مطابق پوشه‌بندی فیزیکی شما در منوی سمت چپ
 import CopySettingsHeader from "@/src/components/copy-trading/copy-settings/CopySettingsHeader";
 import CopySettingsPanel from "@/src/components/copy-trading/copy-settings/CopySettingsPanel";

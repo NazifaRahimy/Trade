@@ -1,4 +1,6 @@
 "use client";
+
+import {useTranslation} from "react-i18next";
 import {FiDollarSign, FiPercent, FiTrendingUp, FiUsers} from "react-icons/fi";
 interface CopyTradesStatsProps {
   data?: {
@@ -14,41 +16,44 @@ interface CopyTradesStatsProps {
   };
 }
 export default function CopyTradesStats({data}: CopyTradesStatsProps) {
+  const {t} = useTranslation();
   const activeTraders = data?.active_traders ?? data?.activeTraders ?? 0;
   const investment = data?.investment ?? data?.total_investment ?? 0;
   const totalProfit = data?.total_profit ?? data?.totalProfit ?? 0;
   const returnPercentage =
     data?.return ?? data?.return_percentage ?? data?.returnPercentage ?? 0;
+
   const stats = [
     {
-      title: "Active Traders",
+      title: t("copyTradingMyTraders.activeTraders"),
       value: activeTraders,
       icon: FiUsers,
-      description: "Currently copying",
+      description: t("copyTradingMyTraders.activeTradersDescription"),
       iconClass: "bg-blue-50 text-blue-600",
     },
     {
-      title: "Investment",
+      title: t("copyTradingMyTraders.investment"),
       value: `$${Number(investment).toLocaleString()}`,
       icon: FiDollarSign,
-      description: "Allocated to copy trading",
+      description: t("copyTradingMyTraders.investmentDescription"),
       iconClass: "bg-violet-50 text-violet-600",
     },
     {
-      title: "Total Profit",
+      title: t("copyTradingMyTraders.totalProfit"),
       value: `$${Number(totalProfit).toLocaleString()}`,
       icon: FiTrendingUp,
-      description: "Closed trades profit",
+      description: t("copyTradingMyTraders.totalProfitDescription"),
       iconClass: "bg-emerald-50 text-emerald-600",
     },
     {
-      title: "Return",
+      title: t("copyTradingMyTraders.return"),
       value: `${returnPercentage}%`,
       icon: FiPercent,
-      description: "Overall account return",
+      description: t("copyTradingMyTraders.returnDescription"),
       iconClass: "bg-amber-50 text-amber-600",
     },
   ];
+
   return (
     <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {stats.map((stat) => {
@@ -56,7 +61,8 @@ export default function CopyTradesStats({data}: CopyTradesStatsProps) {
         return (
           <div
             key={stat.title}
-            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md" >
+            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md"
+          >
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-sm font-medium text-slate-500">
@@ -74,6 +80,8 @@ export default function CopyTradesStats({data}: CopyTradesStatsProps) {
             </div>
             <p className="mt-4 text-xs text-slate-400">{stat.description}</p>
           </div>
-        );   })}
+        );
+      })}
     </section>
-  );}
+  );
+}

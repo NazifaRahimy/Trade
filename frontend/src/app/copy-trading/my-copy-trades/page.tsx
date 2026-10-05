@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { FiLoader } from "react-icons/fi";
+import {useEffect, useState} from "react";
 
+import {FiLoader} from "react-icons/fi";
+import {useTranslation} from "react-i18next";
 // 🚀 اصلاح آدرس‌های ایمپورت برای محو شدن آنی خطوط قرمز (خطوط ۵ تا ۱۰)
 import api from "@/src/lib/axios";
 import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
@@ -23,6 +22,7 @@ interface CopyTradesResponse {
 }
 
 export default function MyCopyTradesPage() {
+  const {t} = useTranslation();
   const [trades, setTrades] = useState<any[]>([]);
   const [stats, setStats] = useState<any>({});
   const [loading, setLoading] = useState(true);
@@ -31,7 +31,7 @@ export default function MyCopyTradesPage() {
     try {
       setLoading(true);
       const response = await api.get<CopyTradesResponse>(
-        "/api/copy-trading/my-copy-trades/"
+        "/api/copy-trading/my-copy-trades/",
       );
 
       setTrades(response.data?.trades ?? []);
@@ -54,7 +54,10 @@ export default function MyCopyTradesPage() {
       <ProtectedRoute>
         <div className="flex min-h-screen w-full items-center justify-center gap-2 bg-slate-50 text-sm text-slate-400">
           <FiLoader size={22} className="animate-spin text-blue-600" />
-          <span>Loading copied trades...</span>
+          <span>
+            {" "}
+            <span>{t("myCopyTrading.loadingCopiedTrades")}</span>
+          </span>
         </div>
       </ProtectedRoute>
     );

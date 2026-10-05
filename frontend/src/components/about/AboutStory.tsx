@@ -1,9 +1,10 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {FiTarget, FiBookOpen} from "react-icons/fi";
 
 export default function AboutStory() {
+  const {t} = useTranslation();
   return (
     <section className="bg-white py-20">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
@@ -16,28 +17,22 @@ export default function AboutStory() {
             transition={{duration: 0.5}}
           >
             <p className="text-xs font-bold uppercase tracking-wider text-blue-600">
-              Our Story
+              {t("about.ourStory")}
             </p>
 
             <h2 className="mt-3 text-3xl font-black text-slate-900 md:text-4xl">
-              Turning Market Experience
+              {t("about.turningMarketExperience")}
               <span className="block text-blue-600">
-                Into A Smarter Journey
+                {t("about.intoASmarterJourney")}
               </span>
             </h2>
 
             <p className="mt-6 text-sm leading-7 text-slate-600 md:text-base">
-              Amiri Finance Academy was created to shorten the difficult
-              learning journey of financial markets by bringing years of
-              practical experience, market knowledge and tested strategies
-              together in one platform.
+              {t("about.storyDescription")}
             </p>
 
             <p className="mt-4 text-sm leading-7 text-slate-600 md:text-base">
-              Mr. Ebrahim Amiri has spent more than seven years working across
-              Forex and Cryptocurrency markets, gaining experience through
-              different market conditions and using modern trading platforms and
-              analytical tools.
+              {t("about.experienceDescription")}
             </p>
           </motion.div>
 
@@ -55,11 +50,12 @@ export default function AboutStory() {
                 <FiTarget size={22} />
               </div>
 
-              <h3 className="mt-5 font-bold text-slate-900">Our Mission</h3>
+              <h3 className="mt-5 font-bold text-slate-900">
+                {t("about.ourMission")}
+              </h3>
 
               <p className="mt-3 text-sm leading-6 text-slate-600">
-                Make the trading journey simpler through structured education,
-                market insights and disciplined risk management.
+                {t("about.missionDescription")}
               </p>
             </motion.div>
 
@@ -75,12 +71,12 @@ export default function AboutStory() {
                 <FiBookOpen size={22} />
               </div>
 
-              <h3 className="mt-5 font-bold text-slate-900">Our Approach</h3>
+              <h3 className="mt-5 font-bold text-slate-900">
+                {t("about.ourApproach")}
+              </h3>
 
               <p className="mt-3 text-sm leading-6 text-slate-600">
-                We focus on practical knowledge, responsible decision-making and
-                understanding market risk rather than promising guaranteed
-                results.
+                {t("about.approachDescription")}
               </p>
             </motion.div>
           </div>

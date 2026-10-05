@@ -2,8 +2,10 @@
 
 import {motion} from "framer-motion";
 import {FiSettings} from "react-icons/fi";
+import {useTranslation} from "react-i18next";
 
 export default function CopySettingsHeader() {
+  const {t} = useTranslation();
   return (
     <motion.div
       initial={{opacity: 0, y: 15}}
@@ -18,22 +20,20 @@ export default function CopySettingsHeader() {
           </div>
 
           <span className="text-sm font-medium text-blue-600">
-            Copy Trading
+            {t("copyTradingCopySettings.copySettings")}
           </span>
         </div>
-
         <h1 className="text-2xl font-bold text-slate-900 md:text-3xl">
-          Copy Settings
+          {t("copyTradingCopySettings.copySettingsTitle")}
         </h1>
 
         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-          Manage how trades from the professional trader are copied to your
-          connected trading account.
+          {t("copyTradingCopySettings.copySettingsDescription")}
         </p>
       </div>
 
       <span className="w-fit rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600">
-        Copying Active
+        {t("copyTradingCopySettings.copyingActive")}
       </span>
     </motion.div>
   );

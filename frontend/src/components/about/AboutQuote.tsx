@@ -1,9 +1,10 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {FiMessageCircle} from "react-icons/fi";
 
 export default function AboutQuote() {
+  const {t} = useTranslation();
   return (
     <section className="bg-white py-20">
       <div className="mx-auto max-w-4xl px-5 lg:px-8">
@@ -22,16 +23,14 @@ export default function AboutQuote() {
             </div>
 
             <p className="mt-7 text-lg font-medium leading-8 text-white md:text-2xl md:leading-10">
-              “The financial markets are not a place for guesswork. They require
-              discipline, statistics, market psychology and responsible risk
-              management.”
+              {t("about.quote")}
             </p>
 
             <div className="mt-7">
-              <p className="font-bold text-white">Ebrahim Amiri</p>
+              <p className="font-bold text-white">{t("about.ebrahimAmiri")}</p>
 
               <p className="mt-1 text-sm text-slate-400">
-                Trader & Market Analyst
+                {t("about.traderAndMarketAnalyst")}
               </p>
             </div>
           </div>

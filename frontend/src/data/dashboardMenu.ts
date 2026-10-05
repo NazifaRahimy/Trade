@@ -1,35 +1,28 @@
-import {
-  FiGrid,
-  FiUser,
-  FiLink,
-  FiShield,
-  FiClock,
-  FiCreditCard,
-} from "react-icons/fi";
+import {FiGrid, FiUser, FiLink, FiShield, FiClock} from "react-icons/fi";
 
 export const dashboardMenu = [
   {
-    label: "Dashboard",
+    key: "overview",
     href: "/dashboard",
     icon: FiGrid,
   },
   {
-    label: "Account Status",
+    key: "accountStatus",
     href: "/dashboard/account-status",
     icon: FiUser,
   },
   {
-    label: "Broker Connection",
+    key: "brokerForm",
     href: "/dashboard/broker-form",
     icon: FiLink,
   },
   {
-    label: "Risk Control",
+    key: "riskControl",
     href: "/dashboard/risk-control",
     icon: FiShield,
   },
   {
-    label: "Trade History",
+    key: "tradeHistory",
     href: "/dashboard/trade-history",
     icon: FiClock,
   },

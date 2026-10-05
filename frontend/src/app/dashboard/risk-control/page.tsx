@@ -1,13 +1,14 @@
 "use client";
 
 import {useState} from "react";
-
+import {useTranslation} from "react-i18next";
 import RiskGauge from "@/src/components/dashboard/risk-control/RiskGauge";
 import RiskStats from "@/src/components/dashboard/risk-control/RiskStats";
 import EmergencyStop from "@/src/components/dashboard/risk-control/EmergencyStop";
 import RiskSettings from "@/src/components/dashboard/risk-control/RiskSettings";
 
 export default function RiskControlPage() {
+  const {t} = useTranslation();
   // Bot status
   const [botActive, setBotActive] = useState(true);
 
@@ -22,10 +23,13 @@ export default function RiskControlPage() {
     <div className="min-h-screen space-y-8 p-5 text-black lg:p-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white">Risk Control</h1>
+        <h1 className="text-2xl font-bold">
+          {" "}
+          {t("telegramBotRiskControl.title")}
+        </h1>
 
         <p className="mt-2 text-slate-400">
-          Manage account protection and trading risk.
+          {t("telegramBotRiskControl.description")}
         </p>
       </div>
 

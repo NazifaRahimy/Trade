@@ -2,8 +2,10 @@
 
 import {motion} from "framer-motion";
 import {FiInfo, FiShield} from "react-icons/fi";
+import {useTranslation} from "react-i18next";
 
 export default function CopySettingsInfo() {
+  const {t} = useTranslation();
   return (
     <motion.div
       initial={{opacity: 0, y: 15}}
@@ -17,17 +19,17 @@ export default function CopySettingsInfo() {
         </div>
 
         <div>
-          <h2 className="font-semibold text-slate-900">About Copy Settings</h2>
+          <h2 className="font-semibold text-slate-900">
+            {t("copyTradingCopySettings.aboutCopySettings")}
+          </h2>
 
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            Your copy settings determine how trades from the professional trader
-            are replicated on your connected trading account. Changes should be
-            reviewed carefully before saving.
+            {t("copyTradingCopySettings.aboutCopySettingsDescription")}
           </p>
 
           <div className="mt-4 flex items-center gap-2 text-xs font-medium text-blue-700">
             <FiShield size={15} />
-            Your funds remain in your connected broker account.
+            {t("copyTradingCopySettings.fundsSecurity")}
           </div>
         </div>
       </div>

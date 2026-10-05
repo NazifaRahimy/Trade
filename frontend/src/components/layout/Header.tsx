@@ -1,8 +1,9 @@
 "use client";
-
+import {useTranslation} from "react-i18next";
 import {useEffect, useState, useRef} from "react";
 import Link from "next/link";
 import Image from "next/image";
+import {CiLogout} from "react-icons/ci";
 import {usePathname, useRouter} from "next/navigation";
 import {
   FiMenu,
@@ -13,29 +14,31 @@ import {
   FiCopy,
   FiLogOut,
   FiBarChart2,
+  FiGlobe,
+  FiCheck,
 } from "react-icons/fi";
 
 import logo from "../../assets/images/logo.png";
 
 const navItems = [
   {
-    name: "Home",
+    key: "navBar.home",
     href: "/",
   },
   {
-    name: "About Us",
+    key: "navBar.about",
     href: "/about",
   },
   {
-    name: "Contact",
+    key: "navBar.contact",
     href: "/contact",
   },
   {
-    name: "Subscription",
+    key: "navBar.subscription",
     href: "/subscription",
   },
   {
-    name: "Billing",
+    key: "navBar.billing",
     href: "/billing",
   },
 ];
@@ -43,13 +46,38 @@ const navItems = [
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
+  const {t, i18n} = useTranslation();
 
+  const language: "fa" | "en" = i18n.language?.startsWith("en") ? "en" : "fa";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 
+  const languageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    document.documentElement.lang = i18n.language === "fa" ? "fa" : "en";
+    document.documentElement.dir = i18n.language === "fa" ? "rtl" : "ltr";
+  }, [i18n.language]);
+  useEffect(() => {
+    const handleLanguageClickOutside = (event: MouseEvent) => {
+      if (
+        languageRef.current &&
+        !languageRef.current.contains(event.target as Node)
+      ) {
+        setIsLanguageOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleLanguageClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleLanguageClickOutside);
+    };
+  }, []);
   useEffect(() => {
     const checkAuth = () => {
       const token = localStorage.getItem("access_token");
@@ -143,14 +171,29 @@ export default function Header() {
     router.push("/login");
   };
 
+  const handleLanguageChange = async (lang: "fa" | "en") => {
+    console.log("Selected language:", lang);
+
+    await i18n.changeLanguage(lang);
+
+    localStorage.setItem("language", lang);
+
+    document.cookie = `language=${lang}; path=/; max-age=31536000; SameSite=Lax`;
+
+    console.log("Cookie:", document.cookie);
+
+    setIsLanguageOpen(false);
+
+    window.location.reload();
+  };
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-800 bg-slate-950">
-      <div className="px-4 max-w-[1400px] mx-auto ">
+      <div className="px-4 max-w-[1400px] mx-auto  ">
         {/* ==========================================
             HEADER ROW
         ========================================== */}
 
-        <div className="flex h-20 items-center justify-between">
+        <div className="flex h-20 items-center justify-between ">
           {/* Logo */}
 
           <Link
@@ -181,7 +224,7 @@ export default function Header() {
                     active ? "text-blue-500" : "text-white hover:text-blue-500"
                   }`}
                 >
-                  {item.name}
+                  {t(item.key)}
 
                   {active && (
                     <span className="absolute bottom-0 left-1/2 h-[2px] w-7 -translate-x-1/2 rounded-full bg-blue-500" />
@@ -194,156 +237,70 @@ export default function Header() {
           {/* ==========================================
               DESKTOP ACTIONS
           ========================================== */}
-
-          <div className="hidden items-center gap-3 md:flex">
-            {!isLoggedIn ? (
-              <Link
-                href="/login"
-                className="rounded-lg border border-blue-600 px-6 py-2.5 text-sm font-medium text-blue-500 transition hover:bg-blue-600 hover:text-white"
+          {/* Language Switcher */}
+          <div className="flex gap-4 w-full justify-end md:w-auto">
+            <div ref={languageRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setIsLanguageOpen((prev) => !prev)}
+                className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm font-medium text-white transition hover:border-blue-500 hover:bg-slate-800"
               >
-                Login
-              </Link>
-            ) : (
-              <div ref={dropdownRef} className="relative">
-                {/* Profile Button */}
+                <FiGlobe className="text-base text-blue-500" />
 
-                <button
-                  type="button"
-                  onClick={() => setIsDropdownOpen((prev) => !prev)}
-                  className="flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 transition hover:border-blue-500 hover:bg-slate-800"
-                >
-                  <div className="hidden text-left px-4 py-1 lg:block truncate text-sm font-semibold text-white">
-                    Services
-                  </div>
+                <span>
+                  {language === "fa"
+                    ? t("language.persian")
+                    : t("language.english")}
+                </span>
 
-                  <FiChevronDown
-                    className={`text-slate-400 transition-transform ${
-                      isDropdownOpen ? "rotate-180" : ""
+                <FiChevronDown
+                  className={`text-slate-400 transition-transform ${
+                    isLanguageOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {isLanguageOpen && (
+                <div className="absolute right-0 mt-3 w-36 overflow-hidden rounded-xl border border-slate-700 bg-slate-950 p-1.5 shadow-2xl shadow-black/30">
+                  {/* فارسی */}
+                  <button
+                    type="button"
+                    onClick={() => handleLanguageChange("fa")}
+                    className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm transition ${
+                      language === "fa"
+                        ? "bg-blue-600 text-white"
+                        : "text-slate-300 hover:bg-slate-800 hover:text-white"
                     }`}
-                  />
-                </button>
+                  >
+                    <span>{t("language.persian")}</span>
 
-                {/* ==========================================
-                    DROPDOWN
-                ========================================== */}
+                    {language === "fa" && <FiCheck className="text-base" />}
+                  </button>
 
-                {isDropdownOpen && (
-                  <div className="absolute right-0 mt-3 w-60 overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-2 shadow-2xl shadow-black/30">
-                    {/* User Info */}
+                  {/* English */}
+                  <button
+                    type="button"
+                    onClick={() => handleLanguageChange("en")}
+                    className={`mt-1 flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm transition ${
+                      language === "en"
+                        ? "bg-blue-600 text-white"
+                        : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                    }`}
+                  >
+                    <span>{t("language.english")}</span>
 
-                    <div className="mb-2 flex items-center gap-3 rounded-xl bg-slate-900 p-3">
-                      {photo ? (
-                        <img
-                          src={photo}
-                          alt={firstName}
-                          className="h-10 w-10 rounded-full object-cover"
-                        />
-                      ) : (
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 font-semibold text-white">
-                          {userInitial}
-                        </div>
-                      )}
-
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold text-white">
-                          {firstName}
-                        </p>
-
-                        <p className="truncate text-xs text-slate-400">
-                          {email || "Member"}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Dashboard */}
-
-                    <Link
-                      href="/dashboard"
-                      onClick={() => setIsDropdownOpen(false)}
-                      className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-normal transition ${
-                        pathname === "/dashboard"
-                          ? "bg-blue-600 text-white"
-                          : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                      }`}
-                    >
-                      <FiGrid className="text-lg" />
-
-                      <span>Telegram Bot Dashboard</span>
-                    </Link>
-
-                    {/* Copy Trading */}
-
-                    <Link
-                      href="/copy-trading"
-                      onClick={() => setIsDropdownOpen(false)}
-                      className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-normal transition ${
-                        pathname.startsWith("/copy-trading")
-                          ? "bg-blue-600 text-white"
-                          : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                      }`}
-                    >
-                      <FiCopy className="text-lg" />
-
-                      <span>Copy Trading Dashboard</span>
-                    </Link>
-                    <Link
-                      href="/discount-premium"
-                      onClick={() => setIsDropdownOpen(false)}
-                      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition ${
-                        pathname === "/discount-premium"
-                          ? "bg-blue-600 text-white"
-                          : "text-slate-300 hover:bg-slate-900 hover:text-white"
-                      }`}
-                    >
-                      <FiBarChart2 className="text-base" />
-                      <span>Discount Premium Dashboard</span>
-                    </Link>
-                    {isAdmin && (
-                      <Link
-                        href="/admin/finance"
-                        onClick={() => setIsDropdownOpen(false)}
-                        className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-normal transition ${
-                          pathname.startsWith("/admin/finance")
-                            ? "bg-blue-600 text-white"
-                            : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                        }`}
-                      >
-                        <FiCreditCard className="text-lg" />
-
-                        <span>Admin Finance</span>
-                      </Link>
-                    )}
-
-                    <div className="my-2 border-t border-slate-800" />
-
-                    {/* Logout */}
-
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-400 transition hover:bg-red-950/40 hover:text-red-400"
-                    >
-                      <FiLogOut className="text-lg" />
-
-                      <span>Logout</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* ==========================================
-              MOBILE BUTTON
-          ========================================== */}
-
-          <div className="flex items-center gap-2 md:hidden">
+                    {language === "en" && <FiCheck className="text-base" />}
+                  </button>
+                </div>
+              )}
+            </div>
+            {/* Menu Button */}
             <button
               type="button"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMenuOpen}
               onClick={toggleMenu}
-              className="relative z-[100] flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-slate-700 bg-slate-900 text-white transition hover:border-blue-500 hover:text-blue-500"
+              className="relative z-[100] flex md:hidden h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-slate-700 bg-slate-900 text-white transition hover:border-blue-500 hover:text-blue-500"
             >
               {isMenuOpen ? (
                 <FiX className="h-6 w-6" />
@@ -351,6 +308,152 @@ export default function Header() {
                 <FiMenu className="h-6 w-6" />
               )}
             </button>
+            <div className="hidden items-center gap-3 md:flex">
+              {!isLoggedIn ? (
+                <Link
+                  href="/login"
+                  className="rounded-lg border border-blue-600 px-6 py-2.5 text-sm font-medium text-blue-500 transition hover:bg-blue-600 hover:text-white"
+                >
+                  {t("auth.login")}
+                </Link>
+              ) : (
+                <div ref={dropdownRef} className="relative">
+                  {/* Profile Button */}
+
+                  <button
+                    type="button"
+                    onClick={() => setIsDropdownOpen((prev) => !prev)}
+                    className="flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 transition hover:border-blue-500 hover:bg-slate-800"
+                  >
+                    <div className="hidden text-left px-4 py-1 lg:block truncate text-sm font-semibold text-white">
+                      {t("navBar.services.title")}
+                    </div>
+
+                    <FiChevronDown
+                      className={`text-slate-400 transition-transform ${
+                        isDropdownOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {/* ==========================================
+                    DROPDOWN
+                ========================================== */}
+
+                  {isDropdownOpen && (
+                    <div
+                      className={`absolute ${
+                        i18n.language.startsWith("fa") ? "left-0" : "right-0 "
+                      } mt-3 w-60 overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 p-2 shadow-2xl shadow-black/30`}
+                    >
+                      {/* User Info */}
+
+                      <div className="mb-2 flex items-center gap-3 rounded-xl bg-slate-900 p-3">
+                        {photo ? (
+                          <img
+                            src={photo}
+                            alt={firstName}
+                            className="h-10 w-10 rounded-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 font-semibold text-white">
+                            {userInitial}
+                          </div>
+                        )}
+
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-white">
+                            {firstName}
+                          </p>
+
+                          <p className="truncate text-xs text-slate-400">
+                            {email || t("user.member")}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Dashboard */}
+
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setIsDropdownOpen(false)}
+                        className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-normal transition ${
+                          pathname === "/dashboard"
+                            ? "bg-blue-600 text-white"
+                            : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                        }`}
+                      >
+                        <FiGrid className="text-lg" />
+
+                        <span>{t("navBar.services.telegramDashboard")}</span>
+                      </Link>
+
+                      {/* Copy Trading */}
+
+                      <Link
+                        href="/copy-trading"
+                        onClick={() => setIsDropdownOpen(false)}
+                        className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-normal transition ${
+                          pathname.startsWith("/copy-trading")
+                            ? "bg-blue-600 text-white"
+                            : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                        }`}
+                      >
+                        <FiCopy className="text-lg" />
+
+                        <span>{t("navBar.services.copyTradingDashboard")}</span>
+                      </Link>
+                      <Link
+                        href="/discount-premium"
+                        onClick={() => setIsDropdownOpen(false)}
+                        className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition ${
+                          pathname === "/discount-premium"
+                            ? "bg-blue-600 text-white"
+                            : "text-slate-300 hover:bg-slate-900 hover:text-white"
+                        }`}
+                      >
+                        <FiBarChart2 className="text-base" />
+                        <span>
+                          {t("navBar.services.discountPremiumDashboard")}
+                        </span>
+                      </Link>
+                      {isAdmin && (
+                        <Link
+                          href="/admin/finance"
+                          onClick={() => setIsDropdownOpen(false)}
+                          className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-normal transition ${
+                            pathname.startsWith("/admin/finance")
+                              ? "bg-blue-600 text-white"
+                              : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                          }`}
+                        >
+                          <FiCreditCard className="text-lg" />
+                          <span>{t("navBar.services.adminFinance")}</span>
+                        </Link>
+                      )}
+
+                      <div className="my-2 border-t border-slate-800" />
+
+                      {/* Logout */}
+
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-400 transition hover:bg-red-950/40 hover:text-red-400"
+                      >
+                        {i18n.language.startsWith("fa") ? (
+                          <CiLogout className="text-lg" />
+                        ) : (
+                          <FiLogOut className="text-lg" />
+                        )}
+
+                        <span>{t("auth.logout")}</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -375,7 +478,7 @@ export default function Header() {
                         : "text-white hover:text-blue-500"
                     }`}
                   >
-                    {item.name}
+                    {t(item.key)}
                   </Link>
                 );
               })}
@@ -386,7 +489,7 @@ export default function Header() {
                   onClick={closeMenu}
                   className="mx-3 mt-4 block rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-medium text-white hover:bg-blue-700"
                 >
-                  Login
+                  {t("auth.login")}
                 </Link>
               ) : (
                 <>
@@ -403,7 +506,7 @@ export default function Header() {
                   >
                     <FiGrid />
 
-                    <span>Dashboard</span>
+                    <span>{t("navBar.services.telegramDashboard")}</span>
                   </Link>
 
                   {/* Mobile Copy Trading */}
@@ -419,7 +522,7 @@ export default function Header() {
                   >
                     <FiCopy />
 
-                    <span>Copy Trading</span>
+                    <span>{t("navBar.services.copyTradingDashboard")}</span>
                   </Link>
                   <Link
                     href="/discount-premium"
@@ -431,7 +534,7 @@ export default function Header() {
                     }`}
                   >
                     <FiBarChart2 className="text-base" />
-                    <span>Discount Premium Dashboard</span>
+                    <span>{t("navBar.services.discountPremiumDashboard")}</span>
                   </Link>
 
                   {isAdmin && (
@@ -446,7 +549,7 @@ export default function Header() {
                     >
                       <FiCreditCard className="text-lg" />
 
-                      <span>Admin Finance</span>
+                      <span>{t("navBar.services.adminFinance")}</span>
                     </Link>
                   )}
 
@@ -457,9 +560,13 @@ export default function Header() {
                     onClick={handleLogout}
                     className=" mt-2 flex w-[calc(100%-2rem)] items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-slate-400 hover:bg-red-950/40 hover:text-red-400"
                   >
-                    <FiLogOut />
+                    {i18n.language.startsWith("fa") ? (
+                      <CiLogout className="text-lg" />
+                    ) : (
+                      <FiLogOut className="text-lg" />
+                    )}
 
-                    <span>Logout</span>
+                    <span>{t("auth.logout")}</span>
                   </button>
                 </>
               )}
