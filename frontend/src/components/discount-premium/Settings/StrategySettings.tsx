@@ -25,7 +25,7 @@ const settings = [
   },
 ];
 
-// 🟢 تغییر خط ۲۷: ورودی تابع را به پروپس‌های داینامیک صفحه اصلی متصل می‌کنیم
+// 🟢 اتصال رسمی ورودی تابع به پروپس‌های داینامیک صفحه اصلی شما
 export default function StrategySettings({ enabled, setEnabled }: { enabled: any, setEnabled: any }) {
   
   const toggleSetting = (id: string) => {
@@ -49,7 +49,8 @@ export default function StrategySettings({ enabled, setEnabled }: { enabled: any
         {settings.map((setting) => (
           <div
             key={setting.id}
-            className="flex items-center justify-between gap-4 py-4" >
+            className="flex items-center justify-between gap-4 py-4"
+          >
             <div>
               <h3 className="text-sm font-semibold text-gray-900">
                 {setting.title}
@@ -58,17 +59,21 @@ export default function StrategySettings({ enabled, setEnabled }: { enabled: any
                 {setting.description}
               </p>
             </div>
+            
+            {/* 🟢 لایو کردن دکمه‌ها: حفظ کامل کلاس‌ها و انیمیشن‌های دقیق شما + گارد اختیاری ? جهت مهار کرش */}
             <button
               type="button"
               onClick={() => toggleSetting(setting.id)}
               aria-label={`Toggle ${setting.title}`}
               className={`relative h-6 w-11 shrink-0 rounded-full transition ${
-                enabled[setting.id] ? "bg-blue-600" : "bg-gray-200"
-              }`}  >
+                enabled?.[setting.id] ? "bg-blue-600" : "bg-gray-200"
+              }`}
+            >
               <span
                 className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow-sm transition ${
-                  enabled[setting.id] ? "left-6" : "left-1"
-                }`} />
+                  enabled?.[setting.id] ? "left-6" : "left-1"
+                }`}
+              />
             </button>
           </div>
         ))}

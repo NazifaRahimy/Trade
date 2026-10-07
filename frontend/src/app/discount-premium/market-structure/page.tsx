@@ -17,7 +17,7 @@ export default function MarketPage() {
   useEffect(() => {
     const fetchRadarFeeds = async () => {
       try {
-        const response = await api.get(`/api/gold-bot/live-radar/?symbol=XAUUSD&timeframe=${timeframe}`);
+        const response = await api.get(`/api/market-data/gold-bot/live-radar/?symbol=XAUUSD&timeframe=${timeframe}`);
         if (response.data) setRadarData(response.data);
       } catch (err) {
         console.error("Radar network link delayed", err);

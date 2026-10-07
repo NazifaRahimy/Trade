@@ -1,13 +1,18 @@
 "use client";
 
-import {useState} from "react";
-import {FiActivity} from "react-icons/fi";
+import { FiActivity } from "react-icons/fi";
 
 const timeframes = ["M1", "M5", "M15", "H1", "H4", "D1"];
 
-export default function MarketTimeframe() {
-  const [selected, setSelected] = useState("M5");
+interface MarketTimeframeProps {
+  selected: string;
+  onChange: (timeframe: string) => void;
+}
 
+export default function MarketTimeframe({
+  selected,
+  onChange,
+}: MarketTimeframeProps) {
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
       <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -35,7 +40,7 @@ export default function MarketTimeframe() {
             <button
               key={timeframe}
               type="button"
-              onClick={() => setSelected(timeframe)}
+              onClick={() => onChange(timeframe)}
               className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
                 active
                   ? "bg-blue-600 text-white shadow-sm"

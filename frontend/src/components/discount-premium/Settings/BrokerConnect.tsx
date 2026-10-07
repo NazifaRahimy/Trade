@@ -1,31 +1,30 @@
 "use client";
 
 import React, { useState } from "react";
+import { FiLoader } from "react-icons/fi";
 import api from "@/src/lib/axios"; // 🚀 استفاده از اکسوس بومی تصفیه شده شما
 
-export default function BrokerConnect() {
-  const [server, setServer] = useState("MetaQuotes-Demo");
-  const [login, setLogin] = useState("");
-  const [password, setPassword] = useState("");
+// 🟢 تغییر ورودی تابع: اتصال مستقیم به فیلدها و آرایه سرورهای ادمین که از صفحه اصلی (پدر) پاس داده می‌شوند
+export default function BrokerConnect({ fields, setFields, mt5Servers , supportedBrokers }: any) {
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState({ type: "", text: "" });
+  const [selectedBroker, setSelectedBroker] = useState("");
 
-  // 🚀 متد شلیک اطلاعات حساب به اندپوینت متمرکز بک‌اَند
+  // 🚀 متد شلیک و اتصال آنی حساب به اندپوینت متمرکز بک‌اَند جهت تست اتصال
   const handleConnectBroker = async () => {
-    if (!login || !password) {
+    if (!fields?.mt5_login || !fields?.mt5_password) {
       setStatusMsg({ type: "error", text: "❌ لطفاً شماره حساب و رمز عبور را وارد کنید." });
       return;
     }
 
-    setLoading(false);
     setLoading(true);
     setStatusMsg({ type: "", text: "" });
 
     try {
       const response = await api.post("/api/user/broker/", {
-        mt5_login: intValue(login),
-        mt5_password: password,
-        mt5_server: server,
+        mt5_login: intValue(fields.mt5_login),
+        mt5_password: fields.mt5_password,
+        mt5_server: fields.mt5_server,
       });
 
       if (response.status === 200) {
@@ -59,39 +58,45 @@ export default function BrokerConnect() {
       )}
 
       <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
-        {/* فیلد انتخاب سرور */}
+        {/* فیلد انتخاب سرور کاملاً داینامیک شده */}
         <div>
           <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-500">MT5 Server</label>
           <select
-            value={server}
-            onChange={(e) => setServer(e.target.value)}
+            value={fields?.mt5_server || ""}
+            onChange={(e) => setFields({ ...fields, mt5_server: e.target.value })}
             className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 outline-none transition focus:border-blue-500"
           >
-            <option value="MetaQuotes-Demo">MetaQuotes-Demo</option>
-            <option value="Exness-MT5-Trial9">Exness-MT5-Trial9</option>
-            <option value="Alpari-MT5-Demo">Alpari-MT5-Demo</option>
+            <option value="">-- Select Broker Server --</option>
+            
+            {/* 🎯 رندر ۱۰۰٪ داینامیک سرورهایی که شما در داشبورد ادمین اضافه کردید */}
+          
+          {supportedBrokers?.map((brokerName: string, index: number) => (
+            <option key={index} value={brokerName}>
+              {brokerName}
+            </option>
+    ))}
           </select>
         </div>
 
-        {/* فیلد لاگین */}
+        {/* فیلد لاگین متصل به استیت پدر */}
         <div>
           <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-500">Account Login</label>
           <input
             type="text"
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
+            value={fields?.mt5_login || ""}
+            onChange={(e) => setFields({ ...fields, mt5_login: e.target.value })}
             placeholder="Enter account login"
             className="w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm text-gray-700 outline-none transition focus:border-blue-500"
           />
         </div>
 
-        {/* فیلد پسورد */}
+        {/* field پسورد متصل به استیت پدر */}
         <div>
           <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-gray-500">Password</label>
           <input
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={fields?.mt5_password || ""}
+            onChange={(e) => setFields({ ...fields, mt5_password: e.target.value })}
             placeholder="Enter password"
             className="w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm text-gray-700 outline-none transition focus:border-blue-500"
           />
@@ -115,7 +120,7 @@ export default function BrokerConnect() {
           onClick={handleConnectBroker}
           className="rounded-lg bg-blue-600 px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:opacity-50 flex items-center gap-1"
         >
-          {loading && <span className="h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent"></span>}
+          {loading && <FiLoader className="animate-spin" size={12} />}
           Connect MT5
         </button>
       </div>
@@ -124,5 +129,6 @@ export default function BrokerConnect() {
 }
 
 function intValue(val: string) {
-  return parseInt(val.replace(/[^0-9]/g, "")) || 0;
+  if (!val) return 0;
+  return parseInt(String(val).replace(/[^0-9]/g, "")) || 0;
 }

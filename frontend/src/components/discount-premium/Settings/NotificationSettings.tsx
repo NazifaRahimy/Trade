@@ -1,6 +1,7 @@
 "use client";
 
-import {useState} from "react";
+import React from "react";
+
 const notifications = [
   {
     id: "newSetup",
@@ -8,34 +9,32 @@ const notifications = [
     description: "Notify when a new valid trading setup is detected.",
   },
   {
-    id: "entry",
+    id: "entryAlert", // 🟢 همگام‌سازی کلید با استیت entryAlert تعریف شده در فایل پدر شما
     title: "Entry Alert",
     description: "Notify when price reaches the confirmed entry zone.",
   },
   {
-    id: "tp",
+    id: "tpHit", // 🟢 همگام‌سازی کلید با استیت tpHit تعریف شده در فایل پدر شما
     title: "TP Hit Alert",
     description: "Notify when a take profit level is reached.",
   },
   {
-    id: "sl",
+    id: "slHit", // 🟢 همگام‌سازی کلید با استیت slHit تعریف شده در فایل پدر شما
     title: "SL Hit Alert",
     description: "Notify when the stop loss level is reached.",
   },
 ];
-export default function NotificationSettings() {
-  const [enabled, setEnabled] = useState<Record<string, boolean>>({
-    newSetup: true,
-    entry: true,
-    tp: true,
-    sl: true,
-  });
+
+// 🟢 اتصال ورودی تابع به پروپس‌های داینامیک و متمرکز صفحه اصلی شما
+export default function NotificationSettings({ enabled, setEnabled }: { enabled: any; setEnabled: any }) {
+  
   const toggle = (id: string) => {
-    setEnabled((current) => ({
+    setEnabled((current: any) => ({
       ...current,
       [id]: !current[id],
     }));
   };
+
   return (
     <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
       <div className="border-b border-gray-100 pb-4">
@@ -59,17 +58,18 @@ export default function NotificationSettings() {
               </p>
             </div>
 
+            {/* 🟢 لایو شدن سوئیچ‌ها: حفظ کامل کلاس‌ها و پوزیشن‌های انیمیشنی شما + گارد اختیاری ? جهت جلوگیری از کرش */}
             <button
               type="button"
               onClick={() => toggle(notification.id)}
               aria-label={`Toggle ${notification.title}`}
               className={`relative h-6 w-11 shrink-0 rounded-full transition ${
-                enabled[notification.id] ? "bg-blue-600" : "bg-gray-200"
+                enabled?.[notification.id] ? "bg-blue-600" : "bg-gray-200"
               }`}
             >
               <span
                 className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow-sm transition ${
-                  enabled[notification.id] ? "left-6" : "left-1"
+                  enabled?.[notification.id] ? "left-6" : "left-1"
                 }`}
               />
             </button>

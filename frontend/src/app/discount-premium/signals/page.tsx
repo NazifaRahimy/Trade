@@ -6,57 +6,88 @@ import SignalRadar from "@/src/components/discount-premium/Signals/SignalRadar";
 import SignalFilters from "@/src/components/discount-premium/Signals/SignalFilters";
 import SignalCard from "@/src/components/discount-premium/Signals/SignalCard";
 import SignalDetails from "@/src/components/discount-premium/Signals/SignalDetails";
-import api from "@/src/lib/axios"; // کلاینت اکسوس بومی شما
+import api from "@/src/lib/axios";
 
 export default function SignalsPage() {
   const [signals, setSignals] = useState<any[]>([]);
   const [selectedSignal, setSelectedSignal] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // متغیرهای فیلتر کردن زنده روی آرایه خروجی
   const [symbolFilter, setSymbolFilter] = useState("All");
   const [directionFilter, setDirectionFilter] = useState("All");
   const [timeframeFilter, setTimeframeFilter] = useState("All");
 
-  // 📡 پولینگ لایو سیگنال‌های اسکنر بازار از بک‌اَند هر ۱۰ ثانیه یک‌بار
+  // دریافت زنده سیگنال‌های واقعی Scanner از Backend
   useEffect(() => {
     const fetchLiveScannerSignals = async () => {
       try {
         const token = localStorage.getItem("access_token");
-        if (!token) return;
 
-        const response = await api.get("/api/scanner/signals/active/");
-        if (response.data) {
-          setSignals(response.data);
-          
-          // حفظ انتخاب سیگنال جاری کاربر در زمان رفرش داده‌ها
-          if (response.data.length > 0) {
-            setSelectedSignal((current: any) => {
-              if (current) {
-                return response.data.find((s: any) => s.id === current.id) || response.data[0];
-              }
-              return response.data[0];
-            });
-          }
+        if (!token) {
+          return;
+        }
+
+        const response = await api.get("/api/scanner/radar/live/");
+
+        const detectedSignals =
+          response.data?.detected_signals || [];
+
+        setSignals(detectedSignals);
+
+        if (detectedSignals.length > 0) {
+          setSelectedSignal((current: any) => {
+            if (current) {
+              return (
+                detectedSignals.find(
+                  (signal: any) => signal.id === current.id
+                ) || detectedSignals[0]
+              );
+            }
+
+            return detectedSignals[0];
+          });
+        } else {
+          setSelectedSignal(null);
         }
       } catch (err) {
-        console.error("Scanner signal channel connection error", err);
+        console.error(
+          "Scanner signal channel connection error",
+          err
+        );
       } finally {
         setLoading(false);
       }
     };
 
     fetchLiveScannerSignals();
-    const interval = setInterval(fetchLiveScannerSignals, 10000);
+
+    const interval = setInterval(
+      fetchLiveScannerSignals,
+      10000
+    );
+
     return () => clearInterval(interval);
   }, []);
 
-  // اعمال داینامیک فیلترها روی دیتای دریافتی پایتون قبل از رندر
+  // فیلتر کردن سیگنال‌ها بر اساس دیتای واقعی Backend
   const filteredSignals = signals.filter((sig) => {
-    const matchSymbol = symbolFilter === "All" || sig.symbol === symbolFilter;
-    const matchDirection = directionFilter === "All" || sig.direction === directionFilter;
-    const matchTimeframe = timeframeFilter === "All" || sig.timeframe === timeframeFilter;
-    return matchSymbol && matchDirection && matchTimeframe;
+    const matchSymbol =
+      symbolFilter === "All" ||
+      sig.symbol_name === symbolFilter;
+
+    const matchDirection =
+      directionFilter === "All" ||
+      sig.order_type === directionFilter;
+
+    const matchTimeframe =
+      timeframeFilter === "All" ||
+      sig.timeframe === timeframeFilter;
+
+    return (
+      matchSymbol &&
+      matchDirection &&
+      matchTimeframe
+    );
   });
 
   if (loading) {
@@ -68,32 +99,44 @@ export default function SignalsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/50 p-6 space-y-6">
+    <div className="min-h-screen space-y-6 bg-gray-50/50 p-6">
       <SignalsHeader />
-      
-      {/* پاس دادن کل سیگنال‌ها برای محاسبه داینامیک تعداد پدینگ و سترانگ */}
+
+      {/* تمام سیگنال‌های واقعی برای محاسبه وضعیت Scanner */}
       <SignalRadar signals={signals} />
-      
-      {/* متصل کردن فیلترهای بومی شما به ست‌کننده‌های وضعیت پدر */}
-      <SignalFilters 
-        symbol={symbolFilter} setSymbol={setSymbolFilter}
-        direction={directionFilter} setDirection={setDirectionFilter}
-        timeframe={timeframeFilter} setTimeframe={setTimeframeFilter}
+
+      {/* فیلترهای داینامیک سیگنال‌ها */}
+      <SignalFilters
+        symbol={symbolFilter}
+        setSymbol={setSymbolFilter}
+        direction={directionFilter}
+        setDirection={setDirectionFilter}
+        timeframe={timeframeFilter}
+        setTimeframe={setTimeframeFilter}
       />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         <div className="space-y-4 xl:col-span-2">
-          <h2 className="text-lg font-semibold text-gray-900">Pending Signals</h2>
-          <p className="text-xs text-gray-500 -mt-3">Signals currently waiting for execution confirmation.</p>
-          
+          <h2 className="text-lg font-semibold text-gray-900">
+            Pending Signals
+          </h2>
+
+          <p className="-mt-3 text-xs text-gray-500">
+            Signals currently waiting for execution confirmation.
+          </p>
+
           <div className="space-y-3">
             {filteredSignals.length > 0 ? (
               filteredSignals.map((signal) => (
                 <SignalCard
                   key={signal.id}
                   signal={signal}
-                  selected={selectedSignal?.id === signal.id}
-                  onSelect={() => setSelectedSignal(signal)}
+                  selected={
+                    selectedSignal?.id === signal.id
+                  }
+                  onSelect={() =>
+                    setSelectedSignal(signal)
+                  }
                 />
               ))
             ) : (
@@ -104,13 +147,13 @@ export default function SignalsPage() {
           </div>
         </div>
 
-        {/* سایدبار سمت راست: نمایش جزئیات سیگنال انتخابی */}
+        {/* نمایش جزئیات سیگنال انتخاب‌شده */}
         <div className="xl:col-span-1">
           <div className="xl:sticky xl:top-6">
             {selectedSignal ? (
               <SignalDetails signal={selectedSignal} />
             ) : (
-              <div className="rounded-2xl bg-white p-6 border border-gray-200 text-center text-sm text-gray-400">
+              <div className="rounded-2xl border border-gray-200 bg-white p-6 text-center text-sm text-gray-400">
                 Select a scanner node setup to review structural matrix conditions.
               </div>
             )}

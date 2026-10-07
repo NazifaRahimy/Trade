@@ -11,32 +11,58 @@ export default function MarketStructure({ data }: { data: any }) {
           <h2 className="text-lg font-semibold text-gray-900">
             XAUUSD Market Structure
           </h2>
+
           <p className="mt-1 text-sm text-gray-500">
             Current structural condition of the gold market
           </p>
         </div>
-        <StructureChart />
+
+        <StructureChart data={data} />
       </div>
 
       <div className="space-y-4">
-        {/* ۱. باکس وضعیت تایم‌فریم ساختار اصلی (M5) */}
         <StructureStatusCard
+          title="M5 Primary Structure"
           timeframe="M5"
-          trend={structure?.timeframe === "M5" ? structure.trend : "BULLISH"}
+          trend={
+            structure?.timeframe === "M5"
+              ? structure.trend
+              : "BULLISH"
+          }
           structure="BOS"
-          lastStructure={structure?.timeframe === "M5" && structure.last_high ? floatFix(structure.last_high) : "HH"}
-          previousStructure={structure?.timeframe === "M5" && structure.last_low ? floatFix(structure.last_low) : "HL"}
+          lastStructure={
+            structure?.timeframe === "M5" && structure.last_high
+              ? floatFix(structure.last_high)
+              : "HH"
+          }
+          previousStructure={
+            structure?.timeframe === "M5" && structure.last_low
+              ? floatFix(structure.last_low)
+              : "HL"
+          }
           strength="Strong"
           confirmation="Primary Direction"
         />
 
-        {/* ۲. باکس وضعیت تایم‌فریم ورود لایو ربات (M1) */}
         <StructureStatusCard
+          title="M1 Entry Structure"
           timeframe="M1"
-          trend={structure?.timeframe === "M1" ? structure.trend : "BULLISH"}
+          trend={
+            structure?.timeframe === "M1"
+              ? structure.trend
+              : "BULLISH"
+          }
           structure="BOS"
-          lastStructure={structure?.timeframe === "M1" && structure.last_high ? floatFix(structure.last_high) : "HH"}
-          previousStructure={structure?.timeframe === "M1" && structure.last_low ? floatFix(structure.last_low) : "HL"}
+          lastStructure={
+            structure?.timeframe === "M1" && structure.last_high
+              ? floatFix(structure.last_high)
+              : "HH"
+          }
+          previousStructure={
+            structure?.timeframe === "M1" && structure.last_low
+              ? floatFix(structure.last_low)
+              : "HL"
+          }
           strength="Confirmed"
           confirmation="Entry Confirmation"
         />
@@ -45,7 +71,6 @@ export default function MarketStructure({ data }: { data: any }) {
   );
 }
 
-// 🟢 ساخت تابع محاسباتی اعشار جهت رفع ارور ناپدید بودن فیلد تراز
 function floatFix(val: string | number) {
   return parseFloat(val.toString()).toFixed(2);
 }

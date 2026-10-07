@@ -1,23 +1,22 @@
 "use client";
 
-import {useState} from "react";
+import React from "react";
 
-export default function TakeProfitSettings() {
-  const [tp1, setTp1] = useState("Previous High / Low");
-  const [tp2, setTp2] = useState("Liquidity Target");
-  const [tp3, setTp3] = useState("Extended Target");
+// 🟢 تغییر ورودی تابع: اتصال مستقیم به استیت‌های متمرکز و داینامیک صفحه اصلی شما
+export default function TakeProfitSettings({ fields, setFields }: { fields: any, setFields: any }) {
 
   const levels = [
     {
       name: "TP1",
-      value: tp1,
-      setValue: setTp1,
+      value: fields?.tp1 || "Previous High / Low",
+      // به‌روزرسانی فیلد متناظر در صفحه پدر به محض تغییر گزینه‌ها
+      setValue: (val: string) => setFields((prev: any) => ({ ...currentFields(prev), tp1: val })),
       options: ["Previous High / Low", "Fixed Risk / Reward", "Equilibrium"],
     },
     {
       name: "TP2",
-      value: tp2,
-      setValue: setTp2,
+      value: fields?.tp2 || "Liquidity Target",
+      setValue: (val: string) => setFields((prev: any) => ({ ...currentFields(prev), tp2: val })),
       options: [
         "Liquidity Target",
         "Previous High / Low",
@@ -26,11 +25,16 @@ export default function TakeProfitSettings() {
     },
     {
       name: "TP3",
-      value: tp3,
-      setValue: setTp3,
+      value: fields?.tp3 || "Extended Target",
+      setValue: (val: string) => setFields((prev: any) => ({ ...currentFields(prev), tp3: val })),
       options: ["Extended Target", "Liquidity Target", "Previous High / Low"],
     },
   ];
+
+  // تابع کمکی جهت مهار رفتارهای ناهمگام استیت‌ها
+  function currentFields(prev: any) {
+    return prev || { tp1: "", tp2: "", tp3: "" };
+  }
 
   return (
     <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
@@ -65,7 +69,9 @@ export default function TakeProfitSettings() {
               className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 outline-none focus:border-blue-500"
             >
               {level.options.map((option) => (
-                <option key={option}>{option}</option>
+                <option key={option} value={option}>
+                  {option}
+                </option>
               ))}
             </select>
           </div>

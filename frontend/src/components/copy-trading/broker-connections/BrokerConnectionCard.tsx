@@ -18,7 +18,11 @@ const [connection, setConnection] = useState<any>(null);
     setTesting(true);
     try {
       // اتصال لایو به هسته بررسی پسورد و هندشیک متاتریدر ۵
-      await api.post("/api/market-data/broker/connect/");
+      await api.post("/api/market-data/broker/connect/", {
+        mt5_login: connection?.mt5_login,
+        mt5_password: connection?.mt5_password,
+        mt5_server: connection?.mt5_server
+      });
       
       // به‌روزرسانی کارت پس از موفقیت‌آمیز بودن تست اتصال
       await fetchConnection();
@@ -65,7 +69,10 @@ useEffect(() => {
       const data = await getDashboardStats(); 
       if (data) {
         setConnection(data);
-      }
+      }else {
+          // اگر آمار داشبورد خالی بود، مستقیماً دیتای واقعی دیتابیس فچ می‌شود
+          await fetchConnection();
+        }
     } catch (error) {
       console.error("Error loading active broker connection:", error);
     } finally {
@@ -85,6 +92,7 @@ useEffect(() => {
       </div>
     );
   }
+  const isConnected = connection && (connection.status === "CONNECTED" || connection.is_active);
 
   return (
     <motion.div
@@ -99,12 +107,12 @@ useEffect(() => {
         </div>
 
         <span className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium ${
-          account && account.is_active 
+          isConnected 
             ? "border-emerald-200 bg-emerald-50 text-emerald-700" 
             : "border-slate-200 bg-slate-50 text-slate-500"
         }`}>
-          <span className={`h-1.5 w-1.5 rounded-full ${account && account.is_active ? "bg-emerald-500" : "bg-slate-400"}`} />
-          {account && account.is_active ? "Connected" : "Inactive"}
+          <span className={`h-1.5 w-1.5 rounded-full ${isConnected ? "bg-emerald-500" : "bg-slate-400"}`} />
+          {isConnected ? "Connected" : "Inactive"}
         </span>
       </div>
 

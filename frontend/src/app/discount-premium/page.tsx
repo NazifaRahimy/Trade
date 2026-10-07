@@ -22,7 +22,7 @@ export default function DiscountPremiumOverview() {
       if (!token) return;
 
       // 🟢 ارسال درخواست به اندپوینت‌های واقعی پایتون شما
-      const radarRes = await api.get("/api/gold-bot/live-radar/?symbol=XAUUSD&timeframe=M5");
+      const radarRes = await api.get("/api/market-data/gold-bot/live-radar/?symbol=XAUUSD&timeframe=M5");
       const statsRes = await api.get("/api/stats/overview/");
 
       if (radarRes.data && statsRes.data) {

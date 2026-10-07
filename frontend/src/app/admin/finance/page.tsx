@@ -6,8 +6,8 @@ import {FiArrowLeft, FiBarChart2, FiLoader} from "react-icons/fi";
 
 // 🚀 ۱. اصلاح دقیق آدرس‌های ایمپورت برای برطرف شدن باگ Turbopack
 import api from "@/src/lib/axios";
-import AdminFinanceStats from "@/src/components/copy-trading/billing/admin/AdminFinanceStats";
-import RevenueBreakdown from "@/src/components/copy-trading/billing/admin/RevenueBreakdown";
+import AdminFinanceStats from "@/src/components/billing/admin/AdminFinanceStats";
+import RevenueBreakdown from "@/src/components/billing/admin/RevenueBreakdown";
 import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
 
 export default function AdminFinancePage() {

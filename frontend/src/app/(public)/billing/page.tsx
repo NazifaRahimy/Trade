@@ -9,7 +9,7 @@ import BillingStats from "@/src/components/billing/BillingStats";
 import RecentTransactions from "@/src/components/billing/RecentTransactions";
 import TelegramBotCard from "@/src/components/billing/TelegramBotCard"; // ایمپورت دکمه جدید ربات
 import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
-import PremiumBotCard from "@/src/components/copy-trading/billing/PremiumBotCard";
+import PremiumBotCard from "@/src/components/billing/PremiumBotCard";
 export default function BillingPage() {
   const [billingData, setBillingData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
